@@ -34,9 +34,9 @@ func (c ContentPath) Print() {
 func GenerateRoutes() {
 	contentPaths := GetContentPaths()
 	parentDirs := IdentifyParentDirs(contentPaths)
-	for _, parentDir := range parentDirs {
-		parentDir.Print()
-
+	childDirs := IdentifyChildDirs(contentPaths, parentDirs)
+	for _, childDir := range childDirs {
+		childDir.Print()
 	}
 
 }
@@ -85,4 +85,20 @@ func IdentifyParentDirs(contentPaths []ContentPath) []ContentPath {
 
 	}
 	return parentDirs
+}
+
+func IdentifyChildDirs(contentPaths []ContentPath, parentDirs []ContentPath) []ContentPath {
+	childDirs := []ContentPath{}
+	for _, contentPath := range contentPaths {
+		lastPart := contentPath.Parts[len(contentPath.Parts)-1]
+		// if last part contains a "."" it is not a dir and we can skip it
+		if strings.Contains(lastPart, ".") {
+			continue
+		}
+		// if the parts only contains one element, it is a root dir and therefore is not a child
+		if len(contentPath.Parts) == 1 {
+			continue
+		}
+	}
+	return childDirs
 }
