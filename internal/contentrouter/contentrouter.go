@@ -1,104 +1,136 @@
 package contentrouter
 
 import (
+	"encoding/json"
 	"fmt"
-	"godocument/internal/config"
 	"os"
-	"path/filepath"
-	"strings"
 )
 
-// ContentPath is a struct that represents all contents of ./content directory.
-// It can be either a directory itself, or a file.
-type ContentPath struct {
-	ExactPath string
-	Parts     []string
+type Page struct {
+	Name         string
+	RouterPath   string
+	MarkdownPath string
 }
 
-func NewContentPath(filePath string) ContentPath {
-	exactPath := "./" + filePath
-	trimmedPath := strings.TrimPrefix(filePath, config.ContentPrefix)
-	pathParts := strings.Split(trimmedPath, "/")
-	return ContentPath{
-		ExactPath: exactPath,
-		Parts:     pathParts,
+func (p Page) Print(lineIndention string) {
+	fmt.Println(lineIndention + "Page:")
+	fmt.Println(lineIndention + "  Name: " + p.Name)
+	fmt.Println(lineIndention + "  RouterPath: " + p.RouterPath)
+	fmt.Println(lineIndention + "  MarkdownPath: " + p.MarkdownPath)
+}
+
+type Series struct {
+	Name      string
+	Pages     []Page
+	Subseries []Series
+}
+
+func (s Series) Print(lineIndentation string) {
+	fmt.Println(lineIndentation + "Series: " + s.Name)
+	for _, page := range s.Pages {
+		page.Print(lineIndentation + "  ")
 	}
-}
-
-func (c ContentPath) Print() {
-	fmt.Println("Printing ContentPath:")
-	fmt.Printf("  ExactPath: %s\n", c.ExactPath)
-	fmt.Printf("  Parts: %v\n", c.Parts)
+	for _, sub := range s.Subseries {
+		sub.Print(lineIndentation + "  ")
+	}
 }
 
 func GenerateRoutes() {
-	contentPaths := GetContentPaths()
-	parentDirs := IdentifyParentDirs(contentPaths)
-	childDirs := IdentifyChildDirs(contentPaths, parentDirs)
-	for _, childDir := range childDirs {
-		childDir.Print()
-	}
 
+	docConfigLines := GetDocConfigLines()
+	PrintDocConfigLines(docConfigLines, 0)
 }
 
-func GetContentPaths() []ContentPath {
-	contentPaths := []ContentPath{}
-	err := filepath.WalkDir(config.ContentDirRoot, func(path string, d os.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if path == config.ContentDirRoot {
-			return nil
-		}
-		contentPath := NewContentPath(path)
-		contentPaths = append(contentPaths, contentPath)
-		return nil
-	})
+func GetDocConfigLines() []interface{} {
+
+	// docConfigLines is a slice of interfaces that can be either a Page or a Series
+	// we do this to ensure the order of the pages and series in the config file is maintained
+	docConfigLines := []interface{}{}
+
+	// reading godocument.config.json file
+	data, err := os.ReadFile("./godocument.config.json")
 	if err != nil {
-		fmt.Printf("error walking the path %q: %v\n", config.ContentDirRoot, err)
+		panic("Error reading godocument.config.json file")
 	}
-	return contentPaths
+
+	// Unmarshal JSON data into an interface
+	var result interface{}
+	err = json.Unmarshal(data, &result)
+	if err != nil {
+		panic("Error unmarshalling JSON data in godocument.config.json - check syntax")
+	}
+
+	// Assert result to a map to access its contents
+	resultMap, ok := result.(map[string]interface{})
+	if !ok {
+		panic("Error asserting JSON data to a map in godocument.config.json - check syntax")
+	}
+
+	// Extract "docs" value (which is a map) from the JSON object
+	docs, ok := resultMap["docs"]
+	if !ok {
+		panic("docs key not found in godocument.config.json - check syntax")
+	}
+
+	for key, value := range docs.(map[string]interface{}) {
+		// if value is a string, it is not a series
+		if _, ok := value.(string); ok {
+			markdownPath := value.(string)
+			routerPath := markdownPath[6 : len(markdownPath)-3]
+			docConfigLines = append(docConfigLines, Page{
+				Name:         key,
+				RouterPath:   routerPath,
+				MarkdownPath: markdownPath,
+			})
+		}
+		// if value is a map, it is a series
+		if _, ok := value.(map[string]interface{}); ok {
+			s := ParseSeries(key, value.(map[string]interface{}))
+			docConfigLines = append(docConfigLines, s)
+		}
+	}
+
+	return docConfigLines
+
 }
 
-func IdentifyParentDirs(contentPaths []ContentPath) []ContentPath {
-	parentDirs := []ContentPath{}
-	for _, contentPath := range contentPaths {
-		lastPart := contentPath.Parts[len(contentPath.Parts)-1]
-		// if last part contains a "."" it is not a dir and we can skip it
-		if strings.Contains(lastPart, ".") {
-			continue
+func ParseSeries(seriesName string, series map[string]interface{}) Series {
+	pages := []Page{}
+	subseries := []Series{}
+	for key, value := range series {
+		// if value is a string, it is not a series
+		if _, ok := value.(string); ok {
+			markdownPath := value.(string)
+			routerPath := markdownPath[6 : len(markdownPath)-3]
+			pages = append(pages, Page{
+				Name:         key,
+				RouterPath:   routerPath,
+				MarkdownPath: value.(string),
+			})
 		}
-		// if the parts only contains one element, it is the root dir and therefore is a parent
-		if len(contentPath.Parts) == 1 {
-			parentDirs = append(parentDirs, contentPath)
-			continue
+		// if the value is a map, it is a subseries
+		if _, ok := value.(map[string]interface{}); ok {
+			subseries = append(subseries, ParseSeries(key, value.(map[string]interface{})))
 		}
-		dirEntries, err := os.ReadDir(contentPath.ExactPath)
-		if err != nil {
-			panic(err)
-		}
-		for _, dirEntry := range dirEntries {
-			if dirEntry.IsDir() {
-				parentDirs = append(parentDirs, contentPath)
-			}
-		}
-
 	}
-	return parentDirs
+	return Series{
+		Name:      seriesName,
+		Pages:     pages,
+		Subseries: subseries,
+	}
 }
 
-func IdentifyChildDirs(contentPaths []ContentPath, parentDirs []ContentPath) []ContentPath {
-	childDirs := []ContentPath{}
-	for _, contentPath := range contentPaths {
-		lastPart := contentPath.Parts[len(contentPath.Parts)-1]
-		// if last part contains a "."" it is not a dir and we can skip it
-		if strings.Contains(lastPart, ".") {
-			continue
-		}
-		// if the parts only contains one element, it is a root dir and therefore is not a child
-		if len(contentPath.Parts) == 1 {
-			continue
+func PrintDocConfigLines(docConfigLines []interface{}, baseIndentation int) {
+	lineIndentation := ""
+	for i := 0; i < baseIndentation; i++ {
+		lineIndentation += " "
+	}
+	for _, line := range docConfigLines {
+		switch v := line.(type) {
+		case Page:
+			v.Print(lineIndentation)
+		case Series:
+			v.Print(lineIndentation)
 		}
 	}
-	return childDirs
 }

@@ -1,0 +1,12 @@
+{
+    "docs": {
+        "Introduction": "./docs/introduction.md",
+        "Getting Started": {
+            "Installation": "./docs/getting-started/installation.md",
+            "Usage": "./docs/getting-started/usage.md",
+            "More Information": {
+                "Configuration": "./docs/getting-started/more-information/configuration.md"
+            }
+        }
+    }
+}
