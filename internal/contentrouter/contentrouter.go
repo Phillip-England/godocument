@@ -25,37 +25,19 @@ func NewContentPath(filePath string) ContentPath {
 	}
 }
 
-// ContentDirectory is a struct that represents a directory in ./content directory
-type ContentDirectory struct {
-	ContentPath      ContentPath
-	ChildDirectories []ContentDirectory
-	ChildFiles       []ContentMarkdownFile
-}
-
-func NewContentDirectory(contentPath ContentPath) ContentDirectory {
-	childDirectories := []ContentDirectory{}
-	dirEntries, _ := os.ReadDir(contentPath.ExactPath)
-	for _, entry := range dirEntries {
-		if entry.IsDir() {
-			contentDir := NewContentDirectory(NewContentPath(entry.Name()))
-			childDirectories = append(childDirectories, contentDir)
-		}
-	}
-	return ContentDirectory{
-		ContentPath:      contentPath,
-		ChildDirectories: childDirectories,
-		ChildFiles:       []ContentMarkdownFile{},
-	}
-}
-
-// ContentMarkdownFile is a struct that represents a markdown file in ./content directory
-type ContentMarkdownFile struct {
-	ContentPath ContentPath
+func (c ContentPath) Print() {
+	fmt.Println("Printing ContentPath:")
+	fmt.Printf("  ExactPath: %s\n", c.ExactPath)
+	fmt.Printf("  Parts: %v\n", c.Parts)
 }
 
 func GenerateRoutes() {
 	contentPaths := GetContentPaths()
-	_ = GetContentDirectories(contentPaths)
+	parentDirs := IdentifyParentDirs(contentPaths)
+	for _, parentDir := range parentDirs {
+		parentDir.Print()
+
+	}
 
 }
 
@@ -78,15 +60,29 @@ func GetContentPaths() []ContentPath {
 	return contentPaths
 }
 
-func GetContentDirectories(contentPaths []ContentPath) []ContentDirectory {
-	contentDirectories := []ContentDirectory{}
+func IdentifyParentDirs(contentPaths []ContentPath) []ContentPath {
+	parentDirs := []ContentPath{}
 	for _, contentPath := range contentPaths {
-		finalPart := contentPath.Parts[len(contentPath.Parts)-1]
-		if !strings.Contains(finalPart, ".") {
-			contentDirectory := NewContentDirectory(contentPath)
-			contentDirectories = append(contentDirectories, contentDirectory)
+		lastPart := contentPath.Parts[len(contentPath.Parts)-1]
+		// if last part contains a "."" it is not a dir and we can skip it
+		if strings.Contains(lastPart, ".") {
+			continue
+		}
+		// if the parts only contains one element, it is the root dir and therefore is a parent
+		if len(contentPath.Parts) == 1 {
+			parentDirs = append(parentDirs, contentPath)
+			continue
+		}
+		dirEntries, err := os.ReadDir(contentPath.ExactPath)
+		if err != nil {
+			panic(err)
+		}
+		for _, dirEntry := range dirEntries {
+			if dirEntry.IsDir() {
+				parentDirs = append(parentDirs, contentPath)
+			}
 		}
 
 	}
-	return contentDirectories
+	return parentDirs
 }
