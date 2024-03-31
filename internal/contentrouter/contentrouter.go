@@ -32,6 +32,14 @@ type ContentDirectory struct {
 	ChildFiles       []ContentMarkdownFile
 }
 
+func NewContentDirectory(contentPath ContentPath) ContentDirectory {
+	return ContentDirectory{
+		ContentPath:      contentPath,
+		ChildDirectories: []ContentDirectory{},
+		ChildFiles:       []ContentMarkdownFile{},
+	}
+}
+
 // ContentMarkdownFile is a struct that represents a markdown file in ./content directory
 type ContentMarkdownFile struct {
 	ContentPath ContentPath
@@ -39,10 +47,8 @@ type ContentMarkdownFile struct {
 
 func GenerateRoutes() {
 	contentPaths := GetContentPaths()
-	for _, contentPath := range contentPaths {
-		fmt.Println(contentPath.ExactPath)
-		fmt.Println(contentPath.Parts)
-	}
+	contentDirectories := GetContentDirectories(contentPaths)
+	fmt.Println(contentDirectories)
 
 }
 
@@ -63,4 +69,17 @@ func GetContentPaths() []ContentPath {
 		fmt.Printf("error walking the path %q: %v\n", config.ContentDirRoot, err)
 	}
 	return contentPaths
+}
+
+func GetContentDirectories(contentPaths []ContentPath) []ContentDirectory {
+	contentDirectories := []ContentDirectory{}
+	for _, contentPath := range contentPaths {
+		finalPart := contentPath.Parts[len(contentPath.Parts)-1]
+		if !strings.Contains(finalPart, ".") {
+			contentDirectory := NewContentDirectory(contentPath)
+			contentDirectories = append(contentDirectories, contentDirectory)
+		}
+
+	}
+	return contentDirectories
 }
