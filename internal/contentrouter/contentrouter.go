@@ -6,9 +6,21 @@ import (
 	"os"
 )
 
+type NodeWithoutDropdown struct {
+	Parent       string
+	Name         string
+	MarkdownPath string
+}
+
+type NodeWithDropdown struct {
+	Parent   string
+	Name     string
+	Children map[string]interface{}
+}
+
 func GenerateRoutes() {
 	uDocs := GetUnstructuredDocs()
-	TraverseUnstructuredDocs(uDocs, 0)
+	TraverseUnstructuredDocs(uDocs, "Root", 0)
 }
 
 func GetUnstructuredDocs() map[string]interface{} {
@@ -36,17 +48,18 @@ func IToStrMap(i interface{}) map[string]interface{} {
 	return i.(map[string]interface{})
 }
 
-func TraverseUnstructuredDocs(docs map[string]interface{}, depth int) {
+func TraverseUnstructuredDocs(docs map[string]interface{}, parent string, depth int) {
+	docConfigLines := []interface{}{}
 	for key, value := range docs {
 		switch value := value.(type) {
 		case string:
-			fmt.Printf("%d | %s | %s\n", depth, key, value)
-		case map[string]interface{}:
-			if depth > 0 {
-				fmt.Println("I am within another interface")
+			if depth == 0 {
+				parent = "Root"
 			}
-			fmt.Printf("%d | %s\n", depth, key)
-			TraverseUnstructuredDocs(value, depth+1)
+			fmt.Printf("%d | %s | %s | %s\n", depth, parent, key, value)
+		case map[string]interface{}:
+			fmt.Printf("%d | %s | %s\n", depth, parent, key)
+			TraverseUnstructuredDocs(value, key, depth+1)
 		default:
 			panic("Invalid type")
 		}
