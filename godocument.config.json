@@ -7,6 +7,12 @@
             "More Information": {
                 "Configuration": "./docs/getting-started/more-information/configuration.md"
             }
+        },
+        "Learn More": {
+            "Advanced Usage": "./docs/learn-more/advanced-usage.md",
+            "API Reference": "./docs/learn-more/api-reference.md",
+            "Contributing": "./docs/learn-more/contributing.md",
+            "FAQ": "./docs/learn-more/faq.md"
         }
     }
 }
