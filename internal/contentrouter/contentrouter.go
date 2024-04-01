@@ -6,21 +6,19 @@ import (
 	"os"
 )
 
-type NodeWithoutDropdown struct {
+type DocNode struct {
+	Depth        int
 	Parent       string
 	Name         string
-	MarkdownPath string
-}
-
-type NodeWithDropdown struct {
-	Parent   string
-	Name     string
-	Children map[string]interface{}
+	MarkdownFile *string
 }
 
 func GenerateRoutes() {
 	uDocs := GetUnstructuredDocs()
-	TraverseUnstructuredDocs(uDocs, "Root", 0)
+	docs := GetStructuredDocs(uDocs, "Root", []*DocNode{}, 0)
+	for _, doc := range docs {
+		fmt.Println(doc)
+	}
 }
 
 func GetUnstructuredDocs() map[string]interface{} {
@@ -48,28 +46,32 @@ func IToStrMap(i interface{}) map[string]interface{} {
 	return i.(map[string]interface{})
 }
 
-func TraverseUnstructuredDocs(docs map[string]interface{}, parent string, depth int) {
-	docConfigLines := []interface{}{}
+func GetStructuredDocs(docs map[string]interface{}, parent string, docSlice []*DocNode, depth int) []*DocNode {
 	for key, value := range docs {
 		switch value := value.(type) {
 		case string:
 			if depth == 0 {
 				parent = "Root"
 			}
-			fmt.Printf("%d | %s | %s | %s\n", depth, parent, key, value)
+			docNode := &DocNode{
+				Depth:        depth,
+				Parent:       parent,
+				Name:         key,
+				MarkdownFile: &value,
+			}
+			docSlice = append(docSlice, docNode)
 		case map[string]interface{}:
-			fmt.Printf("%d | %s | %s\n", depth, parent, key)
-			TraverseUnstructuredDocs(value, key, depth+1)
+			docNode := &DocNode{
+				Depth:        depth,
+				Parent:       parent,
+				Name:         key,
+				MarkdownFile: nil,
+			}
+			docSlice = append(docSlice, docNode)
+			docSlice = GetStructuredDocs(value, key, docSlice, depth+1)
 		default:
 			panic("Invalid type")
 		}
 	}
+	return docSlice
 }
-
-// func indent(depth int) string {
-// 	indentation := ""
-// 	for i := 0; i < depth; i++ {
-// 		indentation += "  " // Using a tab for each level of depth
-// 	}
-// 	return indentation
-// }
