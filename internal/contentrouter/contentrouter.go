@@ -4,12 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 )
 
 const (
-	DocRoot        = "Root"
-	DocJSONKey     = "docs"
-	JSONConfigPath = "./godocument.config.json"
+	DocRoot            = "Root"
+	DocJSONKey         = "docs"
+	JSONConfigPath     = "./godocument.config.json"
+	IntroductionString = "Introduction"
 )
 
 // each line in the godocument.config.json under the "docs" section is a DocNode
@@ -27,36 +29,36 @@ type BaseDocData struct {
 	Name   string
 }
 
+// GetBaseData returns a string representation of the BaseDocData
 func (b *BaseDocData) GetBaseData() string {
-	return fmt.Sprintf("%d | %s | %s | ", b.Depth, b.Parent, b.Name)
+	return fmt.Sprintf("%d | %s | %s", b.Depth, b.Parent, b.Name)
 }
 
+// DocNodeString represents a leaf node in the structured data
 type DocNodeString struct {
 	BaseDocData  *BaseDocData
 	MarkdownFile string
+	RouterPath   string
+	Next         *DocNodeString
+	Prev         *DocNodeString
 }
 
+// Print prints the DocNodeString data
 func (b *DocNodeString) Print() {
 	baseData := b.BaseDocData.GetBaseData()
-	fmt.Println(baseData + b.MarkdownFile)
+	fmt.Printf("%s | %s | %s\n", baseData, b.MarkdownFile, b.RouterPath)
 }
 
+// DocNodeObject represents a non-leaf node in the structured data
 type DocNodeObject struct {
 	BaseDocData *BaseDocData
 	Children    DocNodes
 }
 
+// Print prints the DocNodeObject data
 func (b *DocNodeObject) Print() {
 	baseData := b.BaseDocData.GetBaseData()
 	fmt.Println(baseData)
-}
-
-func GenerateRoutes() {
-	uDocs := GetUnstructuredDocs()
-	docs := GetStructuredDocs(uDocs, DocRoot, DocNodes{}, 0)
-	for _, doc := range docs {
-		doc.Print()
-	}
 }
 
 // GetUnstructuredDocs reads the godocument.config.json file and returns the unstructured data
@@ -82,6 +84,12 @@ func GetStructuredDocs(docs map[string]interface{}, parent string, docNodes DocN
 			if depth == 0 {
 				parent = DocRoot
 			}
+			routerPath := ""
+			if key == IntroductionString && depth == 0 {
+				routerPath = "/"
+			} else {
+				routerPath = strings.TrimPrefix(strings.TrimSuffix(value, ".md"), "./docs")
+			}
 			docNode := &DocNodeString{
 				BaseDocData: &BaseDocData{
 					Depth:  depth,
@@ -89,6 +97,7 @@ func GetStructuredDocs(docs map[string]interface{}, parent string, docNodes DocN
 					Name:   key,
 				},
 				MarkdownFile: value,
+				RouterPath:   routerPath,
 			}
 			docNodes = append(docNodes, docNode)
 		case map[string]interface{}:
@@ -107,4 +116,14 @@ func GetStructuredDocs(docs map[string]interface{}, parent string, docNodes DocN
 		}
 	}
 	return docNodes
+}
+
+// GenerateRoutes generates code for application routes based on the ./godocument.config.json file "docs" section
+// this function populates ./internal/generated/generated.go
+func GenerateRoutes() {
+	uDocs := GetUnstructuredDocs()
+	docs := GetStructuredDocs(uDocs, DocRoot, DocNodes{}, 0)
+	for _, doc := range docs {
+		doc.Print()
+	}
 }
