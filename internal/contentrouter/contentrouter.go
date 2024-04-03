@@ -6,14 +6,18 @@ import (
 	"os"
 	"strings"
 
+	"godocument/internal/filewriter"
+	"godocument/internal/util"
+
 	"github.com/iancoleman/orderedmap"
 )
 
 const (
-	DocRoot            = "Root"
-	DocJSONKey         = "docs"
-	JSONConfigPath     = "./godocument.config.json"
-	IntroductionString = "Introduction"
+	DocRoot             = "Root"
+	DocJSONKey          = "docs"
+	JSONConfigPath      = "./godocument.config.json"
+	IntroductionString  = "Introduction"
+	GeneratedRoutesFile = "./internal/generated/generated.go"
 )
 
 // each line in the godocument.config.json under the "docs" section is a DocNode
@@ -21,10 +25,10 @@ type DocNode interface {
 	Print()
 }
 
-// a slice of DocNodes representing the structured data
-type DocNodes []DocNode
+// a slice of DocConfig representing the structured data
+type DocConfig []DocNode
 
-// all DocNodes should implement this type in their struct
+// all DocConfig should implement this type in their struct
 type BaseNodeData struct {
 	Depth  int
 	Parent string
@@ -38,34 +42,43 @@ func (b *BaseNodeData) GetBaseData() string {
 
 // MarkdownNode represents a leaf node in the structured data
 type MarkdownNode struct {
-	BaseNodeData *BaseNodeData
-	MarkdownFile string
-	RouterPath   string
-	Sequence     int
-	Next         *MarkdownNode
-	Prev         *MarkdownNode
+	BaseNodeData        *BaseNodeData
+	MarkdownFile        string
+	RouterPath          string
+	Sequence            int
+	Next                *MarkdownNode
+	Prev                *MarkdownNode
+	HandlerName         string
+	HandlerUniqueString string
 }
 
 // Print prints the MarkdownNode data
 func (b *MarkdownNode) Print() {
 	baseData := b.BaseNodeData.GetBaseData()
 	if b.Prev == nil {
-		fmt.Printf("%s | %s | %s | %d | %s | %d\n", baseData, b.MarkdownFile, b.RouterPath, b.Sequence, "nil", b.Next.Sequence)
+		fmt.Printf("%s | %s | %s | %d | %s | %d | %s\n", baseData, b.MarkdownFile, b.RouterPath, b.Sequence, "nil", b.Next.Sequence, b.HandlerName)
 		return
 
 	}
 	if b.Next == nil {
-		fmt.Printf("%s | %s | %s | %d | %d | %s\n", baseData, b.MarkdownFile, b.RouterPath, b.Sequence, b.Prev.Sequence, "nil")
+		fmt.Printf("%s | %s | %s | %d | %d | %s | %s\n", baseData, b.MarkdownFile, b.RouterPath, b.Sequence, b.Prev.Sequence, "nil", b.HandlerName)
 		return
 
 	}
-	fmt.Printf("%s | %s | %s | %d | %d | %d\n", baseData, b.MarkdownFile, b.RouterPath, b.Sequence, b.Prev.Sequence, b.Next.Sequence)
+	fmt.Printf("%s | %s | %s | %d | %d | %d | %s\n", baseData, b.MarkdownFile, b.RouterPath, b.Sequence, b.Prev.Sequence, b.Next.Sequence, b.HandlerName)
+}
+
+func (b *MarkdownNode) AssignHandlerName() {
+	// generate 8 random characters to prevent name collisions
+	b.HandlerUniqueString = util.RandomString(8)
+	nameWithoutSpaces := strings.ReplaceAll(b.BaseNodeData.Name, " ", "")
+	b.HandlerName = fmt.Sprintf("h%s%s", nameWithoutSpaces, b.HandlerUniqueString)
 }
 
 // ObjectNode represents a non-leaf node in the structured data
 type ObjectNode struct {
 	BaseNodeData *BaseNodeData
-	Children     DocNodes
+	Children     DocConfig
 }
 
 // Print prints the ObjectNode data
@@ -89,7 +102,7 @@ func getUnstructuredDocs() *orderedmap.OrderedMap {
 }
 
 // GetStructuredDocs recursively generates a structured representation of the unstructured doc config data
-func getLinearDocs(om interface{}, parent string, docNodes DocNodes, depth int) DocNodes {
+func getLinearDocs(om interface{}, parent string, docConfig DocConfig, depth int) DocConfig {
 	switch om := om.(type) {
 	case orderedmap.OrderedMap:
 		for _, key := range om.Keys() {
@@ -114,7 +127,7 @@ func getLinearDocs(om interface{}, parent string, docNodes DocNodes, depth int) 
 					MarkdownFile: value,
 					RouterPath:   routerPath,
 				}
-				docNodes = append(docNodes, docNode)
+				docConfig = append(docConfig, docNode)
 			case orderedmap.OrderedMap:
 				docNode := &ObjectNode{
 					BaseNodeData: &BaseNodeData{
@@ -124,51 +137,51 @@ func getLinearDocs(om interface{}, parent string, docNodes DocNodes, depth int) 
 					},
 					Children: nil,
 				}
-				docNodes = append(docNodes, docNode)
-				docNodes = getLinearDocs(value, key, docNodes, depth+1)
+				docConfig = append(docConfig, docNode)
+				docConfig = getLinearDocs(value, key, docConfig, depth+1)
 			}
 		}
 	case string:
-		return docNodes
+		return docConfig
 	case nil:
-		return docNodes
+		return docConfig
 	default:
 		panic("Invalid type")
 	}
-	return docNodes
+	return docConfig
 }
 
 // sequenceMarkdownNodes assigns a sequence number to each MarkdownNode
-func sequenceMarkdownNodes(docNodes DocNodes) {
+func sequenceMarkdownNodes(docConfig DocConfig) {
 	sequence := 0
-	for i := 0; i < len(docNodes); i++ {
-		switch docNodes[i].(type) {
+	for i := 0; i < len(docConfig); i++ {
+		switch docConfig[i].(type) {
 		case *ObjectNode:
 			continue
 		case *MarkdownNode:
-			docNodes[i].(*MarkdownNode).Sequence = sequence
+			docConfig[i].(*MarkdownNode).Sequence = sequence
 			sequence++
 		}
 	}
 }
 
 // links each markdown node to the next markdown node based on their sequence number
-func linkMarkdownNodes(docNodes DocNodes) {
-	for i := 0; i < len(docNodes); i++ {
-		switch docNodes[i].(type) {
+func linkMarkdownNodes(docConfig DocConfig) {
+	for i := 0; i < len(docConfig); i++ {
+		switch docConfig[i].(type) {
 		case *ObjectNode:
 			continue
 		case *MarkdownNode:
-			for j := 0; j < len(docNodes); j++ {
-				switch docNodes[j].(type) {
+			for j := 0; j < len(docConfig); j++ {
+				switch docConfig[j].(type) {
 				case *ObjectNode:
 					continue
 				case *MarkdownNode:
-					if docNodes[j].(*MarkdownNode).Sequence == docNodes[i].(*MarkdownNode).Sequence+1 {
-						docNodes[i].(*MarkdownNode).Next = docNodes[j].(*MarkdownNode)
+					if docConfig[j].(*MarkdownNode).Sequence == docConfig[i].(*MarkdownNode).Sequence+1 {
+						docConfig[i].(*MarkdownNode).Next = docConfig[j].(*MarkdownNode)
 					}
-					if docNodes[j].(*MarkdownNode).Sequence == docNodes[i].(*MarkdownNode).Sequence-1 {
-						docNodes[i].(*MarkdownNode).Prev = docNodes[j].(*MarkdownNode)
+					if docConfig[j].(*MarkdownNode).Sequence == docConfig[i].(*MarkdownNode).Sequence-1 {
+						docConfig[i].(*MarkdownNode).Prev = docConfig[j].(*MarkdownNode)
 					}
 				}
 			}
@@ -178,15 +191,15 @@ func linkMarkdownNodes(docNodes DocNodes) {
 }
 
 // assignChildNodes assigns markdownNodes to each ObjectNode
-func assignMarkdownNodes(docNodes DocNodes) {
-	for i := 0; i < len(docNodes); i++ {
-		switch docNodes[i].(type) {
+func assignMarkdownNodes(docConfig DocConfig) {
+	for i := 0; i < len(docConfig); i++ {
+		switch docConfig[i].(type) {
 		case *ObjectNode:
-			for j := 0; j < len(docNodes); j++ {
-				switch docNodes[j].(type) {
+			for j := 0; j < len(docConfig); j++ {
+				switch docConfig[j].(type) {
 				case *MarkdownNode:
-					if docNodes[j].(*MarkdownNode).BaseNodeData.Parent == docNodes[i].(*ObjectNode).BaseNodeData.Name {
-						docNodes[i].(*ObjectNode).Children = append(docNodes[i].(*ObjectNode).Children, docNodes[j])
+					if docConfig[j].(*MarkdownNode).BaseNodeData.Parent == docConfig[i].(*ObjectNode).BaseNodeData.Name {
+						docConfig[i].(*ObjectNode).Children = append(docConfig[i].(*ObjectNode).Children, docConfig[j])
 					}
 				}
 			}
@@ -195,50 +208,80 @@ func assignMarkdownNodes(docNodes DocNodes) {
 }
 
 // purgeMarkdownNodes removes all MarkdownNodes (except Root-level markdown nodes) from the structured data and returns only ObjectNodes
-func purgeMarkdownNodes(docNodes DocNodes) DocNodes {
-	objectNodes := DocNodes{}
-	for i := 0; i < len(docNodes); i++ {
-		switch docNodes[i].(type) {
+func purgeMarkdownNodes(docConfig DocConfig) DocConfig {
+	objectNodes := DocConfig{}
+	for i := 0; i < len(docConfig); i++ {
+		switch docConfig[i].(type) {
 		case *ObjectNode:
-			objectNodes = append(objectNodes, docNodes[i])
+			objectNodes = append(objectNodes, docConfig[i])
 		case *MarkdownNode:
-			if docNodes[i].(*MarkdownNode).BaseNodeData.Parent == DocRoot {
-				objectNodes = append(objectNodes, docNodes[i])
+			if docConfig[i].(*MarkdownNode).BaseNodeData.Parent == DocRoot {
+				objectNodes = append(objectNodes, docConfig[i])
 			}
 		}
 	}
 	return objectNodes
 }
 
-// printDocNodes prints the structured data
-func printDocNodes(docNodes DocNodes) {
-	for i := 0; i < len(docNodes); i++ {
-		switch docNodes[i].(type) {
+// printDocConfig prints the structured data
+func printDocConfig(docConfig DocConfig) {
+	for i := 0; i < len(docConfig); i++ {
+		switch docConfig[i].(type) {
 		case *ObjectNode:
-			docNodes[i].(*ObjectNode).Print()
-			printDocNodes(docNodes[i].(*ObjectNode).Children)
+			docConfig[i].(*ObjectNode).Print()
+			printDocConfig(docConfig[i].(*ObjectNode).Children)
 		case *MarkdownNode:
-			docNodes[i].(*MarkdownNode).Print()
+			docConfig[i].(*MarkdownNode).Print()
 		}
 	}
+}
 
+// workOnMarkdownNodes applies the action function to each MarkdownNode in the structured data
+func workOnMarkdownNodes(docConfig DocConfig, action func(*MarkdownNode)) {
+	for i := 0; i < len(docConfig); i++ {
+		switch docConfig[i].(type) {
+		case *ObjectNode:
+			workOnMarkdownNodes(docConfig[i].(*ObjectNode).Children, action)
+		case *MarkdownNode:
+			action(docConfig[i].(*MarkdownNode))
+		}
+	}
+}
+
+// GetDocConfig returns a structured representation of the "docs" section of the godocument.config.json file
+func GetDocConfig() DocConfig {
+	uDocs := getUnstructuredDocs()
+	docConfig := DocConfig{}
+	for i := 0; i < len(uDocs.Keys()); i++ {
+		key := uDocs.Keys()[i]
+		value, _ := uDocs.Get(key)
+		docConfig = getLinearDocs(value, DocRoot, docConfig, 0)
+	}
+	sequenceMarkdownNodes(docConfig)
+	linkMarkdownNodes(docConfig)
+	assignMarkdownNodes(docConfig)
+	sortedNodes := purgeMarkdownNodes(docConfig)
+	workOnMarkdownNodes(sortedNodes, func(m *MarkdownNode) {
+		m.AssignHandlerName()
+	})
+	return sortedNodes
 }
 
 // GenerateRoutes generates code for application routes based on the ./godocument.config.json file "docs" section
 // this function populates ./internal/generated/generated.go
 func GenerateRoutes() {
-	uDocs := getUnstructuredDocs()
-	docNodes := DocNodes{}
-	for i := 0; i < len(uDocs.Keys()); i++ {
-		key := uDocs.Keys()[i]
-		value, _ := uDocs.Get(key)
-		docNodes = getLinearDocs(value, DocRoot, docNodes, 0)
-	}
-	sequenceMarkdownNodes(docNodes)
-	linkMarkdownNodes(docNodes)
-	assignMarkdownNodes(docNodes)
-	sortedNodes := purgeMarkdownNodes(docNodes)
-	printDocNodes(sortedNodes)
-	// docs := GetStructuredDocs(uDocs, DocRoot, DocNodes{}, 0)
-
+	docConfig := GetDocConfig()
+	file := filewriter.ResetFile(GeneratedRoutesFile)
+	defer file.Close()
+	filewriter.SetPackageName(file, "generated")
+	filewriter.SetImports(file, []string{
+		"fmt",
+	})
+	filewriter.WriteGoFunc(file, filewriter.GoFunc{
+		Name:   "Print",
+		Params: "name string",
+		Body:   `fmt.Println(name)`,
+	})
+	filewriter.RunGoFmt(file)
+	printDocConfig(docConfig)
 }
