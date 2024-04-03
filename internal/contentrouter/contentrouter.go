@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/iancoleman/orderedmap"
 )
 
 const (
@@ -62,58 +64,64 @@ func (b *DocNodeObject) Print() {
 }
 
 // GetUnstructuredDocs reads the godocument.config.json file and returns the unstructured data
-func GetUnstructuredDocs() map[string]interface{} {
+func getUnstructuredDocs() *orderedmap.OrderedMap {
 	file, err := os.ReadFile(JSONConfigPath) // Ensure the file path and extension are correct
 	if err != nil {
 		panic(err)
 	}
-	var result map[string]interface{}
+	result := orderedmap.New()
 	err = json.Unmarshal(file, &result)
 	if err != nil {
 		panic(err)
 	}
-	docs := result[DocJSONKey]
-	return docs.(map[string]interface{})
+	return result
 }
 
-// GetStructuredDocs takes the unstructured data and returns a structured data
-func GetStructuredDocs(docs map[string]interface{}, parent string, docNodes DocNodes, depth int) DocNodes {
-	for key, value := range docs {
-		switch value := value.(type) {
-		case string:
-			if depth == 0 {
-				parent = DocRoot
+func getLinearDocs(om interface{}, parent string, docNodes DocNodes, depth int) DocNodes {
+	switch om := om.(type) {
+	case orderedmap.OrderedMap:
+		for _, key := range om.Keys() {
+			value, _ := om.Get(key)
+			switch value := value.(type) {
+			case string:
+				if depth == 0 {
+					parent = DocRoot
+				}
+				routerPath := ""
+				if key == IntroductionString && depth == 0 {
+					routerPath = "/"
+				} else {
+					routerPath = strings.TrimPrefix(strings.TrimSuffix(value, ".md"), "./docs")
+				}
+				docNode := &DocNodeString{
+					BaseDocData: &BaseDocData{
+						Depth:  depth,
+						Parent: parent,
+						Name:   key,
+					},
+					MarkdownFile: value,
+					RouterPath:   routerPath,
+				}
+				docNodes = append(docNodes, docNode)
+			case orderedmap.OrderedMap:
+				docNode := &DocNodeObject{
+					BaseDocData: &BaseDocData{
+						Depth:  depth,
+						Parent: parent,
+						Name:   key,
+					},
+					Children: nil,
+				}
+				docNodes = append(docNodes, docNode)
+				docNodes = getLinearDocs(value, key, docNodes, depth+1)
 			}
-			routerPath := ""
-			if key == IntroductionString && depth == 0 {
-				routerPath = "/"
-			} else {
-				routerPath = strings.TrimPrefix(strings.TrimSuffix(value, ".md"), "./docs")
-			}
-			docNode := &DocNodeString{
-				BaseDocData: &BaseDocData{
-					Depth:  depth,
-					Parent: parent,
-					Name:   key,
-				},
-				MarkdownFile: value,
-				RouterPath:   routerPath,
-			}
-			docNodes = append(docNodes, docNode)
-		case map[string]interface{}:
-			docNode := &DocNodeObject{
-				BaseDocData: &BaseDocData{
-					Depth:  depth,
-					Parent: parent,
-					Name:   key,
-				},
-				Children: nil,
-			}
-			docNodes = append(docNodes, docNode)
-			docNodes = GetStructuredDocs(value, key, docNodes, depth+1)
-		default:
-			panic("Invalid type")
 		}
+	case string:
+		return docNodes
+	case nil:
+		return docNodes
+	default:
+		panic("Invalid type")
 	}
 	return docNodes
 }
@@ -121,9 +129,17 @@ func GetStructuredDocs(docs map[string]interface{}, parent string, docNodes DocN
 // GenerateRoutes generates code for application routes based on the ./godocument.config.json file "docs" section
 // this function populates ./internal/generated/generated.go
 func GenerateRoutes() {
-	uDocs := GetUnstructuredDocs()
-	docs := GetStructuredDocs(uDocs, DocRoot, DocNodes{}, 0)
-	for _, doc := range docs {
-		doc.Print()
+	uDocs := getUnstructuredDocs()
+
+	docNodes := DocNodes{}
+	for i := 0; i < len(uDocs.Keys()); i++ {
+		key := uDocs.Keys()[i]
+		value, _ := uDocs.Get(key)
+		docNodes = getLinearDocs(value, DocRoot, docNodes, 0)
 	}
+	for _, docNode := range docNodes {
+		docNode.Print()
+	}
+	// docs := GetStructuredDocs(uDocs, DocRoot, DocNodes{}, 0)
+
 }
