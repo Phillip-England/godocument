@@ -276,12 +276,16 @@ func GenerateRoutes() {
 	filewriter.SetPackageName(file, "generated")
 	filewriter.SetImports(file, []string{
 		"fmt",
+		"net/http",
 	})
-	filewriter.WriteGoFunc(file, filewriter.GoFunc{
-		Name:   "Print",
-		Params: "name string",
-		Body:   `fmt.Println(name)`,
+	workOnMarkdownNodes(docConfig, func(m *MarkdownNode) {
+		filewriter.WriteGoFunc(file, filewriter.GoFunc{
+			Name:   m.HandlerName,
+			Params: "w http.ResponseWriter, r *http.Request",
+			Body:   fmt.Sprintf(`fmt.Printf(w.Header().Get("name"), "Hello, %s!", r.URL.Path)`, m.BaseNodeData.Name),
+		})
 	})
+
 	filewriter.RunGoFmt(file)
 	printDocConfig(docConfig)
 }
