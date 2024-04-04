@@ -1,15 +1,18 @@
 package contentrouter
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 	"strings"
 
-	"godocument/internal/filewriter"
+	"godocument/internal/middleware"
 	"godocument/internal/util"
 
 	"github.com/iancoleman/orderedmap"
+	"github.com/yuin/goldmark"
 )
 
 const (
@@ -30,9 +33,10 @@ type DocConfig []DocNode
 
 // all DocConfig should implement this type in their struct
 type BaseNodeData struct {
-	Depth  int
-	Parent string
-	Name   string
+	Depth   int
+	Parent  string
+	Name    string
+	NavHTML string
 }
 
 // GetBaseData returns a string representation of the BaseNodeData
@@ -50,6 +54,7 @@ type MarkdownNode struct {
 	Prev                *MarkdownNode
 	HandlerName         string
 	HandlerUniqueString string
+	HandlerFunc         middleware.CustomHandler
 }
 
 // Print prints the MarkdownNode data
@@ -72,7 +77,7 @@ func (b *MarkdownNode) AssignHandlerName() {
 	// generate 8 random characters to prevent name collisions
 	b.HandlerUniqueString = util.RandomString(8)
 	nameWithoutSpaces := strings.ReplaceAll(b.BaseNodeData.Name, " ", "")
-	b.HandlerName = fmt.Sprintf("h%s%s", nameWithoutSpaces, b.HandlerUniqueString)
+	b.HandlerName = fmt.Sprintf("%s%s", nameWithoutSpaces, b.HandlerUniqueString)
 }
 
 // ObjectNode represents a non-leaf node in the structured data
@@ -248,8 +253,74 @@ func workOnMarkdownNodes(docConfig DocConfig, action func(*MarkdownNode)) {
 	}
 }
 
-// GetDocConfig returns a structured representation of the "docs" section of the godocument.config.json file
-func GetDocConfig() DocConfig {
+// hookDocRoutes links our routes to the http.ServeMux
+func hookDocRoutes(mux *http.ServeMux, docConfig DocConfig) {
+	workOnMarkdownNodes(docConfig, func(m *MarkdownNode) {
+		if m.BaseNodeData.Parent == DocRoot && m.BaseNodeData.Name == IntroductionString {
+			mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+				if r.URL.Path != "/" {
+					http.NotFound(w, r)
+					return
+				}
+				middleware.Chain(w, r, docConfig[0].(*MarkdownNode).HandlerFunc)
+			})
+			return
+		}
+		mux.HandleFunc("GET "+m.RouterPath, func(w http.ResponseWriter, r *http.Request) {
+			middleware.Chain(w, r, m.HandlerFunc)
+		})
+	})
+}
+
+func assignHandlers(docConfig DocConfig) {
+	workOnMarkdownNodes(docConfig, func(m *MarkdownNode) {
+		m.HandlerFunc = func(cc *middleware.CustomContext, w http.ResponseWriter, r *http.Request) {
+			mdContent, err := os.ReadFile(m.MarkdownFile)
+			if err != nil {
+				// Handle error (e.g., file not found)
+				http.Error(w, "File not found", http.StatusNotFound)
+				return
+			}
+			var buf bytes.Buffer
+			if err := goldmark.Convert(mdContent, &buf); err != nil {
+				http.Error(w, "Error converting markdown", http.StatusInternalServerError)
+				return
+			}
+			w.Header().Set("Content-Type", "text/html")
+			w.Write(buf.Bytes())
+		}
+	})
+}
+
+func workOnNavbar(node DocNode, html string) string {
+	switch n := node.(type) {
+	case *ObjectNode:
+		html += "<ul class='dropdown'>"
+		html += "<button class='dropbtn'>" + n.BaseNodeData.Name + "</button>"
+		html += "<div class='dropdown-content'>"
+		for i := 0; i < len(n.Children); i++ {
+			html = workOnNavbar(n.Children[i], html)
+		}
+		html += "</ul>"
+		html += "</div>"
+	case *MarkdownNode:
+		html += "<li><a href='" + n.RouterPath + "'>" + n.BaseNodeData.Name + "</a></li>"
+	}
+	return html
+}
+
+func generateDynamicNavbar(docConfig DocConfig) string {
+	html := "<nav><ul>"
+	for i := 0; i < len(docConfig); i++ {
+		html = workOnNavbar(docConfig[i], html)
+	}
+	html += "</ul></nav>"
+	return html
+}
+
+// GenerateRoutes generates code for application routes based on the ./godocument.config.json file "docs" section
+// this function populates ./internal/generated/generated.go
+func GenerateRoutes(mux *http.ServeMux) {
 	uDocs := getUnstructuredDocs()
 	docConfig := DocConfig{}
 	for i := 0; i < len(uDocs.Keys()); i++ {
@@ -260,32 +331,22 @@ func GetDocConfig() DocConfig {
 	sequenceMarkdownNodes(docConfig)
 	linkMarkdownNodes(docConfig)
 	assignMarkdownNodes(docConfig)
-	sortedNodes := purgeMarkdownNodes(docConfig)
-	workOnMarkdownNodes(sortedNodes, func(m *MarkdownNode) {
+	docConfig = purgeMarkdownNodes(docConfig)
+	workOnMarkdownNodes(docConfig, func(m *MarkdownNode) {
 		m.AssignHandlerName()
 	})
-	return sortedNodes
-}
-
-// GenerateRoutes generates code for application routes based on the ./godocument.config.json file "docs" section
-// this function populates ./internal/generated/generated.go
-func GenerateRoutes() {
-	docConfig := GetDocConfig()
-	file := filewriter.ResetFile(GeneratedRoutesFile)
-	defer file.Close()
-	filewriter.SetPackageName(file, "generated")
-	filewriter.SetImports(file, []string{
-		"fmt",
-		"net/http",
-	})
-	workOnMarkdownNodes(docConfig, func(m *MarkdownNode) {
-		filewriter.WriteGoFunc(file, filewriter.GoFunc{
-			Name:   m.HandlerName,
-			Params: "w http.ResponseWriter, r *http.Request",
-			Body:   fmt.Sprintf(`fmt.Printf(w.Header().Get("name"), "Hello, %s!", r.URL.Path)`, m.BaseNodeData.Name),
-		})
-	})
-
-	filewriter.RunGoFmt(file)
-	printDocConfig(docConfig)
+	assignHandlers(docConfig)
+	hookDocRoutes(mux, docConfig)
+	navbarHTML := generateDynamicNavbar(docConfig)
+	// write html to ./test.html
+	f, err := os.Create("./test.html")
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+	_, err = f.WriteString(navbarHTML)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(navbarHTML)
 }

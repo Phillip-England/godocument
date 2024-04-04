@@ -10,13 +10,25 @@ type GoFunc struct {
 	Name   string
 	Params string
 	Body   string
+	Return string
+}
+
+// GoType represents a Go type in our generated file
+type GoType struct {
+	Name string
+	Body string
 }
 
 // WriteFunc writes a Go function to a file
 func WriteGoFunc(file *os.File, f GoFunc) {
-	file.WriteString("func " + f.Name + "(" + f.Params + ") {\n")
+	file.WriteString("func " + f.Name + "(" + f.Params + ")" + f.Return + "{\n")
 	file.WriteString(f.Body)
 	file.WriteString("\n}\n\n")
+}
+
+// WriteType writes a Go type to a file
+func WriteGoType(file *os.File, t GoType) {
+	file.WriteString("type " + t.Name + " " + t.Body + "\n\n")
 }
 
 // deletes and recreates a new file
