@@ -6,6 +6,7 @@ import (
 	"godocument/internal/handler"
 	"net/http"
 	"os"
+	"path/filepath"
 	"text/template"
 
 	"github.com/joho/godotenv"
@@ -17,8 +18,19 @@ func main() {
 
 	_ = godotenv.Load()
 
-	var err error
-	templates, err = template.ParseGlob("./html/templates/*.html")
+	templates = template.New("")
+	err := filepath.Walk("./static/html", func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() && filepath.Ext(path) == ".html" {
+			_, err := templates.ParseFiles(path)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 	if err != nil {
 		panic(err)
 	}

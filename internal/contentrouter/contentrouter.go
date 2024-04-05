@@ -10,6 +10,7 @@ import (
 	"text/template"
 
 	"godocument/internal/middleware"
+	"godocument/internal/tdata"
 	"godocument/internal/util"
 
 	"github.com/iancoleman/orderedmap"
@@ -17,11 +18,12 @@ import (
 )
 
 const (
-	DocRoot             = "Root"
-	DocJSONKey          = "docs"
-	JSONConfigPath      = "./godocument.config.json"
-	IntroductionString  = "Introduction"
-	GeneratedRoutesFile = "./internal/generated/generated.go"
+	DocRoot              = "Root"
+	DocJSONKey           = "docs"
+	JSONConfigPath       = "./godocument.config.json"
+	IntroductionString   = "Introduction"
+	GeneratedNavPath     = "./static/html/components/generated-nav.html"
+	StaticMarkdownPrefix = "./static/docs"
 )
 
 // each line in the godocument.config.json under the "docs" section is a DocNode
@@ -122,7 +124,8 @@ func getLinearDocs(om interface{}, parent string, docConfig DocConfig, depth int
 				if key == IntroductionString && depth == 0 {
 					routerPath = "/"
 				} else {
-					routerPath = strings.TrimPrefix(strings.TrimSuffix(value, ".md"), "./docs")
+					routerPath = strings.TrimPrefix(strings.TrimSuffix(value, ".md"), StaticMarkdownPrefix)
+					fmt.Println(routerPath)
 				}
 				docNode := &MarkdownNode{
 					BaseNodeData: &BaseNodeData{
@@ -302,7 +305,6 @@ func workOnObjectNodes(docConfig DocConfig, action func(*ObjectNode)) {
 // hookDocRoutes links our routes to the http.ServeMux
 func hookDocRoutes(mux *http.ServeMux, templates *template.Template, docConfig DocConfig) {
 	workOnMarkdownNodes(docConfig, func(m *MarkdownNode) {
-		fmt.Println(m.RouterPath)
 		if m.BaseNodeData.Parent == DocRoot && m.BaseNodeData.Name == IntroductionString {
 			mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 				if r.URL.Path != "/" {
@@ -328,13 +330,36 @@ func assignHandlers(docConfig DocConfig) {
 				http.Error(w, "File not found", http.StatusNotFound)
 				return
 			}
-			var buf bytes.Buffer
-			if err := goldmark.Convert(mdContent, &buf); err != nil {
+			var mdBuf bytes.Buffer
+			if err := goldmark.Convert(mdContent, &mdBuf); err != nil {
 				http.Error(w, "Error converting markdown", http.StatusInternalServerError)
 				return
 			}
+
+			// Create a new instance of tdata.Base with the title and markdown content as HTML
+			baseData := &tdata.Base{
+				Title:   "Your Title Here",
+				Content: mdBuf.String(),
+			}
+
+			// Assuming you have already parsed your templates (including the base template) elsewhere
+			tmpl := cc.Templates.Lookup("base.html")
+			fmt.Println(tmpl)
+			if tmpl == nil {
+				http.Error(w, "Base template not found", http.StatusInternalServerError)
+				return
+			}
+
+			// Execute the base template with the baseData instance
+			var htmlBuf bytes.Buffer
+			if err := tmpl.Execute(&htmlBuf, baseData); err != nil {
+				fmt.Println(err)
+				http.Error(w, "Error executing template", http.StatusInternalServerError)
+				return
+			}
+
 			w.Header().Set("Content-Type", "text/html")
-			w.Write(buf.Bytes())
+			w.Write(htmlBuf.Bytes())
 		}
 	})
 }
@@ -368,7 +393,7 @@ func generateDynamicNavbar(docConfig DocConfig) string {
 
 // writeNavbarHTML writes the generated navbar html to ./template/generated-nav.html
 func writeNavbarHTML(html string) {
-	f, err := os.Create("./html/components/generated-nav.html")
+	f, err := os.Create(GeneratedNavPath)
 	if err != nil {
 		panic(err)
 	}
