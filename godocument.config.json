@@ -1,18 +1,18 @@
 {
     "docs": {
-        "Introduction": "./static/docs/introduction.md",
+        "Introduction": "/introduction.md",
         "Getting Started": {
-            "Installation": "./static/docs/getting-started/installation.md",
-            "Usage": "./static/docs/getting-started/usage.md",
+            "Installation": "/getting-started/installation.md",
+            "Usage": "/getting-started/usage.md",
             "More Information": {
-                "Configuration": "./static/docs/getting-started/more-information/configuration.md"
+                "Configuration": "/getting-started/more-information/configuration.md"
             }
         },
         "Learn More": {
-            "Advanced Usage": "./static/docs/learn-more/advanced-usage.md",
-            "API Reference": "./static/docs/learn-more/api-reference.md",
-            "Contributing": "./static/docs/learn-more/contributing.md",
-            "FAQ": "./static/docs/learn-more/faq.md"
+            "Advanced Usage": "/learn-more/advanced-usage.md",
+            "API Reference": "/learn-more/api-reference.md",
+            "Contributing": "/learn-more/contributing.md",
+            "FAQ": "/learn-more/faq.md"
         }
     }
 }

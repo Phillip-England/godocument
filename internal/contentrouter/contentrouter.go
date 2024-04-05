@@ -24,7 +24,48 @@ const (
 	IntroductionString   = "Introduction"
 	GeneratedNavPath     = "./static/html/components/generated-nav.html"
 	StaticMarkdownPrefix = "./static/docs"
+	StaticMarkdownSuffix = "./static/docs"
 )
+
+// GenerateRoutes generates code for application routes based on the ./godocument.config.json file "docs" section
+// this function populates ./internal/generated/generated.go
+func GenerateRoutes(mux *http.ServeMux, templates *template.Template) {
+
+	// here is how we take the json found in ./godocument.config.json and generate the data in a structured format
+	// each "line" in the json file is a DocNode (an interface that represents all lines in the "docs" section of the json file)
+	// first, we get each line using orderedmap.OrderedMap in getUnstructuredDocs()
+	// the order of the lines is important because it will dictate the arrangement of html components
+	// then we generate a slice of each line in the json file using getLinearDocs()
+	// we sequence each markdown node so it is easy for us to link them together
+	// then, each markdown node is linked to eachother based on their sequence number
+	// nodes not found at the root level have a parent node assigned to them
+	// in assignMarkdownNodes, we assign each markdown node to their respective parent object node
+	// in assignSubObjectNodes, we assign each object node to their respective parent object node
+	// after doing this, we purge all markdown nodes that are not at the root level (because they now exist in objectnode.Children)
+	// we also purge all object nodes that are not at the root level (because they will be assigned to another object node)
+	// we then assign a handler name to each markdown node
+	// we then assign a handler function to each markdown node
+	// then we actually mount each route to the http.ServeMux
+
+	uDocs := getUnstructuredDocs()
+	docConfig := DocConfig{}
+	for i := 0; i < len(uDocs.Keys()); i++ {
+		key := uDocs.Keys()[i]
+		value, _ := uDocs.Get(key)
+		docConfig = getLinearDocs(value, DocRoot, docConfig, 0)
+	}
+	sequenceMarkdownNodes(docConfig)
+	linkMarkdownNodes(docConfig)
+	assignMarkdownNodes(docConfig)
+	assignSubObjectNodes(docConfig)
+	docConfig = purgeMarkdownNodes(docConfig)
+	docConfig = purgeNonRootObjectNodes(docConfig)
+	ensureMarkdownsFileExists(docConfig)
+	assignHandlers(docConfig)
+	hookDocRoutes(mux, templates, docConfig)
+	navbarHTML := generateDynamicNavbar(docConfig)
+	writeNavbarHTML(navbarHTML)
+}
 
 // each line in the godocument.config.json under the "docs" section is a DocNode
 type DocNode interface {
@@ -124,8 +165,7 @@ func getLinearDocs(om interface{}, parent string, docConfig DocConfig, depth int
 				if key == IntroductionString && depth == 0 {
 					routerPath = "/"
 				} else {
-					routerPath = strings.TrimPrefix(strings.TrimSuffix(value, ".md"), StaticMarkdownPrefix)
-					fmt.Println(routerPath)
+					routerPath = strings.TrimSuffix(value, ".md")
 				}
 				docNode := &MarkdownNode{
 					BaseNodeData: &BaseNodeData{
@@ -133,7 +173,7 @@ func getLinearDocs(om interface{}, parent string, docConfig DocConfig, depth int
 						Parent: parent,
 						Name:   key,
 					},
-					MarkdownFile: value,
+					MarkdownFile: StaticMarkdownSuffix + value,
 					RouterPath:   routerPath,
 				}
 				docConfig = append(docConfig, docNode)
@@ -267,19 +307,6 @@ func purgeNonRootObjectNodes(docConfig DocConfig) DocConfig {
 
 }
 
-// printDocConfig prints the structured data
-func printDocConfig(docConfig DocConfig) {
-	for i := 0; i < len(docConfig); i++ {
-		switch docConfig[i].(type) {
-		case *ObjectNode:
-			docConfig[i].(*ObjectNode).Print()
-			printDocConfig(docConfig[i].(*ObjectNode).Children)
-		case *MarkdownNode:
-			docConfig[i].(*MarkdownNode).Print()
-		}
-	}
-}
-
 // workOnMarkdownNodes applies the action function to each MarkdownNode in the structured data
 func workOnMarkdownNodes(docConfig DocConfig, action func(*MarkdownNode)) {
 	for i := 0; i < len(docConfig); i++ {
@@ -290,16 +317,6 @@ func workOnMarkdownNodes(docConfig DocConfig, action func(*MarkdownNode)) {
 			action(docConfig[i].(*MarkdownNode))
 		}
 	}
-}
-
-func workOnObjectNodes(docConfig DocConfig, action func(*ObjectNode)) {
-	for i := 0; i < len(docConfig); i++ {
-		switch docConfig[i].(type) {
-		case *ObjectNode:
-			action(docConfig[i].(*ObjectNode))
-		}
-	}
-
 }
 
 // hookDocRoutes links our routes to the http.ServeMux
@@ -344,7 +361,6 @@ func assignHandlers(docConfig DocConfig) {
 
 			// Assuming you have already parsed your templates (including the base template) elsewhere
 			tmpl := cc.Templates.Lookup("base.html")
-			fmt.Println(tmpl)
 			if tmpl == nil {
 				http.Error(w, "Base template not found", http.StatusInternalServerError)
 				return
@@ -353,7 +369,6 @@ func assignHandlers(docConfig DocConfig) {
 			// Execute the base template with the baseData instance
 			var htmlBuf bytes.Buffer
 			if err := tmpl.Execute(&htmlBuf, baseData); err != nil {
-				fmt.Println(err)
 				http.Error(w, "Error executing template", http.StatusInternalServerError)
 				return
 			}
@@ -408,44 +423,10 @@ func writeNavbarHTML(html string) {
 	}
 }
 
-// GenerateRoutes generates code for application routes based on the ./godocument.config.json file "docs" section
-// this function populates ./internal/generated/generated.go
-func GenerateRoutes(mux *http.ServeMux, templates *template.Template) {
-
-	// here is how we take the json found in ./godocument.config.json and generate the data in a structured format
-	// each "line" in the json file is a DocNode (an interface that represents all lines in the "docs" section of the json file)
-	// first, we get each line using orderedmap.OrderedMap in getUnstructuredDocs()
-	// the order of the lines is important because it will dictate the arrangement of html components
-	// then we generate a slice of each line in the json file using getLinearDocs()
-	// we sequence each markdown node so it is easy for us to link them together
-	// then, each markdown node is linked to eachother based on their sequence number
-	// nodes not found at the root level have a parent node assigned to them
-	// in assignMarkdownNodes, we assign each markdown node to their respective parent object node
-	// in assignSubObjectNodes, we assign each object node to their respective parent object node
-	// after doing this, we purge all markdown nodes that are not at the root level (because they now exist in objectnode.Children)
-	// we also purge all object nodes that are not at the root level (because they will be assigned to another object node)
-	// we then assign a handler name to each markdown node
-	// we then assign a handler function to each markdown node
-	// then we actually mount each route to the http.ServeMux
-
-	uDocs := getUnstructuredDocs()
-	docConfig := DocConfig{}
-	for i := 0; i < len(uDocs.Keys()); i++ {
-		key := uDocs.Keys()[i]
-		value, _ := uDocs.Get(key)
-		docConfig = getLinearDocs(value, DocRoot, docConfig, 0)
-	}
-	sequenceMarkdownNodes(docConfig)
-	linkMarkdownNodes(docConfig)
-	assignMarkdownNodes(docConfig)
-	assignSubObjectNodes(docConfig)
-	docConfig = purgeMarkdownNodes(docConfig)
-	docConfig = purgeNonRootObjectNodes(docConfig)
+func ensureMarkdownsFileExists(docConfig DocConfig) {
 	workOnMarkdownNodes(docConfig, func(m *MarkdownNode) {
-		m.AssignHandlerName()
+		if _, err := os.Stat(m.MarkdownFile); os.IsNotExist(err) {
+			panic(fmt.Sprintf("Markdown file %s does not exist", m.MarkdownFile))
+		}
 	})
-	assignHandlers(docConfig)
-	hookDocRoutes(mux, templates, docConfig)
-	navbarHTML := generateDynamicNavbar(docConfig)
-	writeNavbarHTML(navbarHTML)
 }
