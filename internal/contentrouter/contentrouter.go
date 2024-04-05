@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"text/template"
 
 	"godocument/internal/middleware"
 	"godocument/internal/util"
@@ -299,20 +300,21 @@ func workOnObjectNodes(docConfig DocConfig, action func(*ObjectNode)) {
 }
 
 // hookDocRoutes links our routes to the http.ServeMux
-func hookDocRoutes(mux *http.ServeMux, docConfig DocConfig) {
+func hookDocRoutes(mux *http.ServeMux, templates *template.Template, docConfig DocConfig) {
 	workOnMarkdownNodes(docConfig, func(m *MarkdownNode) {
+		fmt.Println(m.RouterPath)
 		if m.BaseNodeData.Parent == DocRoot && m.BaseNodeData.Name == IntroductionString {
 			mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 				if r.URL.Path != "/" {
 					http.NotFound(w, r)
 					return
 				}
-				middleware.Chain(w, r, docConfig[0].(*MarkdownNode).HandlerFunc)
+				middleware.Chain(w, r, templates, m.HandlerFunc)
 			})
 			return
 		}
 		mux.HandleFunc("GET "+m.RouterPath, func(w http.ResponseWriter, r *http.Request) {
-			middleware.Chain(w, r, m.HandlerFunc)
+			middleware.Chain(w, r, templates, m.HandlerFunc)
 		})
 	})
 }
@@ -366,12 +368,15 @@ func generateDynamicNavbar(docConfig DocConfig) string {
 
 // writeNavbarHTML writes the generated navbar html to ./template/generated-nav.html
 func writeNavbarHTML(html string) {
-	f, err := os.Create("./template/generated-nav.html")
+	f, err := os.Create("./html/components/generated-nav.html")
 	if err != nil {
 		panic(err)
 	}
 	defer f.Close()
-	_, err = f.WriteString("<--! This file is auto-generated. Do not modify. -->\n")
+	_, err = f.WriteString("<!-- This file is auto-generated. Do not modify. -->\n")
+	if err != nil {
+		panic(err)
+	}
 	_, err = f.WriteString(html)
 	if err != nil {
 		panic(err)
@@ -380,7 +385,7 @@ func writeNavbarHTML(html string) {
 
 // GenerateRoutes generates code for application routes based on the ./godocument.config.json file "docs" section
 // this function populates ./internal/generated/generated.go
-func GenerateRoutes(mux *http.ServeMux) {
+func GenerateRoutes(mux *http.ServeMux, templates *template.Template) {
 
 	// here is how we take the json found in ./godocument.config.json and generate the data in a structured format
 	// each "line" in the json file is a DocNode (an interface that represents all lines in the "docs" section of the json file)
@@ -415,7 +420,7 @@ func GenerateRoutes(mux *http.ServeMux) {
 		m.AssignHandlerName()
 	})
 	assignHandlers(docConfig)
-	hookDocRoutes(mux, docConfig)
+	hookDocRoutes(mux, templates, docConfig)
 	navbarHTML := generateDynamicNavbar(docConfig)
 	writeNavbarHTML(navbarHTML)
 }

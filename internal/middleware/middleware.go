@@ -4,21 +4,24 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"text/template"
 	"time"
 )
 
 type CustomContext struct {
 	context.Context
 	StartTime time.Time
+	Templates *template.Template
 }
 
 type CustomHandler func(cc *CustomContext, w http.ResponseWriter, r *http.Request)
 type CustomMiddleware func(cc *CustomContext, w http.ResponseWriter, r *http.Request) error
 
-func Chain(w http.ResponseWriter, r *http.Request, handler CustomHandler, middleware ...CustomMiddleware) {
+func Chain(w http.ResponseWriter, r *http.Request, templates *template.Template, handler CustomHandler, middleware ...CustomMiddleware) {
 	cc := &CustomContext{
 		Context:   context.Background(),
 		StartTime: time.Now(),
+		Templates: templates,
 	}
 	for _, mw := range middleware {
 		err := mw(cc, w, r)
