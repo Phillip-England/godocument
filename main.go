@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"godocument/internal/contentrouter"
+	"godocument/internal/filewriter"
 	"godocument/internal/handler"
 	"net/http"
 	"os"
@@ -39,7 +40,8 @@ func main() {
 	mux.HandleFunc("GET /favicon.ico", handler.ServeFavicon)
 	mux.HandleFunc("GET /static/", handler.ServeStaticFiles)
 
-	contentrouter.GenerateRoutes(mux, templates)
+	cnf := contentrouter.GenerateRoutes(mux, templates)
+	filewriter.GenerateDynamicNavbar(cnf)
 
 	port := os.Getenv("PORT")
 	if port == "" {

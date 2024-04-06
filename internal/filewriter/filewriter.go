@@ -1,65 +1,50 @@
 package filewriter
 
 import (
+	"godocument/internal/config"
+	"godocument/internal/stypes"
 	"os"
-	"os/exec"
 )
 
-// GoFunc represents a Go function in our generated file
-type GoFunc struct {
-	Name   string
-	Params string
-	Body   string
-	Return string
+// GenerateDynamicNavbar generates the dynamic navbar based on ./godocument.config.json
+func GenerateDynamicNavbar(cnf stypes.DocConfig) {
+	html := "<nav><ul>"
+	for i := 0; i < len(cnf); i++ {
+		html = workOnNavbar(cnf[i], html)
+	}
+	html += "</ul></nav>"
+	writeNavbarHTML(html)
 }
 
-// GoType represents a Go type in our generated file
-type GoType struct {
-	Name string
-	Body string
+func workOnNavbar(node stypes.DocNode, html string) string {
+	switch n := node.(type) {
+	case *stypes.ObjectNode:
+		html += "<li class='dropdown'>"
+		html += "<button class='dropbtn'><summary>" + n.BaseNodeData.Name + "</summary><div>^</div></button>"
+		html += "<ul class='dropdown-content'>"
+		for i := 0; i < len(n.Children); i++ {
+			html = workOnNavbar(n.Children[i], html)
+		}
+		html += "</ul>"
+		html += "</li>"
+	case *stypes.MarkdownNode:
+		html += "<li><a href='" + n.RouterPath + "'>" + n.BaseNodeData.Name + "</a></li>"
+	}
+	return html
 }
 
-// WriteFunc writes a Go function to a file
-func WriteGoFunc(file *os.File, f GoFunc) {
-	file.WriteString("func " + f.Name + "(" + f.Params + ")" + f.Return + "{\n")
-	file.WriteString(f.Body)
-	file.WriteString("\n}\n\n")
-}
-
-// WriteType writes a Go type to a file
-func WriteGoType(file *os.File, t GoType) {
-	file.WriteString("type " + t.Name + " " + t.Body + "\n\n")
-}
-
-// deletes and recreates a new file
-func ResetFile(filepath string) *os.File {
-	_ = os.Remove(filepath)
-	file, err := os.Create(filepath)
+// writeNavbarHTML writes the generated navbar html to ./template/generated-nav.html
+func writeNavbarHTML(html string) {
+	f, err := os.Create(config.GeneratedNavPath)
 	if err != nil {
 		panic(err)
 	}
-	return file
-}
-
-// sets package name in a .go file
-func SetPackageName(file *os.File, name string) {
-	file.WriteString("package " + name + "\n\n")
-}
-
-// sets import statements in a .go file
-func SetImports(file *os.File, imports []string) {
-	file.WriteString("import (\n")
-	for _, imp := range imports {
-		file.WriteString("\"" + imp + "\"\n")
+	defer f.Close()
+	_, err = f.WriteString("<!-- This file is auto-generated. Do not modify. -->\n")
+	if err != nil {
+		panic(err)
 	}
-	file.WriteString(")\n\n")
-}
-
-// runs gofmt on the generated file
-func RunGoFmt(file *os.File) {
-	_ = file.Close()
-	cmd := exec.Command("gofmt", "-w", file.Name())
-	err := cmd.Run()
+	_, err = f.WriteString(html)
 	if err != nil {
 		panic(err)
 	}
