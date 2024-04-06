@@ -10,7 +10,6 @@ import (
 	"text/template"
 
 	"godocument/internal/middleware"
-	"godocument/internal/tdata"
 	"godocument/internal/util"
 
 	"github.com/iancoleman/orderedmap"
@@ -65,6 +64,14 @@ func GenerateRoutes(mux *http.ServeMux, templates *template.Template) {
 	hookDocRoutes(mux, templates, docConfig)
 	navbarHTML := generateDynamicNavbar(docConfig)
 	writeNavbarHTML(navbarHTML)
+}
+
+// represents our base template
+type BaseTemplate struct {
+	Title   string
+	Content string
+	Prev    *MarkdownNode
+	Next    *MarkdownNode
 }
 
 // each line in the godocument.config.json under the "docs" section is a DocNode
@@ -352,11 +359,13 @@ func assignHandlers(docConfig DocConfig) {
 				http.Error(w, "Error converting markdown", http.StatusInternalServerError)
 				return
 			}
-
+			fmt.Println(m.Next, m.Prev)
 			// Create a new instance of tdata.Base with the title and markdown content as HTML
-			baseData := &tdata.Base{
-				Title:   "Your Title Here",
+			baseData := &BaseTemplate{
+				Title:   "Godocument - " + m.BaseNodeData.Name,
 				Content: mdBuf.String(),
+				Prev:    m.Prev,
+				Next:    m.Next,
 			}
 
 			// Assuming you have already parsed your templates (including the base template) elsewhere
@@ -369,6 +378,7 @@ func assignHandlers(docConfig DocConfig) {
 			// Execute the base template with the baseData instance
 			var htmlBuf bytes.Buffer
 			if err := tmpl.Execute(&htmlBuf, baseData); err != nil {
+				fmt.Println(err)
 				http.Error(w, "Error executing template", http.StatusInternalServerError)
 				return
 			}

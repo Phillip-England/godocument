@@ -1,0 +1,12 @@
+<ul class="page-turn">
+    <li>
+        {{ if .Prev }}
+            <a href={{ .Prev.RouterPath }}>{{ .Prev.BaseNodeData.Name }}</a>
+        {{ end }}
+    </li>
+    <li>
+        {{ if .Next }}
+            <a href={{ .Next.RouterPath }}>{{ .Next.BaseNodeData.Name }}</a>
+        {{ end }}
+    </li>
+</ul>
