@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
+    <title>{{ .Title }}</title>
+</head>
+<body hx-boost="true">
+    {{ template "generated-nav.html" . }}
+    <div id="root">
+        {{ .Content }}
+        {{ template "page-turn.html" . }}
+    </div>
+</body>
+</html>

@@ -21,9 +21,9 @@ const (
 	DocJSONKey           = "docs"
 	JSONConfigPath       = "./godocument.config.json"
 	IntroductionString   = "Introduction"
-	GeneratedNavPath     = "./static/html/components/generated-nav.html"
-	StaticMarkdownPrefix = "./static/docs"
-	StaticMarkdownSuffix = "./static/docs"
+	GeneratedNavPath     = "./html/components/generated-nav.html"
+	StaticMarkdownPrefix = "./docs"
+	StaticMarkdownSuffix = "./docs"
 )
 
 // GenerateRoutes generates code for application routes based on the ./godocument.config.json file "docs" section
@@ -359,7 +359,6 @@ func assignHandlers(docConfig DocConfig) {
 				http.Error(w, "Error converting markdown", http.StatusInternalServerError)
 				return
 			}
-			fmt.Println(m.Next, m.Prev)
 			// Create a new instance of tdata.Base with the title and markdown content as HTML
 			baseData := &BaseTemplate{
 				Title:   "Godocument - " + m.BaseNodeData.Name,

@@ -19,7 +19,7 @@ func main() {
 	_ = godotenv.Load()
 
 	templates = template.New("")
-	err := filepath.Walk("./static/html", func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk("./html", func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
