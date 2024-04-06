@@ -10,6 +10,7 @@
     {{ template "generated-nav.html" . }}
     <div id="root">
         {{ .Content }}
+        {{ template "page-level-nav.html" . }}
         {{ template "page-turn.html" . }}
     </div>
 </body>

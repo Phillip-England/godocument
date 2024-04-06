@@ -1,6 +1,7 @@
 package contentrouter
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -14,6 +15,7 @@ import (
 
 	"github.com/iancoleman/orderedmap"
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/parser"
 )
 
 const (
@@ -68,10 +70,11 @@ func GenerateRoutes(mux *http.ServeMux, templates *template.Template) {
 
 // represents our base template
 type BaseTemplate struct {
-	Title   string
-	Content string
-	Prev    *MarkdownNode
-	Next    *MarkdownNode
+	Title           string
+	Content         string
+	Prev            *MarkdownNode
+	Next            *MarkdownNode
+	MarkdownHeaders []MarkdownHeader
 }
 
 // each line in the godocument.config.json under the "docs" section is a DocNode
@@ -129,6 +132,13 @@ func (b *MarkdownNode) AssignHandlerName() {
 	b.HandlerUniqueString = util.RandomString(8)
 	nameWithoutSpaces := strings.ReplaceAll(b.BaseNodeData.Name, " ", "")
 	b.HandlerName = fmt.Sprintf("%s%s", nameWithoutSpaces, b.HandlerUniqueString)
+}
+
+// MarkdownHeader represents a header in the markdown file
+type MarkdownHeader struct {
+	Line  string
+	Level int
+	Link  string
 }
 
 // ObjectNode represents a non-leaf node in the structured data
@@ -348,6 +358,11 @@ func hookDocRoutes(mux *http.ServeMux, templates *template.Template, docConfig D
 func assignHandlers(docConfig DocConfig) {
 	workOnMarkdownNodes(docConfig, func(m *MarkdownNode) {
 		m.HandlerFunc = func(cc *middleware.CustomContext, w http.ResponseWriter, r *http.Request) {
+			md := goldmark.New(
+				goldmark.WithParserOptions(
+					parser.WithAutoHeadingID(),
+				),
+			)
 			mdContent, err := os.ReadFile(m.MarkdownFile)
 			if err != nil {
 				// Handle error (e.g., file not found)
@@ -355,16 +370,43 @@ func assignHandlers(docConfig DocConfig) {
 				return
 			}
 			var mdBuf bytes.Buffer
-			if err := goldmark.Convert(mdContent, &mdBuf); err != nil {
+			if err := md.Convert(mdContent, &mdBuf); err != nil {
 				http.Error(w, "Error converting markdown", http.StatusInternalServerError)
 				return
 			}
+
+			// reading all headers from the markdown file content
+			file, err := os.Open(m.MarkdownFile)
+			if err != nil {
+				http.Error(w, "Error reading markdown file", http.StatusInternalServerError)
+				return
+			}
+			defer file.Close()
+			// read the file line by line
+			scanner := bufio.NewScanner(file)
+			headers := []MarkdownHeader{}
+			for scanner.Scan() {
+				line := scanner.Text()
+				if strings.Contains(line, "# ") {
+					if strings.Count(line, "#") == 1 {
+						continue
+					}
+					header := MarkdownHeader{
+						Line:  strings.TrimLeft(line, "# "),
+						Level: strings.Count(line, "#") - 2, // ensures we start at a 0 index
+						Link:  "#" + strings.ToLower(strings.ReplaceAll(strings.TrimLeft(line, "# "), " ", "-")),
+					}
+					headers = append(headers, header)
+				}
+			}
+
 			// Create a new instance of tdata.Base with the title and markdown content as HTML
 			baseData := &BaseTemplate{
-				Title:   "Godocument - " + m.BaseNodeData.Name,
-				Content: mdBuf.String(),
-				Prev:    m.Prev,
-				Next:    m.Next,
+				Title:           "Godocument - " + m.BaseNodeData.Name,
+				Content:         mdBuf.String(),
+				Prev:            m.Prev,
+				Next:            m.Next,
+				MarkdownHeaders: headers,
 			}
 
 			// Assuming you have already parsed your templates (including the base template) elsewhere
