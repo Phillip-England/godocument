@@ -1,0 +1,90 @@
+
+:root {
+    --p-1: 1rem;
+    --p-2: 2rem;
+    --p-3: 3rem;
+    --p-4: 4rem;
+    --font-sm: 1rem;
+    --font-md: 1.5rem;
+    --font-lg: 2rem;
+    --font-xl: 3rem;
+    --white: #fafafa;
+}
+
+html, body {
+    box-sizing: border-box;
+    padding:0;
+    margin:0;
+    height: 100%;
+    font-size: 16px;
+    font-family: 'Helvetica', sans-serif;
+    background-color: var(--white);
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+}
+
+
+header {
+    display: flex;
+    flex-direction: row;
+    padding: var(--p-2);
+    position: sticky;
+    top: 0;
+    background-color: var(--white);
+}
+
+header h1 {
+    font-size: var(--font-md);
+    margin-right: auto;
+}
+
+#sitenav {
+    position: fixed;
+    left: 0;
+    padding: var(--p-1);
+}
+
+#pagenav {
+    position: fixed;
+    right: 0;
+    padding: var(--p-1);
+}
+
+
+main {
+    padding: var(--p-2) 300px var(--p-2) 300px;
+}
+
+main h1 {
+    font-size: var(--font-xl);
+    margin-bottom: var(--p-2);
+}
+
+main h2 {
+    font-size: var(--font-lg);
+    margin-bottom: var(--p-1);
+}
+
+main h3 {
+    font-size: var(--font-md);
+    margin-bottom: var(--p-1);
+
+}
+
+main p {
+    font-size: var(--font-sm);
+    margin-bottom: var(--p-1);
+}
+
+
+footer {
+    padding: var(--p-1);
+    text-align: center;
+    background-color: var(--white);
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+}

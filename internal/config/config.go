@@ -16,7 +16,7 @@ const (
 	DocJSONKey           = "docs"
 	JSONConfigPath       = "./godocument.config.json"
 	IntroductionString   = "Introduction"
-	GeneratedNavPath     = "./html/components/generated-nav.html"
+	GeneratedNavPath     = "./html/components/sitenav.html"
 	StaticMarkdownPrefix = "./docs"
 )
 
@@ -43,8 +43,10 @@ func GetDocConfig() stypes.DocConfig {
 	c := stypes.DocConfig{}
 	for i := 0; i < len(u.Keys()); i++ {
 		key := u.Keys()[i]
-		value, _ := u.Get(key)
-		c = getLinearDocs(value, DocRoot, c, 0)
+		if key == DocJSONKey {
+			value, _ := u.Get(key)
+			c = getLinearDocs(value, DocRoot, c, 0)
+		}
 	}
 	sequenceMarkdownNodes(c)
 	linkMarkdownNodes(c)

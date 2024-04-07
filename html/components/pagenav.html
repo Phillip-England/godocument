@@ -1,0 +1,15 @@
+<nav id="pagenav">
+    <ul>
+        {{ if .MarkdownHeaders }}
+            {{ range .MarkdownHeaders }}
+                <li>
+                    <a href={{ .Link }}>{{ .Level }} {{ .Line }}</a>
+                </li>
+            {{ end }}
+        {{ else }}
+            <li>
+                <p>No headers found</p>
+            </li>
+        {{ end }}
+    </ul>
+</nav>

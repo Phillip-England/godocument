@@ -8,7 +8,7 @@ import (
 
 // GenerateDynamicNavbar generates the dynamic navbar based on ./godocument.config.json
 func GenerateDynamicNavbar(cnf stypes.DocConfig) {
-	html := "<nav><ul>"
+	html := "<nav id='sitenav'><ul>"
 	for i := 0; i < len(cnf); i++ {
 		html = workOnNavbar(cnf[i], html)
 	}

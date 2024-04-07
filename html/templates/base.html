@@ -4,14 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
     <title>{{ .Title }}</title>
 </head>
 <body hx-boost="true">
-    {{ template "generated-nav.html" . }}
-    <div id="root">
+    {{ template "header.html" . }}
+    {{ template "sitenav.html" . }}
+    {{ template "pagenav.html" . }}
+    <main>
         {{ .Content }}
-        {{ template "page-level-nav.html" . }}
-        {{ template "page-turn.html" . }}
-    </div>
+        {{ template "pageturn.html" . }}
+    </main>
+    {{ template "footer.html" .}}
 </body>
 </html>
