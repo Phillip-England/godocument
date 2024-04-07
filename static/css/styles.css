@@ -1,21 +1,26 @@
 
 :root {
+
     --p-1: 1rem;
     --p-2: 2rem;
     --p-3: 3rem;
     --p-4: 4rem;
+
     --font-sm: 1rem;
     --font-md: 1.5rem;
     --font-lg: 2rem;
     --font-xl: 3rem;
+
+
     --white: #fafafa;
+    --faint-gray: #e0e0e0;
+
 }
 
 html, body {
     box-sizing: border-box;
     padding:0;
     margin:0;
-    height: 100%;
     font-size: 16px;
     font-family: 'Helvetica', sans-serif;
     background-color: var(--white);
@@ -34,6 +39,8 @@ header {
     position: sticky;
     top: 0;
     background-color: var(--white);
+    border-bottom:solid var(--faint-gray) 1px; 
+    z-index: 1000;
 }
 
 header h1 {
@@ -45,17 +52,28 @@ header h1 {
     position: fixed;
     left: 0;
     padding: var(--p-1);
+    border-right:solid var(--faint-gray) 1px;
+    height:100%;
+    z-index: 10;
+}
+
+#sitenav ul {
+    width: 200px;
 }
 
 #pagenav {
     position: fixed;
     right: 0;
-    padding: var(--p-1);
+    border-left:solid var(--faint-gray) 1px;
+}
+
+#pagenav ul {
+    width: 250px;
 }
 
 
 main {
-    padding: var(--p-2) 300px var(--p-2) 300px;
+    padding: var(--p-2) 350px var(--p-2) 350px;
 }
 
 main h1 {
@@ -71,7 +89,6 @@ main h2 {
 main h3 {
     font-size: var(--font-md);
     margin-bottom: var(--p-1);
-
 }
 
 main p {
@@ -81,10 +98,13 @@ main p {
 
 
 footer {
-    padding: var(--p-1);
+    padding: var(--p-2);
     text-align: center;
     background-color: var(--white);
     display:flex;
     flex-direction: row;
     justify-content: center;
+    border-top: solid var(--faint-gray) 1px;
+    z-index: 20;
+    position: relative;
 }
