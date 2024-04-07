@@ -1,26 +1,26 @@
 
 :root {
 
-    --screen-xs: 767px
-    --screen-sm: 768px;
-    --screen-md: 992px;
-    --screen-lg: 1200px;
-
     --p-1: 1rem;
     --p-2: 2rem;
     --p-3: 3rem;
     --p-4: 4rem;
 
     --rem-2: 2rem;
+    --rem-3: 3rem;
+    --rem-4: 4rem;
+
 
     --font-sm: 1rem;
     --font-md: 1.5rem;
     --font-lg: 2rem;
     --font-xl: 3rem;
 
+    --rounded-sm: 0.25rem;
 
     --white: #fafafa;
     --faint-gray: #e0e0e0;
+    --main-color: blue;
 
 }
 
@@ -33,11 +33,10 @@ html, body {
     background-color: var(--white);
 }
 
-p, h1, h2, h3, h4, h5, h6 {
+p, h1, h2, h3, h4, h5, h6, ul {
     margin: 0;
     padding: 0;
 }
-
 
 header {
     display: flex;
@@ -65,6 +64,7 @@ header h1 {
 }
 
 #sitenav ul:first-child {
+    padding-left: var(--rem-2);
     width: 200px;
 }
 
@@ -75,6 +75,20 @@ header h1 {
     width: 20%;
     padding-right: 50px;
     display: none;
+}
+
+#pagenav ul:first-child {
+    padding-left: var(--rem-4);
+    width: 200px;
+}
+
+@media (min-width: 1000px){
+    #sitenav {
+        display: flex;
+    }
+    #pagenav {
+        display: flex;
+    }
 }
 
 main {
@@ -112,25 +126,22 @@ main {
     }
 }
 
-@media (min-width: 1000px){
-    #sitenav {
-        display: flex;
-    }
-    #pagenav {
-        display: flex;
-    }
-}
 
 
 main h1 {
     font-size: var(--font-xl);
-    margin-bottom: var(--p-2);
+    margin-bottom: var(--rem-2);
 }
 
 main h2 {
     font-size: var(--font-lg);
     margin-bottom: var(--p-1);
 }
+
+main h2:nth-child(n+2) {
+    margin-top: var(--rem-2);
+}
+
 
 main h3 {
     font-size: var(--font-md);
@@ -142,6 +153,29 @@ main p {
     margin-bottom: var(--p-1);
 }
 
+#pageturn {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: var(--rem-4);
+    margin-bottom: var(--rem-4);
+}
+
+#pageturn li {
+    width: 45%;
+    display: flex;
+}
+
+#pageturn a {
+    border: solid var(--faint-gray) 1px;
+    padding: var(--rem-2);
+    width: 100%;
+    border-radius: var(--rounded-sm);
+}
+
+#pageturn a:hover {
+    border: solid var(--main-color) 1px;
+}
 
 footer {
     padding: var(--p-2);
