@@ -10,9 +10,9 @@
 <body hx-boost="true">
     {{ template "header.html" . }}
     {{ template "sitenav.html" . }}
-    {{ template "pagenav.html" . }}
     <main>
         {{ .Content }}
+        {{ template "pagenav.html" . }}
         {{ template "pageturn.html" . }}
     </main>
     {{ template "footer.html" . }}

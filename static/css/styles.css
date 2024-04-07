@@ -1,10 +1,17 @@
 
 :root {
 
+    --screen-xs: 767px
+    --screen-sm: 768px;
+    --screen-md: 992px;
+    --screen-lg: 1200px;
+
     --p-1: 1rem;
     --p-2: 2rem;
     --p-3: 3rem;
     --p-4: 4rem;
+
+    --rem-2: 2rem;
 
     --font-sm: 1rem;
     --font-md: 1.5rem;
@@ -35,7 +42,7 @@ p, h1, h2, h3, h4, h5, h6 {
 header {
     display: flex;
     flex-direction: row;
-    padding: var(--p-2);
+    padding: var(--p-1);
     position: sticky;
     top: 0;
     background-color: var(--white);
@@ -54,10 +61,10 @@ header h1 {
     padding: var(--p-1);
     border-right:solid var(--faint-gray) 1px;
     height:100%;
-    z-index: 10;
+    display: none;
 }
 
-#sitenav ul {
+#sitenav ul:first-child {
     width: 200px;
 }
 
@@ -65,16 +72,55 @@ header h1 {
     position: fixed;
     right: 0;
     border-left:solid var(--faint-gray) 1px;
+    width: 20%;
+    padding-right: 50px;
+    display: none;
 }
-
-#pagenav ul {
-    width: 250px;
-}
-
 
 main {
-    padding: var(--p-2) 350px var(--p-2) 350px;
+    padding-top: var(--p-2);
+    padding-bottom: var(--p-2);
+    display: grid;
 }
+
+@media (min-width: 1600px) {
+    main {
+        padding-left: 350px;
+        padding-right: 450px;
+    }
+}
+
+@media (min-width: 1400px) and (max-width: 1599px){
+    main {
+        padding-left: 350px;
+        padding-right: 400px;
+    }
+}
+
+@media (min-width: 1200px) and (max-width: 1399px){
+    main {
+        padding-left: 350px;
+        padding-right: 375px;
+    }
+
+}
+
+@media (min-width: 1000px) and (max-width: 1199px){
+    main {
+        padding-left: 350px;
+        padding-right:325px;
+    }
+}
+
+@media (min-width: 1000px){
+    #sitenav {
+        display: flex;
+    }
+    #pagenav {
+        display: flex;
+    }
+}
+
 
 main h1 {
     font-size: var(--font-xl);
