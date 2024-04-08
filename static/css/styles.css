@@ -43,9 +43,13 @@ html, body {
 
 }
 
-h1, h2, h3, h4, h5, h6, p {
+h1, h2, h3, h4, h5, h6, p, ul {
     margin: 0;
     padding: 0;
+}
+
+ul {
+    list-style-type: none;
 }
 
 main {
@@ -73,6 +77,20 @@ header {
     display: none;
     border-right: solid var(--faint-gray) 1px;
     width: 300px;
+    padding: var(--rem-2);
+}
+
+#sitenav ul {
+    display:flex;
+    flex-direction: column;
+    gap: var(--rem-1);
+}
+
+
+#sitenav li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rem-1);
 }
 
 @media (min-width: 992px) {
@@ -153,5 +171,46 @@ footer {
     justify-content: center;
     grid-area: footer;
     background-color: var(--white);
+    font-size: var(--text-sm);
 }
 
+.custom-scroll::-webkit-scrollbar {
+    width: 12px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.depth-0 {
+    padding-left: 0;
+}
+
+.depth-1 {
+    padding-left: 0.5rem;
+}
+
+.depth-2 {
+    padding-left: 1rem;
+}
+
+.depth-3 {
+    padding-left: 1.5rem;
+}
+
+.depth-4 {
+    padding-left: 2rem;
+}
+
+.depth-5 {
+    padding-left: 2.5rem;
+}

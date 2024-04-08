@@ -1,6 +1,7 @@
 package filewriter
 
 import (
+	"fmt"
 	"godocument/internal/config"
 	"godocument/internal/stypes"
 	"os"
@@ -19,7 +20,7 @@ func GenerateDynamicNavbar(cnf stypes.DocConfig) {
 func workOnNavbar(node stypes.DocNode, html string) string {
 	switch n := node.(type) {
 	case *stypes.ObjectNode:
-		html += "<li class='dropdown'>"
+		html += "<li class='dropdown " + fmt.Sprintf("depth-%d", n.BaseNodeData.Depth) + "'>"
 		html += "<button class='dropbtn'><summary>" + n.BaseNodeData.Name + "</summary><div>^</div></button>"
 		html += "<ul class='dropdown-content'>"
 		for i := 0; i < len(n.Children); i++ {
@@ -28,7 +29,7 @@ func workOnNavbar(node stypes.DocNode, html string) string {
 		html += "</ul>"
 		html += "</li>"
 	case *stypes.MarkdownNode:
-		html += "<li><a href='" + n.RouterPath + "'>" + n.BaseNodeData.Name + "</a></li>"
+		html += "<li class='" + fmt.Sprintf("depth-%d", n.BaseNodeData.Depth) + "'><a href='" + n.RouterPath + "'>" + n.BaseNodeData.Name + "</a></li>"
 	}
 	return html
 }
