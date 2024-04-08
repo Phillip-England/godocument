@@ -8,13 +8,19 @@
     <title>{{ .Title }}</title>
 </head>
 <body hx-boost="true">
-    {{ template "header.html" . }}
-    {{ template "sitenav.html" . }}
     <main>
-        {{ .Content }}
-        {{ template "pagenav.html" . }}
-        {{ template "pageturn.html" . }}
+        {{ template "header.html" . }}
+        <article>
+            <div id="content-wrapper">
+                {{ .Content }}
+                {{ template "pageturn.html" . }}
+            </div>
+            <div id="pagenav-wrapper">
+                {{ template "pagenav.html" . }}
+            </div>
+        </article>
+        {{ template "sitenav.html" . }}
+        {{ template "footer.html" . }}
     </main>
-    {{ template "footer.html" . }}
 </body>
 </html>
