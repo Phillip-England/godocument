@@ -30,7 +30,7 @@
                 this.items = document.querySelectorAll('.sitenav-item');
                 this.buttons = document.querySelectorAll('.sitenav-dropdown-button');
                 this.buttons.forEach((button) => {
-                    button.classList.remove('sitenav-dropdown-active')
+                    button.classList.remove('sitenav-dropdown-button-active')
                     button.removeEventListener('click', this.eToggleDropdown.bind(this))
                     button.addEventListener('click', this.eToggleDropdown.bind(this))
                 })
@@ -59,7 +59,7 @@
                 }
                 if (parent.classList.contains('sitenav-dropdown')) {
                     let dropdownButton = parent.firstChild
-                    dropdownButton.classList.add('sitenav-dropdown-active');
+                    dropdownButton.classList.add('sitenav-dropdown-button-active');
                     let caret = dropdownButton.querySelector('.dropdown-caret')
                     caret.classList.add('dropdown-caret-active')
                     let hiddenSection = parent.querySelector('.sitenav-dropdown-children');

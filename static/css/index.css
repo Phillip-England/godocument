@@ -1,4 +1,6 @@
 
+/* variables ----------------------------------------------------------------- */
+
 :root {
 
     --p-1: 1rem;
@@ -31,6 +33,8 @@
 
 }
 
+/* reset --------------------------------------------------------------------- */
+
 html, body {
     box-sizing: border-box;
     padding:0;
@@ -49,6 +53,7 @@ html, body {
 h1, h2, h3, h4, h5, h6, p, ul {
     margin: 0;
     padding: 0;
+    font-size: inherit;
 }
 
 ul {
@@ -66,6 +71,8 @@ a {
     color: var(--black);
 }
 
+/* main ---------------------------------------------------------------------- */
+
 main {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -78,6 +85,8 @@ main {
     min-height: 100vh;
 }
 
+/* header -------------------------------------------------------------------- */
+
 header {
     grid-area: header;
     padding: var(--rem-1);
@@ -86,33 +95,56 @@ header {
     border-bottom: solid var(--faint-gray) 1px;
 }
 
+header h1 {
+    font-size: var(--text-md);
+}
+
+/* sitenav ------------------------------------------------------------------ */
+
 #sitenav {
-    grid-area: sitenav;
-    display: none;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    width: 66%;
+    background-color: var(--white);
     border-right: solid var(--faint-gray) 1px;
-    width: 300px;
+    height: 100vh;
+    padding-right: 1rem;
+}
+
+#sitenav .sitenav-mobile-header {
+    padding: var(--rem-1);
+    border-bottom: solid var(--faint-gray) 1px;
+    font-size: var(--text-md);
+    width: 100%;
+}
+
+#sitenav .sitenav-list {
     padding: 0.5rem;
+    /* height: 100%; */
 }
 
 #sitenav ul {
     display:flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.25rem;
+    width: 100%;
 }
 
 
 #sitenav li {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.25rem;
 }
 
 #sitenav .sitenav-item {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
     padding: 0.5rem;
-    border:solid var(--faint-gray) 1px; 
+    /* border:solid var(--faint-gray) 1px;  */
     border-radius: var(--rounded-sm)
 }
 
@@ -125,8 +157,12 @@ header {
     background-color: var(--faint-gray);
 }
 
-#sitenav .sitenav-dropdown-active {
+#sitenav .sitenav-dropdown-button-active {
     color: var(--main-color);
+}
+
+#sitenav .dropdown-caret {
+    color: var(--black);
 }
 
 #sitenav .dropdown-caret-active {
@@ -135,10 +171,25 @@ header {
 
 @media (min-width: 992px) {
     #sitenav {
+        grid-area: sitenav;
+        position: relative;
         display: flex;
         flex-direction: column;
+        height: auto;
+        padding: 0.5rem;
+        width: 300px;
+        border-right: solid var(--faint-gray) 1px;
+    }
+    #sitenav .sitenav-mobile-header {
+        display: none;
+    }
+    #sitenav .sitenav-list {
+        padding: 0;
+        border-right: none;
     }
 }
+
+/* article ------------------------------------------------------------------ */
 
 article {
     grid-area: article;
@@ -160,6 +211,30 @@ article {
         ;
     }
 }
+
+#content-wrapper {
+    grid-area: content;
+    padding: var(--rem-2);
+    margin-bottom: var(--rem-2);
+}
+
+#content-wrapper h1 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--rem-3);
+}
+
+#content-wrapper h2 {
+    font-size: var(--text-lg);
+    margin-top: var(--rem-2);
+    margin-bottom: var(--rem-1);
+}
+
+#content-wrapper p {
+    font-size: var(--text-sm);
+    margin-bottom: var(--rem-1);
+}
+
+/* pagenav ------------------------------------------------------------------- */
 
 #pagenav {
     grid-area: pagenav;
@@ -193,27 +268,7 @@ article {
     }
 }
 
-#content-wrapper {
-    grid-area: content;
-    padding: var(--rem-2);
-    margin-bottom: var(--rem-2);
-}
-
-#content-wrapper h1 {
-    font-size: var(--text-xl);
-    margin-bottom: var(--rem-3);
-}
-
-#content-wrapper h2 {
-    font-size: var(--text-lg);
-    margin-top: var(--rem-2);
-    margin-bottom: var(--rem-1);
-}
-
-#content-wrapper p {
-    font-size: var(--text-sm);
-    margin-bottom: var(--rem-1);
-}
+/* footer -------------------------------------------------------------------- */
 
 footer {
     border-top: solid var(--faint-gray) 1px;
@@ -225,22 +280,33 @@ footer {
     font-size: var(--text-sm);
 }
 
+/* custom scroll ------------------------------------------------------------- */
+
+
 .custom-scroll::-webkit-scrollbar {
-    width: 12px;
+    width: 0px; /* Hides the scrollbar */
 }
 
-.custom-scroll::-webkit-scrollbar-track {
-    background: #f1f1f1;
+@media (min-width: 992px) {
+    .custom-scroll::-webkit-scrollbar {
+        width: 12px;
+    }
+    
+    .custom-scroll::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    
+    .custom-scroll::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+    
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
 }
 
-.custom-scroll::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
-}
-
-.custom-scroll::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
+/* utility classes ----------------------------------------------------------- */
 
 .depth-0 {
     padding-left: 0;
