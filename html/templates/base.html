@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" loaded="false">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
     <title>{{ .Title }}</title>
 </head>
 <body hx-boost="true">
@@ -22,5 +22,6 @@
         {{ template "sitenav.html" . }}
         {{ template "footer.html" . }}
     </main>
+    <script src="/static/js/index.js"></script>
 </body>
 </html>

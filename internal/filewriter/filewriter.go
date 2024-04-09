@@ -20,16 +20,16 @@ func GenerateDynamicNavbar(cnf stypes.DocConfig) {
 func workOnNavbar(node stypes.DocNode, html string) string {
 	switch n := node.(type) {
 	case *stypes.ObjectNode:
-		html += "<li class='dropdown " + fmt.Sprintf("depth-%d", n.BaseNodeData.Depth) + "'>"
-		html += "<button class='dropbtn'><summary>" + n.BaseNodeData.Name + "</summary><div>^</div></button>"
-		html += "<ul class='dropdown-content'>"
+		html += "<li class='sitenav-dropdown " + fmt.Sprintf("depth-%d", n.BaseNodeData.Depth) + "'>"
+		html += "<button class='sitenav-dropdown-button sitenav-item'><summary>" + n.BaseNodeData.Name + "</summary><div class='dropdown-caret'>></div></button>"
+		html += "<ul class='sitenav-dropdown-children hidden'>"
 		for i := 0; i < len(n.Children); i++ {
 			html = workOnNavbar(n.Children[i], html)
 		}
 		html += "</ul>"
 		html += "</li>"
 	case *stypes.MarkdownNode:
-		html += "<li class='" + fmt.Sprintf("depth-%d", n.BaseNodeData.Depth) + "'><a href='" + n.RouterPath + "'>" + n.BaseNodeData.Name + "</a></li>"
+		html += "<li class='" + fmt.Sprintf("depth-%d", n.BaseNodeData.Depth) + "'><a class='sitenav-item' href='" + n.RouterPath + "'>" + n.BaseNodeData.Name + "</a></li>"
 	}
 	return html
 }

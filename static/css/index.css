@@ -24,7 +24,9 @@
     --rounded-sm: 0.25rem;
 
     --white: #fafafa;
+    --black: #111111;
     --faint-gray: #e0e0e0;
+    --gray: #555555;
     --main-color: blue;
 
 }
@@ -40,6 +42,7 @@ html, body {
     display: flex;
     flex-direction: column;
     height: 100%;
+    color: var(--black);
 
 }
 
@@ -50,6 +53,17 @@ h1, h2, h3, h4, h5, h6, p, ul {
 
 ul {
     list-style-type: none;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+}
+
+a {
+    text-decoration: none;
+    color: var(--black);
 }
 
 main {
@@ -77,20 +91,46 @@ header {
     display: none;
     border-right: solid var(--faint-gray) 1px;
     width: 300px;
-    padding: var(--rem-2);
+    padding: 0.5rem;
 }
 
 #sitenav ul {
     display:flex;
     flex-direction: column;
-    gap: var(--rem-1);
+    gap: 0.5rem;
 }
 
 
 #sitenav li {
     display: flex;
     flex-direction: column;
-    gap: var(--rem-1);
+    gap: 0.5rem;
+}
+
+#sitenav .sitenav-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.5rem;
+    border:solid var(--faint-gray) 1px; 
+    border-radius: var(--rounded-sm)
+}
+
+#sitenav .sitenav-item-active {
+    color: var(--main-color);
+    background-color: var(--faint-gray);
+}
+
+#sitenav .sitenav-item:hover {
+    background-color: var(--faint-gray);
+}
+
+#sitenav .sitenav-dropdown-active {
+    color: var(--main-color);
+}
+
+#sitenav .dropdown-caret-active {
+    transform: rotate(90deg);
 }
 
 @media (min-width: 992px) {
@@ -126,16 +166,27 @@ article {
     border-left: solid var(--faint-gray) 1px;
     position: fixed;
     display: none; 
+    padding: var(--rem-1);
+    color: var(--gray);
 }
 
 #pagenav-wrapper {
     display: none; 
 }
 
+#pagenav ul {
+    display:flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: var(--text-xs);
+
+}
+
 @media (min-width: 992px) {
     #pagenav {
         display: flex;
         flex-direction: column;
+        gap: var(--rem-1);
     }
     #pagenav-wrapper {
         display: block;
@@ -213,4 +264,8 @@ footer {
 
 .depth-5 {
     padding-left: 2.5rem;
+}
+
+.hidden {
+    display: none !important;
 }
