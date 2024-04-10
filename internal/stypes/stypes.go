@@ -40,9 +40,9 @@ type MarkdownNode struct {
 
 // MarkdownHeader represents a header in the markdown file
 type MarkdownHeader struct {
-	Line  string
-	Level int
-	Link  string
+	Line       string
+	Link       string
+	DepthClass string
 }
 
 // ObjectNode represents a non-leaf node in the structured data

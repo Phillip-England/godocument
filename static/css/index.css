@@ -116,9 +116,18 @@ header .header-bars {
     cursor: pointer;
 }
 
+header .header-sun-icon {
+    display: none;
+    cursor: pointer;
+
+}
+
 @media (min-width: 992px) {
     header .header-bars {
         display: none;
+    }
+    header .header-sun-icon {
+        display: block;
     }
 }
 
@@ -328,7 +337,10 @@ footer {
     justify-content: center;
     grid-area: footer;
     background-color: var(--white);
-    font-size: var(--text-sm);
+}
+
+footer p {
+    font-size: var(--text-xs);
 }
 
 /* mobile nav overlay ---------------------------------------------------------- */

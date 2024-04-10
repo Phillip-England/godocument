@@ -3,7 +3,7 @@
         {{ if .MarkdownHeaders }}
             {{ range .MarkdownHeaders }}
                 <li>
-                    <a href={{ .Link }}>{{ .Level }} {{ .Line }}</a>
+                    <a href={{ .Link }} class={{ .DepthClass }}>{{ .Line }}</a>
                 </li>
             {{ end }}
         {{ else }}
