@@ -17,18 +17,18 @@
             return climbTreeUntil(parent, callback)
         }
     
-        function getRawHTML(element) {
-            var wrapper = document.createElement('div');
-            wrapper.appendChild(element.cloneNode(true));
-            return wrapper.innerHTML;
-        }
-    
         class SiteNav {
             constructor() {
                 this.nav = document.querySelector('#sitenav');
                 this.pullNavFromSession()
                 this.items = document.querySelectorAll('.sitenav-item');
                 this.buttons = document.querySelectorAll('.sitenav-dropdown-button');
+                this.closeIcon = this.nav.querySelector('.sitenav-mobile-header-close-icon')
+                this.overlay = document.querySelector('#mobile-nav-overlay');
+                this.closeIcon.removeEventListener('click', this.toggleMobileNav.bind(this));
+                this.closeIcon.addEventListener('click', this.toggleMobileNav.bind(this));
+                this.overlay.removeEventListener('click', this.toggleMobileNav.bind(this));
+                this.overlay.addEventListener('click', this.toggleMobileNav.bind(this));
                 this.buttons.forEach((button) => {
                     button.classList.remove('sitenav-dropdown-button-active')
                     button.removeEventListener('click', this.eToggleDropdown.bind(this))
@@ -88,7 +88,6 @@
                 let dropdownButton = element.firstChild
                 let caret = dropdownButton.querySelector('.dropdown-caret')
                 let hiddenSection = element.querySelector('.sitenav-dropdown-children');
-                // dropdownButton.classList.add('sitenav-dropdown-active');
                 caret.classList.add('dropdown-caret-active')
                 hiddenSection.classList.remove('hidden')
             }
@@ -96,15 +95,36 @@
                 let dropdownButton = element.firstChild
                 let caret = dropdownButton.querySelector('.dropdown-caret')
                 let hiddenSection = element.querySelector('.sitenav-dropdown-children');
-                // dropdownButton.classList.remove('sitenav-dropdown-active');
                 caret.classList.remove('dropdown-caret-active')
                 hiddenSection.classList.add('hidden')
             }
+            toggleMobileNav() {
+                if (this.nav.classList.contains('sitenav-active')) {
+                    this.overlay.classList.remove('mobile-nav-overlay-active')
+                    this.nav.classList.remove('sitenav-active');
+                    return
+                }
+                this.overlay.classList.add('mobile-nav-overlay-active')
+                this.nav.classList.add('sitenav-active');
+            }
+        }
 
+        class Header {
+            constructor(sitenav) {
+                this.sitenav = sitenav;
+                this.header = document.querySelector('#header');
+                this.bars = header.querySelector('.header-bars');
+                this.bars.removeEventListener('click', this.toggleMobileNav.bind(this));
+                this.bars.addEventListener('click', this.toggleMobileNav.bind(this));
+            }
+            toggleMobileNav() {
+                this.sitenav.toggleMobileNav();
+            }        
         }
     
         function onLoad() {
-            new SiteNav();
+            let sitenav = new SiteNav();
+            let header = new Header(sitenav);
         }
 
     
