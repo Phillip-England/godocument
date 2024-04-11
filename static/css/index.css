@@ -16,18 +16,20 @@
     --rem-6: 6rem;
     --rem-7: 7rem;
 
-
-    --text-xs: 0.75rem;
-    --text-sm: 1rem;
+    --text-2xs: 0.75rem;
+    --text-xs: 1rem;
+    --text-sm: 1.25rem;
     --text-md: 1.5rem;
-    --text-lg: 2rem;
-    --text-xl: 3rem;
+    --text-lg: 1.75rem;
+    --text-xl: 2rem;
+    --text-2xl: 3rem;
 
     --rounded-sm: 0.25rem;
 
     --white: #fafafa;
     --black: #111111;
     --faint-gray: #e0e0e0;
+    --light-gray: #d0d0d0;
     --gray: #555555;
     --main-color: blue;
 
@@ -106,6 +108,7 @@ header h1 {
 
 header .header-logo {
     display: flex;
+    height: 35px;
     width: 180px;
     align-items: center;
     gap: var(--rem-2);
@@ -156,6 +159,7 @@ header .header-sun-icon {
     padding: var(--rem-1);
     border-bottom: solid var(--faint-gray) 1px;
     font-size: var(--text-md);
+    height: 35px;
 }
 
 #sitenav .sitenav-mobile-header-logo-wrapper {
@@ -249,6 +253,58 @@ header .header-sun-icon {
     }
 }
 
+/* pageturn ------------------------------------------------------------------ */
+
+#pageturn {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+#pageturn li {
+    display: flex;
+    width: 100%;
+}
+
+#pageturn div {
+    display: flex;
+}
+
+#pageturn a p {
+    font-size: var(--text-2xs);
+    font-weight: bold;
+    margin: 0;
+    display: flex;
+    color: var(--main-color);
+}
+
+#pageturn a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-radius: var(--rounded-sm);
+    border: solid var(--light-gray) 1px; 
+    padding: 1rem;
+    width: 100%;
+}
+
+#pageturn .pageturn-next p {
+    justify-content: flex-end;
+}
+
+#pageturn .pageturn-next div {
+    justify-content: flex-end;
+}
+
+#pageturn .pageturn-prev p {
+    justify-content: flex-start;
+}
+
+#pageturn .pageturn-prev div {
+    justify-content: flex-start;
+}
+
 /* article ------------------------------------------------------------------ */
 
 article {
@@ -279,18 +335,24 @@ article {
 }
 
 #content-wrapper h1 {
-    font-size: var(--text-xl);
+    font-size: var(--text-2xl);
     margin-bottom: var(--rem-3);
 }
 
 #content-wrapper h2 {
+    font-size: var(--text-xl);
+    margin-top: var(--rem-2);
+    margin-bottom: var(--rem-1);
+}
+
+#content-wrapper h3 {
     font-size: var(--text-lg);
     margin-top: var(--rem-2);
     margin-bottom: var(--rem-1);
 }
 
 #content-wrapper p {
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
     margin-bottom: var(--rem-1);
 }
 
@@ -313,7 +375,7 @@ article {
     display:flex;
     flex-direction: column;
     gap: 0.5rem;
-    font-size: var(--text-xs);
+    font-size: var(--text-2xs);
 
 }
 
@@ -340,7 +402,7 @@ footer {
 }
 
 footer p {
-    font-size: var(--text-xs);
+    font-size: var(--text-2xs);
 }
 
 /* mobile nav overlay ---------------------------------------------------------- */
