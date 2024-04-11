@@ -45,6 +45,7 @@ html, body {
     font-family: 'Helvetica', sans-serif;
     background-color: var(--white);
     overflow-y: hidden;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -311,17 +312,17 @@ article {
     grid-area: article;
     display: grid;
     gap: var(--rem-2);
-    grid-template-columns: 1fr;
+    grid-template-columns: 100vw;
+    overflow-y: scroll;
     grid-template-areas: 
         "content"
     ;
-    overflow-y: scroll;
-    height: 100%;
 }
 
 @media (min-width: 992px) {
     article {
-        grid-template-columns: 4fr 2fr;
+        overflow-x: hidden;
+        grid-template-columns: 65% 35%;
         grid-template-areas: 
             "content pagenav"
         ;
@@ -356,6 +357,20 @@ article {
     margin-bottom: var(--rem-1);
 }
 
+#content-wrapper pre {
+    font-size: var(--text-xs);
+    padding: var(--rem-1);
+    border-radius: var(--rounded-sm);
+    margin-bottom: var(--rem-1);
+    overflow-x: auto;
+    white-space: pre;
+}
+
+#content-wrapper code {
+    font-size: var(--text-xs);
+    border-radius: var(--rounded-sm);
+}
+
 /* pagenav ------------------------------------------------------------------- */
 
 #pagenav {
@@ -365,6 +380,8 @@ article {
     display: none; 
     padding: var(--rem-1);
     color: var(--gray);
+    min-width: 200px;
+    width: 100%;
 }
 
 #pagenav-wrapper {
