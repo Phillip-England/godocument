@@ -14,7 +14,6 @@ import (
 	"godocument/internal/stypes"
 
 	"github.com/yuin/goldmark"
-	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	"github.com/yuin/goldmark/parser"
 )
 
@@ -53,11 +52,11 @@ func assignHandlers(cnf stypes.DocConfig) {
 				goldmark.WithParserOptions(
 					parser.WithAutoHeadingID(),
 				),
-				goldmark.WithExtensions(
-					highlighting.NewHighlighting(
-						highlighting.WithStyle("github"),
-					),
-				),
+				// goldmark.WithExtensions(
+				// 	highlighting.NewHighlighting(
+				// 		highlighting.WithStyle("github"),
+				// 	),
+				// ),
 			)
 			mdContent, err := os.ReadFile(m.MarkdownFile)
 			if err != nil {

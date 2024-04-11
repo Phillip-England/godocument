@@ -121,11 +121,52 @@
                 this.sitenav.toggleMobileNav();
             }        
         }
-    
+
+        class Theme {
+            constructor() {
+                this.sunIcons = document.querySelectorAll('.sun-icon');
+                for (let i = 0; i < this.sunIcons.length; i++) {
+                    this.sunIcons[i].removeEventListener('click', this.toggleTheme.bind(this));
+                    this.sunIcons[i].addEventListener('click', this.toggleTheme.bind(this));
+                }
+                this.moonIcons = document.querySelectorAll('.moon-icon');
+                for (let i = 0; i < this.moonIcons.length; i++) {
+                    this.moonIcons[i].removeEventListener('click', this.toggleTheme.bind(this));
+                    this.moonIcons[i].addEventListener('click', this.toggleTheme.bind(this));
+                }
+                this.theme = localStorage.getItem('theme');
+                if (!this.theme) {
+                    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                        this.theme = 'dark';
+                    } else {
+                        this.theme = 'light';
+                    }
+                    localStorage.setItem('theme', this.theme);
+                }
+                this.applyTheme();
+            }
+            applyTheme() {
+                document.documentElement.setAttribute('class', this.theme);
+            }
+            toggleTheme() {
+                if (this.theme == 'light') {
+                    this.theme = 'dark';
+                } else {
+                    this.theme = 'light';
+                }
+                localStorage.setItem('theme', this.theme);
+                this.applyTheme();
+            }
+        }
+
         function onLoad() {
             let sitenav = new SiteNav();
             let header = new Header(sitenav);
+            let theme = new Theme()
         }
+
+        
+
 
     
     }
