@@ -23,10 +23,7 @@
                 this.pullNavFromSession()
                 this.items = document.querySelectorAll('.sitenav-item');
                 this.buttons = document.querySelectorAll('.sitenav-dropdown-button');
-                this.closeIcon = this.nav.querySelector('.sitenav-mobile-header-close-icon')
                 this.overlay = document.querySelector('#mobile-nav-overlay');
-                this.closeIcon.removeEventListener('click', this.toggleMobileNav.bind(this));
-                this.closeIcon.addEventListener('click', this.toggleMobileNav.bind(this));
                 this.overlay.removeEventListener('click', this.toggleMobileNav.bind(this));
                 this.overlay.addEventListener('click', this.toggleMobileNav.bind(this));
                 this.buttons.forEach((button) => {

@@ -3,19 +3,6 @@
 
 :root {
 
-    --p-1: 1rem;
-    --p-2: 2rem;
-    --p-3: 3rem;
-    --p-4: 4rem;
-
-    --rem-1: 1rem;
-    --rem-2: 2rem;
-    --rem-3: 3rem;
-    --rem-4: 4rem;
-    --rem-5: 5rem;
-    --rem-6: 6rem;
-    --rem-7: 7rem;
-
     --text-2xs: 0.75rem;
     --text-xs: 1rem;
     --text-sm: 1.25rem;
@@ -27,11 +14,13 @@
     --rounded-sm: 0.25rem;
 
     --white: #fafafa;
-    --black: #111111;
+    --black: #1f1f1f;
     --faint-gray: #e0e0e0;
     --light-gray: #d0d0d0;
     --gray: #555555;
-    --main-color: #0047AB;
+    --dark-gray: #333333;
+    --darkest-gray: #222222;
+    --main-color: #B8860B;
 
 }
 
@@ -50,7 +39,11 @@ html, body {
     flex-direction: column;
     height: 100%;
     color: var(--black);
+}
 
+html.dark body {
+    background-color: var(--black);
+    color: var(--white);
 }
 
 h1, h2, h3, h4, h5, h6, p, ul {
@@ -103,6 +96,11 @@ header {
     align-items: center;
 }
 
+html.dark header {
+    background-color: var(--black);
+    border-color: var(--dark-gray);
+}
+
 header h1 {
     font-size: var(--text-md);
 }
@@ -115,8 +113,13 @@ header .header-logo-wrapper {
 header .header-logo-wrapper .logo {
     display: flex;
     align-items: center;
-    width: 250px;
+    width: 200px;
+}
 
+@media (min-width: 992px) {
+    header .header-logo-wrapper .logo {
+        width: 250px;
+    }
 }
 
 header .header-bars {
@@ -124,17 +127,25 @@ header .header-bars {
     cursor: pointer;
 }
 
-header .header-sun-icon {
+header .sun-icon, header .moon-icon {
     display: none;
     cursor: pointer;
-
 }
 
 @media (min-width: 992px) {
     header .header-bars {
         display: none;
     }
-    header .header-sun-icon {
+    header .moon-icon {
+        display: none;
+    }
+    header .sun-icon {
+        display: block;
+    }
+    html.dark header .sun-icon {
+        display: none;
+    }
+    html.dark header .moon-icon {
         display: block;
     }
 }
@@ -152,6 +163,11 @@ header .header-sun-icon {
     z-index: 1000;
 }
 
+html.dark #sitenav {
+    background-color: var(--black);
+    border-color: var(--dark-gray);
+}
+
 #sitenav.sitenav-active {
     display: flex;
 }
@@ -166,26 +182,47 @@ header .header-sun-icon {
     font-size: var(--text-md);
 }
 
+html.dark #sitenav .sitenav-mobile-header {
+    border-color: var(--dark-gray);
+}
+
 #sitenav .sitenav-mobile-header-logo-wrapper {
     display: flex;
     align-items: center;
     flex-direction: row;
     justify-content: space-between;
-    gap: 2rem;
+    gap: 1rem;
 }
 
 #sitenav .sitenav-mobile-header-logo .logo {
     display: flex;
-    width: 250px;
+    width: 200px;
     align-items: center;
 }
 
-#sitenav .sitenav-mobile-header-sun-icon {
+#sitenav .sitenav-mobile-header-darkmode-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+#sitenav .sun-icon, #sitenav .moon-icon {
     cursor: pointer;
 }
 
-#sitenav .sitenav-mobile-header-close-icon {
-    cursor: pointer;
+#sitenav .moon-icon {
+    display: none;
+}
+
+#sitenav .sun-icon {
+    display: block;
+}
+
+html.dark #sitenav .sun-icon {
+    display: none;
+}
+
+html.dark #sitenav .moon-icon {
+    display: block;
 }
 
 
@@ -212,7 +249,13 @@ header .header-sun-icon {
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem;
-    border-radius: var(--rounded-sm)
+    border-radius: var(--rounded-sm);
+    color: var(--black);
+    font-weight: bold;
+}
+
+html.dark #sitenav .sitenav-item {
+    color: var(--white);
 }
 
 #sitenav .sitenav-item-active {
@@ -220,16 +263,33 @@ header .header-sun-icon {
     background-color: var(--faint-gray);
 }
 
+html.dark #sitenav .sitenav-item-active {
+    background-color: var(--dark-gray);
+    color: var(--main-color);
+}
+
 #sitenav .sitenav-item:hover {
     background-color: var(--faint-gray);
+}
+
+html.dark #sitenav .sitenav-item:hover {
+    background-color: var(--dark-gray);
 }
 
 #sitenav .sitenav-dropdown-button-active {
     color: var(--main-color);
 }
 
+html.dark #sitenav .sitenav-dropdown-button-active {
+    color: var(--main-color);
+}
+
 #sitenav .dropdown-caret {
     color: var(--black);
+}
+
+html.dark #sitenav .dropdown-caret {
+    color: var(--white);
 }
 
 #sitenav .dropdown-caret-active {
@@ -265,6 +325,14 @@ header .header-sun-icon {
     gap: 2rem;
 }
 
+#pageturn svg {
+    color: var(--gray);
+}
+
+html.dark #pageturn svg {
+    color: var(--white);
+}
+
 #pageturn li {
     display: flex;
     width: 100%;
@@ -282,10 +350,6 @@ header .header-sun-icon {
     color: var(--main-color);
 }
 
-html.dark #pageturn a p {
-    color: green;
-}
-
 #pageturn a {
     display: flex;
     flex-direction: column;
@@ -294,6 +358,18 @@ html.dark #pageturn a p {
     border: solid var(--light-gray) 1px; 
     padding: 0.5rem 1rem;
     width: 100%;
+}
+
+html.dark #pageturn a {
+    border-color: var(--dark-gray);
+}
+
+#pageturn a:hover {
+    border-color: var(--gray);
+}
+
+html.dark #pageturn a:hover {
+    border-color: var(--gray);
 }
 
 #pageturn .pageturn-next p {
@@ -317,7 +393,7 @@ html.dark #pageturn a p {
 article {
     grid-area: article;
     display: grid;
-    gap: var(--rem-2);
+    gap: 2rem;
     grid-template-columns: 100vw;
     overflow-y: scroll;
     grid-template-areas: 
@@ -337,30 +413,30 @@ article {
 
 #content-wrapper {
     grid-area: content;
-    padding: var(--rem-2);
-    margin-bottom: var(--rem-2);
+    padding: 2rem;
+    margin-bottom: 2rem;
 }
 
 #content-wrapper h1 {
     font-size: var(--text-2xl);
-    margin-bottom: var(--rem-3);
+    margin-bottom: 3rem;
 }
 
 #content-wrapper h2 {
     font-size: var(--text-xl);
-    margin-top: var(--rem-2);
-    margin-bottom: var(--rem-1);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
 }
 
 #content-wrapper h3 {
     font-size: var(--text-lg);
-    margin-top: var(--rem-2);
-    margin-bottom: var(--rem-1);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
 }
 
 #content-wrapper p {
     font-size: var(--text-xs);
-    margin-bottom: var(--rem-1);
+    margin-bottom: 1rem;
 }
 
 #content-wrapper pre {
@@ -377,6 +453,7 @@ article {
     border-radius: var(--rounded-sm);
 }
 
+
 /* pagenav ------------------------------------------------------------------- */
 
 #pagenav {
@@ -384,10 +461,22 @@ article {
     border-left: solid var(--faint-gray) 1px;
     position: fixed;
     display: none; 
-    padding: var(--rem-1);
+    padding: 1rem;
     color: var(--gray);
     min-width: 200px;
     width: 100%;
+}
+
+html.dark #pagenav {
+    border-color: var(--dark-gray);
+}
+
+#pagenav a {
+    color: var(--gray);
+}
+
+html.dark #pagenav a {
+    color: var(--light-gray);
 }
 
 #pagenav-wrapper {
@@ -406,7 +495,7 @@ article {
     #pagenav {
         display: flex;
         flex-direction: column;
-        gap: var(--rem-1);
+        gap: 1rem;
     }
     #pagenav-wrapper {
         display: block;
@@ -417,16 +506,34 @@ article {
 
 footer {
     border-top: solid var(--faint-gray) 1px;
-    padding: var(--rem-1);
+    padding: 1rem;
     display: flex;
     justify-content: center;
     grid-area: footer;
     background-color: var(--white);
 }
 
+html.dark footer {
+    background-color: var(--black);
+    border-color:  var(--dark-gray);
+}
+
+
 footer p {
     font-size: var(--text-2xs);
+    color: var(--black);
 }
+
+footer a {
+    color: var(--main-color);
+    text-decoration: underline;
+}
+
+html.dark footer p {
+    color: var(--white);
+}
+
+
 
 /* mobile nav overlay ---------------------------------------------------------- */
 
@@ -436,6 +543,7 @@ footer p {
     left: 0;
     height: 100vh;
     width: 100vw;
+    z-index: 999;
     background-color: var(--black);
     opacity: 70%;
     display: none;
@@ -471,12 +579,23 @@ footer p {
     }
     
     .custom-scroll::-webkit-scrollbar-thumb {
-        background: #888;
+        background-color: var(--faint-gray);
         border-radius: 10px;
     }
     
     .custom-scroll::-webkit-scrollbar-thumb:hover {
-        background: #555;
+        background-color: var(--light-gray);
+        cursor: pointer;
+    }
+    html.dark .custom-scroll::-webkit-scrollbar-thumb {
+        background: var(--dark-gray);
+    }
+    html.dark .custom-scroll::-webkit-scrollbar-thumb:hover {
+        background-color: var(--gray);
+        cursor: pointer;
+    }
+    html.dark .custom-scroll::-webkit-scrollbar-track {
+        background: var(--darkest-gray);
     }
 }
 
