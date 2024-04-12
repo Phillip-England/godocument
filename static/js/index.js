@@ -113,6 +113,7 @@
                 this.bars = header.querySelector('.header-bars');
                 this.bars.removeEventListener('click', this.toggleMobileNav.bind(this));
                 this.bars.addEventListener('click', this.toggleMobileNav.bind(this));
+                this.headerHeight = this.header.offsetHeight;
             }
             toggleMobileNav() {
                 this.sitenav.toggleMobileNav();
@@ -156,10 +157,70 @@
             }
         }
 
+        class Article {
+            constructor(headerHeight) {
+                this.article = document.getElementById('article')
+                this.h2 = this.article.querySelectorAll('h2')
+                this.h3 = this.article.querySelectorAll('h3')
+                this.h4 = this.article.querySelectorAll('h4')
+                this.h5 = this.article.querySelectorAll('h5')
+                this.h6 = this.article.querySelectorAll('h6')
+                this.headerHeight = headerHeight
+                this.headers = []
+                this.gatherHeaders()
+                this.setActiveHeader()
+                this.article.removeEventListener('scroll', this.setActiveHeader.bind(this))
+                this.article.addEventListener('scroll', this.setActiveHeader.bind(this))
+                
+            }
+            gatherHeaders() {
+                for (let i = 0; i < this.h2.length; i++) {
+                    this.headers.push(this.h2[i])
+                }
+                for (let i = 0; i < this.h3.length; i++) {
+                    this.headers.push(this.h3[i])
+                }
+                for (let i = 0; i < this.h4.length; i++) {
+                    this.headers.push(this.h4[i])
+                }
+                for (let i = 0; i < this.h5.length; i++) {
+                    this.headers.push(this.h5[i])
+                }
+                for (let i = 0; i < this.h6.length; i++) {
+                    this.headers.push(this.h6[i])
+                }
+            }
+            setActiveHeader() {
+                let found = false
+                for (let i = 0; i < this.headers.length; i++) {
+                    let header = this.headers[i]
+                    let headerTop = this.headers[i].getBoundingClientRect().top
+                    if (headerTop < this.headerHeight) {
+                        header.classList.remove('article-header-active')
+                        continue
+                    }
+                    if (found) {
+                        header.classList.remove('article-header-active')
+                        continue
+                    }
+                    header.classList.add('article-header-active')
+                    found = true
+                }
+            }
+        }
+
+        class PageNav {
+            constructor() {
+                this.nav = document.querySelector('#pagenav');
+            }
+        }
+
         function onLoad() {
             let sitenav = new SiteNav();
             let header = new Header(sitenav);
             let theme = new Theme()
+            let article = new Article(header.headerHeight)
+            console.log(article)
             Prism.highlightAll();
         }
 

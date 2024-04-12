@@ -453,6 +453,10 @@ article {
     border-radius: var(--rounded-sm);
 }
 
+#article #content-wrapper .article-header-active {
+    color: var(--main-color);
+}
+
 
 /* pagenav ------------------------------------------------------------------- */
 

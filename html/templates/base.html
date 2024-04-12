@@ -11,7 +11,7 @@
 <body hx-boost="true">
     <main>
         {{ template "header.html" . }}
-        <article class="custom-scroll">
+        <article id="article" class="custom-scroll">
             <div id="content-wrapper">
                 {{ .Content }}
                 {{ template "pageturn.html" . }}
