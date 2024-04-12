@@ -163,6 +163,7 @@
             let sitenav = new SiteNav();
             let header = new Header(sitenav);
             let theme = new Theme()
+            Prism.highlightAll();
         }
 
         

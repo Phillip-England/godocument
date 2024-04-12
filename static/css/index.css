@@ -31,7 +31,7 @@
     --faint-gray: #e0e0e0;
     --light-gray: #d0d0d0;
     --gray: #555555;
-    --main-color: blue;
+    --main-color: #0047AB;
 
 }
 
@@ -93,7 +93,7 @@ main {
 
 header {
     grid-area: header;
-    padding: var(--rem-1);
+    padding: 1rem;
     font-size: var(--text-xs);
     background-color: var(--white);
     border-bottom: solid var(--faint-gray) 1px;
@@ -107,12 +107,16 @@ header h1 {
     font-size: var(--text-md);
 }
 
-header .header-logo {
+header .header-logo-wrapper {
     display: flex;
-    height: 35px;
-    width: 180px;
     align-items: center;
-    gap: var(--rem-2);
+}
+
+header .header-logo-wrapper .logo {
+    display: flex;
+    align-items: center;
+    width: 250px;
+
 }
 
 header .header-bars {
@@ -157,10 +161,9 @@ header .header-sun-icon {
     justify-content: space-between;
     align-items: center;
     flex-direction: row;
-    padding: var(--rem-1);
+    padding: 1rem;
     border-bottom: solid var(--faint-gray) 1px;
     font-size: var(--text-md);
-    height: 35px;
 }
 
 #sitenav .sitenav-mobile-header-logo-wrapper {
@@ -168,14 +171,13 @@ header .header-sun-icon {
     align-items: center;
     flex-direction: row;
     justify-content: space-between;
-    gap: var(--rem-2);
+    gap: 2rem;
 }
 
-#sitenav .sitenav-mobile-header-logo {
+#sitenav .sitenav-mobile-header-logo .logo {
     display: flex;
-    width: 180px;
+    width: 250px;
     align-items: center;
-    gap: var(--rem-2);
 }
 
 #sitenav .sitenav-mobile-header-sun-icon {
@@ -290,7 +292,7 @@ html.dark #pageturn a p {
     gap: 0.5rem;
     border-radius: var(--rounded-sm);
     border: solid var(--light-gray) 1px; 
-    padding: 1rem;
+    padding: 0.5rem 1rem;
     width: 100%;
 }
 
@@ -363,9 +365,9 @@ article {
 
 #content-wrapper pre {
     font-size: var(--text-xs);
-    padding: var(--rem-1);
     border-radius: var(--rounded-sm);
-    margin-bottom: var(--rem-1);
+    margin-bottom: 2rem;
+    margin-top: 2rem;
     overflow-x: auto;
     white-space: pre;
 }
@@ -762,4 +764,70 @@ html.dark .token.entity {
 
 html.dark .token.inserted {
 	color: green;
+}
+
+div.code-toolbar {
+	position: relative;
+}
+
+div.code-toolbar > .toolbar {
+	position: absolute;
+	z-index: 10;
+	top: .3em;
+	right: .2em;
+	transition: opacity 0.3s ease-in-out;
+	opacity: 1;
+}
+
+div.code-toolbar:hover > .toolbar {
+	opacity: 1;
+}
+
+/* Separate line b/c rules are thrown out if selector is invalid.
+   IE11 and old Edge versions don't support :focus-within. */
+div.code-toolbar:focus-within > .toolbar {
+	opacity: 1;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item {
+	display: inline-block;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > a {
+	cursor: pointer;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > button {
+	background: none;
+	border: 0;
+	color: inherit;
+	font: inherit;
+	line-height: normal;
+	overflow: visible;
+	padding: 0;
+	-webkit-user-select: none; /* for button */
+	-moz-user-select: none;
+	-ms-user-select: none;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > a,
+div.code-toolbar > .toolbar > .toolbar-item > button,
+div.code-toolbar > .toolbar > .toolbar-item > span {
+	color: #bbb;
+	font-size: .8em;
+	padding: 0 .5em;
+	background: #f5f2f0;
+	background: rgba(224, 224, 224, 0.2);
+	box-shadow: 0 2px 0 0 rgba(0,0,0,0.2);
+	border-radius: .5em;
+}
+
+div.code-toolbar > .toolbar > .toolbar-item > a:hover,
+div.code-toolbar > .toolbar > .toolbar-item > a:focus,
+div.code-toolbar > .toolbar > .toolbar-item > button:hover,
+div.code-toolbar > .toolbar > .toolbar-item > button:focus,
+div.code-toolbar > .toolbar > .toolbar-item > span:hover,
+div.code-toolbar > .toolbar > .toolbar-item > span:focus {
+	color: inherit;
+	text-decoration: none;
 }
