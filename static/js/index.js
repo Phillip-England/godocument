@@ -225,7 +225,6 @@
             }
             setBlankArticleLinks() {
                 let links = this.contentWrapper.querySelectorAll('a');
-                console.log(links)
                 for (let i = 0; i < links.length; i++) {
                     let link = links[i];
                     let linkTarget = link.getAttribute('target');
@@ -234,12 +233,26 @@
                     }
                 }
             }
+            scrollToArticleHeader(header) {
+                let headerTop = header.getBoundingClientRect().top;
+                let articleTop = this.article.getBoundingClientRect().top;
+                console.log(headerTop, articleTop)
+            }
         }
 
         class PageNav {
             constructor() {
                 this.nav = document.querySelector('#pagenav');
                 this.links = this.nav.querySelectorAll('a');
+                // remove any punctuation from link hrefs
+                for (let i = 0; i < this.links.length; i++) {
+                    let link = this.links[i];
+                    let href = link.getAttribute('href');
+                    href = href.replace("?", "")
+                    href = href.replace("!", "")
+                    href = href.replace(".", "")
+                    link.setAttribute('href', href);
+                }
             }
         }
 
