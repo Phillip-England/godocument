@@ -453,10 +453,6 @@ article {
     border-radius: var(--rounded-sm);
 }
 
-#article #content-wrapper .article-header-active {
-    color: var(--main-color);
-}
-
 
 /* pagenav ------------------------------------------------------------------- */
 
@@ -492,7 +488,14 @@ html.dark #pagenav a {
     flex-direction: column;
     gap: 0.5rem;
     font-size: var(--text-2xs);
+}
 
+#pagenav .pagenav-link-active {
+    color: var(--main-color);
+}
+
+html.dark #pagenav .pagenav-link-active {
+    color: var(--main-color);
 }
 
 @media (min-width: 992px) {

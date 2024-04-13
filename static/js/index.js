@@ -158,8 +158,9 @@
         }
 
         class Article {
-            constructor(headerHeight) {
+            constructor(headerHeight, pagenavLinks) {
                 this.article = document.getElementById('article')
+                this.pagenavLinks = pagenavLinks
                 this.h2 = this.article.querySelectorAll('h2')
                 this.h3 = this.article.querySelectorAll('h3')
                 this.h4 = this.article.querySelectorAll('h4')
@@ -167,11 +168,11 @@
                 this.h6 = this.article.querySelectorAll('h6')
                 this.headerHeight = headerHeight
                 this.headers = []
+                this.scrollTimeout = null
                 this.gatherHeaders()
-                this.setActiveHeader()
-                this.article.removeEventListener('scroll', this.setActiveHeader.bind(this))
-                this.article.addEventListener('scroll', this.setActiveHeader.bind(this))
-                
+                this.setActivePagenavLink()
+                this.article.removeEventListener('scroll', this.articleScrollEvent.bind(this))
+                this.article.addEventListener('scroll', this.articleScrollEvent.bind(this))
             }
             gatherHeaders() {
                 for (let i = 0; i < this.h2.length; i++) {
@@ -190,28 +191,37 @@
                     this.headers.push(this.h6[i])
                 }
             }
-            setActiveHeader() {
+            setActivePagenavLink() {
                 let found = false
                 for (let i = 0; i < this.headers.length; i++) {
                     let header = this.headers[i]
                     let headerTop = this.headers[i].getBoundingClientRect().top
                     if (headerTop < this.headerHeight) {
-                        header.classList.remove('article-header-active')
+                        this.pagenavLinks[i].classList.remove('pagenav-link-active')
                         continue
                     }
                     if (found) {
-                        header.classList.remove('article-header-active')
+                        this.pagenavLinks[i].classList.remove('pagenav-link-active')
                         continue
                     }
-                    header.classList.add('article-header-active')
+                    this.pagenavLinks[i].classList.add('pagenav-link-active')
                     found = true
                 }
+            }
+            articleScrollEvent() {
+                if (this.scrollTimeout !== null) {
+                    clearTimeout(this.scrollTimeout);
+                }
+                this.scrollTimeout = setTimeout(() => {
+                    this.setActivePagenavLink();
+                }, 100);
             }
         }
 
         class PageNav {
             constructor() {
                 this.nav = document.querySelector('#pagenav');
+                this.links = this.nav.querySelectorAll('a');
             }
         }
 
@@ -219,8 +229,8 @@
             let sitenav = new SiteNav();
             let header = new Header(sitenav);
             let theme = new Theme()
-            let article = new Article(header.headerHeight)
-            console.log(article)
+            let pagenav = new PageNav()
+            let article = new Article(header.headerHeight, pagenav.links)
             Prism.highlightAll();
         }
 
