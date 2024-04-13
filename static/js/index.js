@@ -160,6 +160,7 @@
         class Article {
             constructor(headerHeight, pagenavLinks) {
                 this.article = document.getElementById('article')
+                this.contentWrapper = document.getElementById('content-wrapper')
                 this.pagenavLinks = pagenavLinks
                 this.h2 = this.article.querySelectorAll('h2')
                 this.h3 = this.article.querySelectorAll('h3')
@@ -171,6 +172,7 @@
                 this.scrollTimeout = null
                 this.gatherHeaders()
                 this.setActivePagenavLink()
+                this.setBlankArticleLinks()
                 this.article.removeEventListener('scroll', this.articleScrollEvent.bind(this))
                 this.article.addEventListener('scroll', this.articleScrollEvent.bind(this))
             }
@@ -196,6 +198,10 @@
                 for (let i = 0; i < this.headers.length; i++) {
                     let header = this.headers[i]
                     let headerTop = this.headers[i].getBoundingClientRect().top
+                    if (i == this.headers.length - 1 && headerTop < this.headerHeight) {
+                        this.pagenavLinks[i].classList.add('pagenav-link-active')
+                        continue
+                    }
                     if (headerTop < this.headerHeight) {
                         this.pagenavLinks[i].classList.remove('pagenav-link-active')
                         continue
@@ -206,6 +212,7 @@
                     }
                     this.pagenavLinks[i].classList.add('pagenav-link-active')
                     found = true
+
                 }
             }
             articleScrollEvent() {
@@ -215,6 +222,17 @@
                 this.scrollTimeout = setTimeout(() => {
                     this.setActivePagenavLink();
                 }, 100);
+            }
+            setBlankArticleLinks() {
+                let links = this.contentWrapper.querySelectorAll('a');
+                console.log(links)
+                for (let i = 0; i < links.length; i++) {
+                    let link = links[i];
+                    let linkTarget = link.getAttribute('target');
+                    if (!linkTarget) {
+                        link.setAttribute('target', '_blank');
+                    }
+                }
             }
         }
 

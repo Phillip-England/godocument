@@ -15,6 +15,7 @@ import (
 
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark/renderer/html"
 )
 
 // GenerateRoutes generates code for application routes based on the ./godocument.config.json file "docs" section
@@ -51,6 +52,9 @@ func assignHandlers(cnf stypes.DocConfig) {
 			md := goldmark.New(
 				goldmark.WithParserOptions(
 					parser.WithAutoHeadingID(),
+				),
+				goldmark.WithRendererOptions(
+					html.WithUnsafe(),
 				),
 				// goldmark.WithExtensions(
 				// 	highlighting.NewHighlighting(

@@ -21,7 +21,6 @@
     --dark-gray: #333333;
     --darkest-gray: #222222;
     --main-color: #B8860B;
-
 }
 
 /* reset --------------------------------------------------------------------- */
@@ -323,6 +322,7 @@ html.dark #sitenav .dropdown-caret {
     justify-content: space-between;
     flex-direction: row;
     gap: 2rem;
+    margin-top: 4rem;
 }
 
 #pageturn svg {
@@ -414,36 +414,32 @@ article {
 #content-wrapper {
     grid-area: content;
     padding: 2rem;
-    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 #content-wrapper h1 {
     font-size: var(--text-2xl);
-    margin-bottom: 3rem;
 }
 
 #content-wrapper h2 {
     font-size: var(--text-xl);
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    padding-top: 2rem;
 }
 
 #content-wrapper h3 {
     font-size: var(--text-lg);
-    margin-top: 2rem;
-    margin-bottom: 1rem;
 }
 
 #content-wrapper p {
     font-size: var(--text-xs);
-    margin-bottom: 1rem;
+    line-height: 1.75rem;
 }
 
 #content-wrapper pre {
     font-size: var(--text-xs);
     border-radius: var(--rounded-sm);
-    margin-bottom: 2rem;
-    margin-top: 2rem;
     overflow-x: auto;
     white-space: pre;
 }
@@ -451,6 +447,16 @@ article {
 #content-wrapper code {
     font-size: var(--text-xs);
     border-radius: var(--rounded-sm);
+    margin: 1rem;
+}
+
+#content-wrapper a {
+    color: var(--main-color);
+    text-decoration: underline;
+}
+
+html.dark #content-wrapper a {
+    color: var(--main-color);
 }
 
 
