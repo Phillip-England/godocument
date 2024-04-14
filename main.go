@@ -17,6 +17,8 @@ var templates *template.Template
 
 func main() {
 
+	args := os.Args
+
 	_ = godotenv.Load()
 
 	templates = template.New("")
@@ -46,6 +48,11 @@ func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
+	}
+
+	if len(args) > 1 && args[1] == "--build" {
+		fmt.Println("building statis assests")
+		return
 	}
 
 	fmt.Println("Server is running on port: " + port)

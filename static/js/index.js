@@ -251,7 +251,31 @@
                     href = href.replace("?", "")
                     href = href.replace("!", "")
                     href = href.replace(".", "")
+                    href = href.replace("/", "")
+                    href = href.replace(".", "")
                     link.setAttribute('href', href);
+                }
+            }
+        }
+
+        class CustomContentElements {
+            constructor() {
+                this.contentImportant = document.querySelectorAll('.content-important');
+                this.insertExclamationPoints()
+            }
+            insertExclamationPoints() {
+                for (let i = 0; i < this.contentImportant.length; i++) {
+                    let parentP = this.contentImportant[i].parentElement;
+                    let exclamation = document.createElement('div')
+                    exclamation.classList.add('content-important-exclamation')
+                    exclamation.innerHTML = `
+                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V8m0 8h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                        </svg>
+                        <p>Important</p>
+                    `
+                    parentP.insertBefore(exclamation, this.contentImportant[i])
+                    
                 }
             }
         }
@@ -262,6 +286,7 @@
             let theme = new Theme()
             let pagenav = new PageNav()
             let article = new Article(header.headerHeight, pagenav.links)
+            let customContentElements = new CustomContentElements()
             Prism.highlightAll();
         }
 

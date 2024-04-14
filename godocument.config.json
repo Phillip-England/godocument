@@ -1,18 +1,9 @@
 {
     "docs": {
         "Introduction": "/introduction.md",
-        "Getting Started": {
-            "Installation": "/getting-started/installation.md",
-            "Usage": "/getting-started/usage.md",
-            "More Information": {
-                "Configuration": "/getting-started/more-information/configuration.md"
-            }
-        },
-        "Learn More": {
-            "Advanced Usage": "/learn-more/advanced-usage.md",
-            "API Reference": "/learn-more/api-reference.md",
-            "Contributing": "/learn-more/contributing.md",
-            "FAQ": "/learn-more/faq.md"
+        "Quickstart": {
+            "Installation": "/quickstart/installation.md",
+            "Configuration": "/quickstart/configuration.md"
         }
     }
 }

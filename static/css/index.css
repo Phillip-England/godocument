@@ -15,6 +15,7 @@
 
     --white: #fafafa;
     --black: #1f1f1f;
+    --codeblock-light-background: #f5f2f0;
     --faint-gray: #e0e0e0;
     --light-gray: #d0d0d0;
     --gray: #555555;
@@ -447,7 +448,6 @@ article {
 #content-wrapper code {
     font-size: var(--text-xs);
     border-radius: var(--rounded-sm);
-    margin: 1rem;
 }
 
 #content-wrapper a {
@@ -457,6 +457,37 @@ article {
 
 html.dark #content-wrapper a {
     color: var(--main-color);
+}
+
+#content-wrapper p code {
+    background-color: var(--faint-gray);
+    border-radius: var(--rounded-sm);
+    padding: 0.25rem;
+}
+
+html.dark #content-wrapper p code {
+    background-color: var(--dark-gray);
+}
+
+#content-wrapper p:has(> span.content-important) {
+    background-color: var(--codeblock-light-background);
+    border-left: solid var(--main-color) 5px;
+    border-radius: var(--rounded-sm);
+    padding: 1rem;
+}
+
+html.dark #content-wrapper p:has(> span.content-important) {
+    background-color: var(--dark-gray);
+}
+
+#content-wrapper p div.content-important-exclamation {
+    font-size: var(--text-sm);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    color: var(--main-color);
+    gap: 0.5rem;
 }
 
 
@@ -696,7 +727,7 @@ html.light pre[class*="language-"] {
 
 html.light :not(pre) > code[class*="language-"],
 html.light pre[class*="language-"] {
-	background: #f5f2f0;
+	background: var(--codeblock-light-background);
 }
 
 /* Inline code */
@@ -737,7 +768,7 @@ html.light .token.string,
 html.light .token.char,
 html.light .token.builtin,
 html.light .token.inserted {
-	color: #690;
+	color: rgb(83, 122, 5);
 }
 
 html.light .token.operator,
@@ -746,7 +777,7 @@ html.light .token.url,
 html.light .language-css .token.string,
 html.light .style .token.string {
 	color: #9a6e3a;
-	background: hsla(0, 0%, 100%, .5);
+	background: var(--codeblock-light-background);
 }
 
 html.light .token.atrule,
@@ -757,7 +788,7 @@ html.light .token.keyword {
 
 html.light .token.function,
 html.light .token.class-name {
-	color: #DD4A68;
+	color: #b0374f;
 }
 
 html.light .token.regex,

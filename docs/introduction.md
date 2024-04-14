@@ -42,6 +42,6 @@ Everything starts with your godocument.config.json file. Here is what the config
 
 ```
 
-Godocument takes this config file and builds a series of routes. You can use these routes during development to test your application. Once you get things looking how you want, you can read the static html from the routes and generate an ./out directory containing your static assets.
+Godocument takes this config file and uses it to build a series of routes. You can use these routes during development to test your application. Once you get things looking how you want, you can read the static html from the routes and generate an ./out directory containing your static assets.
 
 From there, you can deploy your application on a CDN of your choice. If that sounds like a plan, keep reading.
