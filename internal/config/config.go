@@ -18,6 +18,7 @@ const (
 	IntroductionString   = "Introduction"
 	GeneratedNavPath     = "./html/components/sitenav.html"
 	StaticMarkdownPrefix = "./docs"
+	StaticAssetsDir      = "./out"
 )
 
 // taks the "docs" section of godocument.json.config and generates a workable data structure from it

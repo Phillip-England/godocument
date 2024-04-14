@@ -4,7 +4,20 @@ import (
 	"fmt"
 	"godocument/internal/config"
 	"godocument/internal/stypes"
+	"io"
+	"net/http"
 	"os"
+	"path/filepath"
+	"regexp"
+	"strings"
+
+	"github.com/tdewolff/minify/v2"
+	"github.com/tdewolff/minify/v2/css"
+	"github.com/tdewolff/minify/v2/html"
+	"github.com/tdewolff/minify/v2/js"
+	"github.com/tdewolff/minify/v2/json"
+	"github.com/tdewolff/minify/v2/svg"
+	"github.com/tdewolff/minify/v2/xml"
 )
 
 // GenerateDynamicNavbar generates the dynamic navbar based on ./godocument.config.json
@@ -72,4 +85,69 @@ func writeNavbarHTML(html string) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func GenerateStaticAssets(cnf stypes.DocConfig) {
+	m := minify.New()
+	m.AddFunc("text/css", css.Minify)
+	m.AddFunc("text/html", html.Minify)
+	m.AddFunc("image/svg+xml", svg.Minify)
+	m.AddFuncRegexp(regexp.MustCompile("^(application|text)/(x-)?(java|ecma)script$"), js.Minify)
+	m.AddFuncRegexp(regexp.MustCompile("[/+]json$"), json.Minify)
+	m.AddFuncRegexp(regexp.MustCompile("[/+]xml$"), xml.Minify)
+	GenerateStaticHTML(m, cnf)
+}
+
+func GenerateStaticHTML(m *minify.M, cnf stypes.DocConfig) {
+	err := os.RemoveAll(config.StaticAssetsDir)
+	if err != nil {
+		fmt.Printf("Error removing directory: %s\n", err)
+		return
+	}
+	if _, err := os.Stat(config.StaticAssetsDir); os.IsNotExist(err) {
+		err := os.Mkdir(config.StaticAssetsDir, 0755)
+		if err != nil {
+			fmt.Printf("Error creating directory: %s\n", err)
+			return
+		}
+	}
+	config.WorkOnMarkdownNodes(cnf, func(n *stypes.MarkdownNode) {
+		client := &http.Client{}
+		res, err := client.Get("http://localhost:8080" + n.RouterPath)
+		if err != nil {
+			panic(err)
+		}
+		defer res.Body.Close()
+		body, err := io.ReadAll(res.Body)
+		if err != nil {
+			fmt.Printf("Error reading body: %s\n", err)
+			return
+		}
+		writeToPath := n.MarkdownFile
+		writeToPath = strings.TrimPrefix(writeToPath, config.StaticMarkdownPrefix)
+		writeToPath = config.StaticAssetsDir + writeToPath
+		writeToPath = strings.Replace(writeToPath, ".md", ".html", 1)
+		dirPath := filepath.Dir(writeToPath)
+
+		if err := os.MkdirAll(dirPath, 0755); err != nil {
+			fmt.Printf("Failed to create directories: %v", err)
+			return
+		}
+		f, err := os.Create(writeToPath)
+		if err != nil {
+			fmt.Printf("Error creating file: %s\n", err)
+			return
+		}
+		defer f.Close()
+		minifiedHTML, err := m.Bytes("text/html", body)
+		if err != nil {
+			fmt.Printf("Error minifying body: %s\n", err)
+			return
+		}
+		_, err = f.Write(minifiedHTML)
+		if err != nil {
+			fmt.Printf("Error writing body to file: %s\n", err)
+			return
+		}
+	})
 }

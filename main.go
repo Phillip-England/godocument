@@ -51,7 +51,7 @@ func main() {
 	}
 
 	if len(args) > 1 && args[1] == "--build" {
-		fmt.Println("building statis assests")
+		filewriter.GenerateStaticAssets(cnf)
 		return
 	}
 
