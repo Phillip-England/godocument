@@ -91,7 +91,9 @@ func writeNavbarHTML(html string) {
 func GenerateStaticAssets(cnf stypes.DocConfig) {
 	m := prepareMinify()
 	resetOutDir()
+	copyDir(config.DevStaticPrefix, config.ProdStaticPrefix)
 	generateStaticHTML(m, cnf)
+	minifyStaticFiles(m, config.StaticAssetsDir)
 }
 
 func prepareMinify() *minify.M {
@@ -157,22 +159,17 @@ func generateStaticHTML(m *minify.M, cnf stypes.DocConfig) {
 		}
 		defer f.Close()
 		doc, err := getQueryDoc(body)
-		modifyAnchorTagsForStatic(doc)
 		if err != nil {
-			fmt.Printf("Error modifying anchor tags: %s\n", err)
+			fmt.Printf("Error *goquery.Document from res.Body(): %s\n", err)
 			return
 		}
+		modifyAnchorTagsForStatic(doc)
 		htmlString, err := doc.Html()
 		if err != nil {
 			fmt.Printf("Error converting doc to html: %s\n", err)
 			return
 		}
 		body = []byte(htmlString)
-		// minifiedHTML, err := m.Bytes("text/html", body)
-		// if err != nil {
-		// 	fmt.Printf("Error minifying body: %s\n", err)
-		// 	return
-		// }
 		_, err = f.Write(body)
 		if err != nil {
 			fmt.Printf("Error writing body to file: %s\n", err)
@@ -202,4 +199,130 @@ func modifyAnchorTagsForStatic(doc *goquery.Document) {
 			s.SetAttr("href", href+".html")
 		}
 	})
+}
+
+func minifyStaticFiles(m *minify.M, dirPath string) {
+	err := filepath.Walk(dirPath, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
+		ext := filepath.Ext(path)
+		var mimetype string
+		switch ext {
+		case ".css":
+			mimetype = "text/css"
+		case ".html":
+			mimetype = "text/html"
+		case ".js":
+			mimetype = "application/javascript"
+		case ".json":
+			mimetype = "application/json"
+		case ".svg":
+			mimetype = "image/svg+xml"
+		case ".xml":
+			mimetype = "text/xml"
+		default:
+			return nil
+		}
+		f, err := os.Open(path)
+		if err != nil {
+			fmt.Printf("Error opening file: %s\n", err)
+			return err
+		}
+		defer f.Close()
+		fileBytes, err := io.ReadAll(f)
+		if err != nil {
+			fmt.Printf("Error reading file: %s\n", err)
+			return err
+		}
+		minifiedBytes, err := m.Bytes(mimetype, fileBytes)
+		if err != nil {
+			fmt.Printf("Error minifying file: %s\n", err)
+			return err
+		}
+		err = os.WriteFile(path, minifiedBytes, info.Mode()) // Preserving original file permissions
+		if err != nil {
+			fmt.Printf("Error writing minified file: %s\n", err)
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		fmt.Printf("Error walking the directory: %s\n", err)
+	}
+}
+
+// copyFile copies a single file from src to dst.
+func copyFile(src, dst string) error {
+	srcFile, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer srcFile.Close()
+
+	dstFile, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer dstFile.Close()
+
+	if _, err := io.Copy(dstFile, srcFile); err != nil {
+		return err
+	}
+
+	srcInfo, err := srcFile.Stat()
+	if err != nil {
+		return err
+	}
+
+	return os.Chmod(dstFile.Name(), srcInfo.Mode())
+}
+
+// copyDir recursively copies a directory tree, attempting to preserve permissions.
+// Source directory must exist, destination directory must *not* exist.
+func copyDir(src string, dst string) error {
+	src = filepath.Clean(src)
+	dst = filepath.Clean(dst)
+	si, err := os.Stat(src)
+	if err != nil {
+		return err
+	}
+	if !si.IsDir() {
+		return fmt.Errorf("source is not a directory")
+	}
+	_, err = os.Stat(dst)
+	if err != nil && !os.IsNotExist(err) {
+		return err
+	}
+	if err == nil {
+		return fmt.Errorf("destination already exists")
+	}
+	err = os.MkdirAll(dst, si.Mode())
+	if err != nil {
+		return err
+	}
+	entries, err := os.ReadDir(src)
+	if err != nil {
+		return err
+	}
+	for _, entry := range entries {
+		srcPath := filepath.Join(src, entry.Name())
+		dstPath := filepath.Join(dst, entry.Name())
+
+		if entry.IsDir() {
+			err = copyDir(srcPath, dstPath)
+			if err != nil {
+				return err
+			}
+		} else {
+			err = copyFile(srcPath, dstPath)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }

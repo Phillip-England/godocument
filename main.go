@@ -6,6 +6,7 @@ import (
 	"godocument/internal/contentrouter"
 	"godocument/internal/filewriter"
 	"godocument/internal/handler"
+	"godocument/internal/middleware"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -30,7 +31,11 @@ func main() {
 		}
 		cnf := config.GetDocConfig()
 		filewriter.GenerateStaticAssets(cnf)
-		mux.HandleFunc("GET /", handler.ServeOutFiles)
+		mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+			middleware.Chain(w, r, nil, func(cc *middleware.CustomContext, w http.ResponseWriter, r *http.Request) {
+				handler.ServeOutFiles(w, r)
+			})
+		})
 		fmt.Println("Server is running on port: " + port)
 		err := http.ListenAndServe(":"+port, mux)
 		if err != nil {

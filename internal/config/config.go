@@ -17,8 +17,10 @@ const (
 	JSONConfigPath       = "./godocument.config.json"
 	IntroductionString   = "Introduction"
 	GeneratedNavPath     = "./html/components/sitenav.html"
+	DevStaticPrefix      = "./static"
 	StaticMarkdownPrefix = "./docs"
 	StaticAssetsDir      = "./out"
+	ProdStaticPrefix     = "./out/static"
 )
 
 // taks the "docs" section of godocument.json.config and generates a workable data structure from it
