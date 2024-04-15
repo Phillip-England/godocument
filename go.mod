@@ -9,4 +9,9 @@ require (
 	github.com/yuin/goldmark v1.7.1
 )
 
-require github.com/tdewolff/parse/v2 v2.7.12 // indirect
+require (
+	github.com/PuerkitoBio/goquery v1.9.1 // indirect
+	github.com/andybalholm/cascadia v1.3.2 // indirect
+	github.com/tdewolff/parse/v2 v2.7.12 // indirect
+	golang.org/x/net v0.21.0 // indirect
+)

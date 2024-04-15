@@ -4,7 +4,7 @@
     <script src="/static/js/prism.js" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="/static/css/index.css"/>
-    <title>Godocument - Configuration</title>
+    <title>Godocument - Introduction</title>
 </head>
 <body hx-boost="true">
     <main>
@@ -24,57 +24,54 @@
 </header>
         <article id="article" class="custom-scroll">
             <div id="content-wrapper">
-                <h1 id="configuration">Configuration</h1>
-<h2 id="project-structure">Project Structure</h2>
-<p>Godocument has the following file structure.</p>
-<pre><code class="language-bash">├── /docs
-├── /html
-├── /internal
-├── /static
-├── main.go
-├── godocument.config.json
-</code></pre>
-<p>Let&#39;s focus on <code>/docs</code> and <code>godocument.config.json</code> for this quickstart.</p>
-<h2 id="godocumentconfigjson">godocument.config.json</h2>
-<p>The <code>godocument.config.json</code> file for this application (up to this point) looks like this:</p>
+                <h1 id="introduction">Introduction</h1>
+<h2 id="static-site-generator">Static Site Generator</h2>
+<p>Godocument is a static site generator built with <em>simplicity</em> in mind. My goal is to make it as quick and easy as possible to get a documentation website up and running.</p>
+<p>Not every developer is a web developer. But every developer who writes open-source software will need to document their code. Godocument makes that process painless. Why spend all your time coding up your documentation when you could spend it improving the project your documenting?</p>
+<h2 id="why">Why?</h2>
+<p>This project was originally built for myself. While learning <a href="https://templ.guide">Templ</a>, I came across <a href="https://docusaurus.io/docs">Docusaurus</a>, another static site generator. <strong>Docusaurus inspired this project.</strong> I thought to myself, &#34;Docusaurus looks great, but I prefer to avoid React and Node if I can.&#34;</p>
+<p>Why make something complex if it doesn&#39;t have to be? Static site generation shouldn&#39;t require you to be locked into the React world. What if there was a way to get most of the benefits of Docusaurus, but without all the framework madness?</p>
+<p>And Godocument was born.</p>
+<h2 id="how-does-it-work">How Does it Work?</h2>
+<p>Godocument&#39;s workflow is straightforward: clone the repo, setup your config, write your markdown files, build the static assets, and deploy.</p>
+<p>Everything starts with your godocument.config.json file. Here is what the config file looks like for this site. Yes, I use my own software. 😉</p>
 <pre><code class="language-json">{
     &#34;docs&#34;: {
         &#34;Introduction&#34;: &#34;/introduction.md&#34;,
-        &#34;Quickstart&#34;: {
-            &#34;Installation&#34;: &#34;/quickstart/installation.md&#34;,
-            &#34;Configuration&#34;: &#34;/quickstart/configuration.md&#34;,
-            ...
+        &#34;Getting Started&#34;: {
+            &#34;Installation&#34;: &#34;/getting-started/installation.md&#34;,
+            &#34;Usage&#34;: &#34;/getting-started/usage.md&#34;,
+            &#34;More Information&#34;: {
+                &#34;Configuration&#34;: &#34;/getting-started/more-information/configuration.md&#34;
+            }
+        },
+        &#34;Learn More&#34;: {
+            &#34;Advanced Usage&#34;: &#34;/learn-more/advanced-usage.md&#34;,
+            &#34;API Reference&#34;: &#34;/learn-more/api-reference.md&#34;,
+            &#34;Contributing&#34;: &#34;/learn-more/contributing.md&#34;,
+            &#34;FAQ&#34;: &#34;/learn-more/faq.md&#34;
         }
-        ...
     }
 }
+
 </code></pre>
-<p>Each line under the <code>docs</code> object should point to an existing markdown file found in <code>./docs</code>. The application with throw an error if you attempt to point to a markdown file which does not exist.</p>
-<p><span class="content-important">The order in which your organize your <code>godocument.config.json</code> file will determine the order of your elements in your apps navigation. It will also determine the order of your pages.</span></p>
-<h2 id="docs">/docs</h2>
-<p><code>./docs</code> for this app (up to this point in your reading) should look like this:</p>
-<pre><code class="language-bash">./docs
-├── introduction.md
-└── quickstart
-    ├── configuration.md
-    └── installation.md
-</code></pre>
-<p><span class="content-important">You should set up the structure of <code>/docs</code> to mirror the structure of <code>godocument.config.json</code>. Not doing so can lead to unforseen bugs.</span></p>
+<p>Godocument takes this config file and uses it to build a series of routes. You can use these routes during development to test your application. Once you get things looking how you want, you can read the static html from the routes and generate an ./out directory containing your static assets.</p>
+<p>From there, you can deploy your application on a CDN of your choice. If that sounds like a plan, keep reading.</p>
 
                 <ul id="pageturn">
     <li class="pageturn-prev">
         
+    </li>
+    <li class="pageturn-next">
+        
             <a href="/quickstart/installation.html" target="_self">
                 <div>
                     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m17 16-4-4 4-4m-6 8-4-4 4-4"></path>
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 16 4-4-4-4m6 8 4-4-4-4"></path>
                     </svg>
                 </div>
                 <p>Installation</p>
             </a>
-        
-    </li>
-    <li class="pageturn-next">
         
     </li>
 </ul>
@@ -85,15 +82,15 @@
         
             
                 <li>
-                    <a href="#project-structure" class="depth-0">Project Structure</a>
+                    <a href="#static-site-generator" class="depth-0">Static Site Generator</a>
                 </li>
             
                 <li>
-                    <a href="#godocument.config.json" class="depth-0">godocument.config.json</a>
+                    <a href="#why?" class="depth-0">Why?</a>
                 </li>
             
                 <li>
-                    <a href="#/docs" class="depth-0">/docs</a>
+                    <a href="#how-does-it-work?" class="depth-0">How Does it Work?</a>
                 </li>
             
         

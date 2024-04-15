@@ -16,3 +16,9 @@ func ServeStaticFiles(w http.ResponseWriter, r *http.Request) {
 	fullPath := filepath.Join(".", "static", filePath)
 	http.ServeFile(w, r, fullPath)
 }
+
+func ServeOutFiles(w http.ResponseWriter, r *http.Request) {
+	filePath := r.URL.Path[len("/"):]
+	fullPath := filepath.Join(".", "out", filePath)
+	http.ServeFile(w, r, fullPath)
+}

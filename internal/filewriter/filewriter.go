@@ -1,6 +1,7 @@
 package filewriter
 
 import (
+	"bytes"
 	"fmt"
 	"godocument/internal/config"
 	"godocument/internal/stypes"
@@ -10,6 +11,7 @@ import (
 	"path/filepath"
 	"regexp"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/tdewolff/minify/v2"
 	"github.com/tdewolff/minify/v2/css"
 	"github.com/tdewolff/minify/v2/html"
@@ -87,6 +89,12 @@ func writeNavbarHTML(html string) {
 }
 
 func GenerateStaticAssets(cnf stypes.DocConfig) {
+	m := prepareMinify()
+	resetOutDir()
+	generateStaticHTML(m, cnf)
+}
+
+func prepareMinify() *minify.M {
 	m := minify.New()
 	m.AddFunc("text/css", css.Minify)
 	m.AddFunc("text/html", html.Minify)
@@ -94,10 +102,10 @@ func GenerateStaticAssets(cnf stypes.DocConfig) {
 	m.AddFuncRegexp(regexp.MustCompile("^(application|text)/(x-)?(java|ecma)script$"), js.Minify)
 	m.AddFuncRegexp(regexp.MustCompile("[/+]json$"), json.Minify)
 	m.AddFuncRegexp(regexp.MustCompile("[/+]xml$"), xml.Minify)
-	GenerateStaticHTML(m, cnf)
+	return m
 }
 
-func GenerateStaticHTML(m *minify.M, cnf stypes.DocConfig) {
+func resetOutDir() {
 	err := os.RemoveAll(config.StaticAssetsDir)
 	if err != nil {
 		fmt.Printf("Error removing directory: %s\n", err)
@@ -110,6 +118,26 @@ func GenerateStaticHTML(m *minify.M, cnf stypes.DocConfig) {
 			return
 		}
 	}
+}
+
+func makeRequiredStaticDirs(staticAssetPath string) {
+	dirPath := filepath.Dir(staticAssetPath)
+	if err := os.MkdirAll(dirPath, 0755); err != nil {
+		fmt.Printf("Failed to create directories: %v", err)
+		return
+	}
+}
+
+func createStaticAssetFile(staticAssetPath string) *os.File {
+	f, err := os.Create(staticAssetPath)
+	if err != nil {
+		fmt.Printf("Error creating file: %s\n", err)
+		return nil
+	}
+	return f
+}
+
+func generateStaticHTML(m *minify.M, cnf stypes.DocConfig) {
 	config.WorkOnMarkdownNodes(cnf, func(n *stypes.MarkdownNode) {
 		client := &http.Client{}
 		res, err := client.Get("http://localhost:8080" + n.RouterPath)
@@ -122,27 +150,56 @@ func GenerateStaticHTML(m *minify.M, cnf stypes.DocConfig) {
 			fmt.Printf("Error reading body: %s\n", err)
 			return
 		}
-		dirPath := filepath.Dir(n.StaticAssetPath)
-
-		if err := os.MkdirAll(dirPath, 0755); err != nil {
-			fmt.Printf("Failed to create directories: %v", err)
-			return
-		}
-		f, err := os.Create(n.StaticAssetPath)
-		if err != nil {
-			fmt.Printf("Error creating file: %s\n", err)
+		makeRequiredStaticDirs(n.StaticAssetPath)
+		f := createStaticAssetFile(n.StaticAssetPath)
+		if f == nil {
 			return
 		}
 		defer f.Close()
-		minifiedHTML, err := m.Bytes("text/html", body)
+		doc, err := getQueryDoc(body)
+		modifyAnchorTagsForStatic(doc)
 		if err != nil {
-			fmt.Printf("Error minifying body: %s\n", err)
+			fmt.Printf("Error modifying anchor tags: %s\n", err)
 			return
 		}
-		_, err = f.Write(minifiedHTML)
+		htmlString, err := doc.Html()
+		if err != nil {
+			fmt.Printf("Error converting doc to html: %s\n", err)
+			return
+		}
+		body = []byte(htmlString)
+		// minifiedHTML, err := m.Bytes("text/html", body)
+		// if err != nil {
+		// 	fmt.Printf("Error minifying body: %s\n", err)
+		// 	return
+		// }
+		_, err = f.Write(body)
 		if err != nil {
 			fmt.Printf("Error writing body to file: %s\n", err)
 			return
+		}
+	})
+}
+
+func getQueryDoc(body []byte) (*goquery.Document, error) {
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(body))
+	if err != nil {
+		return nil, err
+	}
+	return doc, nil
+}
+
+func modifyAnchorTagsForStatic(doc *goquery.Document) {
+	doc.Find("a").Each(func(i int, s *goquery.Selection) {
+		href, exists := s.Attr("href")
+		if exists {
+			if len(href) > 3 && href[0:4] == "http" {
+				return
+			}
+			if href == "/" || href[0] == '#' {
+				return
+			}
+			s.SetAttr("href", href+".html")
 		}
 	})
 }
