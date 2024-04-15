@@ -36,9 +36,6 @@ func GetDocConfig() stypes.DocConfig {
 	// in assignSubObjectNodes, we assign each object node to their respective parent object node
 	// after doing this, we purge all markdown nodes that are not at the root level (because they now exist in objectnode.Children)
 	// we also purge all object nodes that are not at the root level (because they will be assigned to another object node)
-	// we then assign a handler name to each markdown node
-	// we then assign a handler function to each markdown node
-	// then we actually mount each route to the http.ServeMux
 
 	u := getUnstructuredDocs()
 	c := stypes.DocConfig{}
@@ -85,10 +82,16 @@ func getLinearDocs(om interface{}, parent string, docConfig stypes.DocConfig, de
 					parent = DocRoot
 				}
 				routerPath := ""
+				markdownFile := StaticMarkdownPrefix + value
+				staticAssetPath := markdownFile
 				if key == IntroductionString && depth == 0 {
 					routerPath = "/"
+					staticAssetPath = StaticAssetsDir + "/index.html"
 				} else {
 					routerPath = strings.TrimSuffix(value, ".md")
+					staticAssetPath = strings.TrimPrefix(staticAssetPath, StaticMarkdownPrefix)
+					staticAssetPath = StaticAssetsDir + staticAssetPath
+					staticAssetPath = strings.Replace(staticAssetPath, ".md", ".html", 1)
 				}
 				docNode := &stypes.MarkdownNode{
 					BaseNodeData: &stypes.BaseNodeData{
@@ -96,8 +99,9 @@ func getLinearDocs(om interface{}, parent string, docConfig stypes.DocConfig, de
 						Parent: parent,
 						Name:   key,
 					},
-					MarkdownFile: StaticMarkdownPrefix + value,
-					RouterPath:   routerPath,
+					MarkdownFile:    markdownFile,
+					RouterPath:      routerPath,
+					StaticAssetPath: staticAssetPath,
 				}
 				docConfig = append(docConfig, docNode)
 			case orderedmap.OrderedMap:

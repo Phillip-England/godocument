@@ -30,6 +30,7 @@ type MarkdownNode struct {
 	BaseNodeData        *BaseNodeData
 	MarkdownFile        string
 	RouterPath          string
+	StaticAssetPath     string
 	Sequence            int
 	Next                *MarkdownNode
 	Prev                *MarkdownNode

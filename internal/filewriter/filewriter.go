@@ -9,7 +9,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strings"
 
 	"github.com/tdewolff/minify/v2"
 	"github.com/tdewolff/minify/v2/css"
@@ -123,17 +122,13 @@ func GenerateStaticHTML(m *minify.M, cnf stypes.DocConfig) {
 			fmt.Printf("Error reading body: %s\n", err)
 			return
 		}
-		writeToPath := n.MarkdownFile
-		writeToPath = strings.TrimPrefix(writeToPath, config.StaticMarkdownPrefix)
-		writeToPath = config.StaticAssetsDir + writeToPath
-		writeToPath = strings.Replace(writeToPath, ".md", ".html", 1)
-		dirPath := filepath.Dir(writeToPath)
+		dirPath := filepath.Dir(n.StaticAssetPath)
 
 		if err := os.MkdirAll(dirPath, 0755); err != nil {
 			fmt.Printf("Failed to create directories: %v", err)
 			return
 		}
-		f, err := os.Create(writeToPath)
+		f, err := os.Create(n.StaticAssetPath)
 		if err != nil {
 			fmt.Printf("Error creating file: %s\n", err)
 			return
