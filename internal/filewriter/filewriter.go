@@ -186,6 +186,8 @@ func getQueryDoc(body []byte) (*goquery.Document, error) {
 	return doc, nil
 }
 
+// prepares all anchor tags in the static html files to point to the correct .html file
+// also converts relative paths to absolute paths
 func modifyAnchorTagsForStatic(doc *goquery.Document) {
 	doc.Find("a").Each(func(i int, s *goquery.Selection) {
 		href, exists := s.Attr("href")
@@ -196,7 +198,13 @@ func modifyAnchorTagsForStatic(doc *goquery.Document) {
 			if href == "/" || href[0] == '#' {
 				return
 			}
-			s.SetAttr("href", href+".html")
+			serverURL := os.Getenv("SERVER_URL")
+			if serverURL == "" {
+				fmt.Println("SERVER_URL not set. Defaulting to http://localhost:8080")
+				serverURL = "http://localhost:8080"
+			}
+			s.SetAttr("href", serverURL+href+".html")
+
 		}
 	})
 }
