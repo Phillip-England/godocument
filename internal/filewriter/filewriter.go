@@ -190,20 +190,25 @@ func getQueryDoc(body []byte) (*goquery.Document, error) {
 // prepares all anchor tags in the static html files to point to the correct .html file
 // also converts relative paths to absolute paths
 func modifyAnchorTagsForStatic(doc *goquery.Document) {
+	serverURL := os.Getenv("SERVER_URL")
+	if serverURL == "" {
+		fmt.Println("SERVER_URL not set. Defaulting to http://localhost:8080")
+		serverURL = "http://localhost:8080"
+	}
 	doc.Find("a").Each(func(i int, s *goquery.Selection) {
 		href, exists := s.Attr("href")
 		if exists {
 			if len(href) > 3 && href[0:4] == "http" {
 				return
 			}
-			if href == "/" || href[0] == '#' {
+			if href[0] == '#' {
 				return
 			}
-			serverURL := os.Getenv("SERVER_URL")
-			if serverURL == "" {
-				fmt.Println("SERVER_URL not set. Defaulting to http://localhost:8080")
-				serverURL = "http://localhost:8080"
+			if href == "/" {
+				s.SetAttr("href", serverURL+"/")
+				return
 			}
+
 			s.SetAttr("href", serverURL+href+".html")
 		}
 	})
@@ -226,6 +231,15 @@ func setOtherAbsolutePaths(doc *goquery.Document) {
 		}
 	})
 	doc.Find("script").Each(func(i int, s *goquery.Selection) {
+		src, exists := s.Attr("src")
+		if exists {
+			if len(src) > 3 && src[0:4] == "http" {
+				return
+			}
+			s.SetAttr("src", serverURL+src)
+		}
+	})
+	doc.Find("img").Each(func(i int, s *goquery.Selection) {
 		src, exists := s.Attr("src")
 		if exists {
 			if len(src) > 3 && src[0:4] == "http" {
