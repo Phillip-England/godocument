@@ -92,7 +92,7 @@ func GenerateStaticAssets(cnf stypes.DocConfig) {
 	m := prepareMinify()
 	resetOutDir()
 	copyDir(config.DevStaticPrefix, config.ProdStaticPrefix)
-	generateStaticHTML(m, cnf)
+	generateStaticHTML(cnf)
 	minifyStaticFiles(m, config.StaticAssetsDir)
 }
 
@@ -139,7 +139,7 @@ func createStaticAssetFile(staticAssetPath string) *os.File {
 	return f
 }
 
-func generateStaticHTML(m *minify.M, cnf stypes.DocConfig) {
+func generateStaticHTML(cnf stypes.DocConfig) {
 	config.WorkOnMarkdownNodes(cnf, func(n *stypes.MarkdownNode) {
 		client := &http.Client{}
 		res, err := client.Get("http://localhost:8080" + n.RouterPath)
@@ -164,6 +164,7 @@ func generateStaticHTML(m *minify.M, cnf stypes.DocConfig) {
 			return
 		}
 		modifyAnchorTagsForStatic(doc)
+		setOtherAbsolutePaths(doc)
 		htmlString, err := doc.Html()
 		if err != nil {
 			fmt.Printf("Error converting doc to html: %s\n", err)
@@ -204,7 +205,33 @@ func modifyAnchorTagsForStatic(doc *goquery.Document) {
 				serverURL = "http://localhost:8080"
 			}
 			s.SetAttr("href", serverURL+href+".html")
+		}
+	})
+}
 
+// finds all local paths to static assets (other than anchor links) and converts them to absolute paths
+func setOtherAbsolutePaths(doc *goquery.Document) {
+	serverURL := os.Getenv("SERVER_URL")
+	if serverURL == "" {
+		fmt.Println("SERVER_URL not set. Defaulting to http://localhost:8080")
+		serverURL = "http://localhost:8080"
+	}
+	doc.Find("link").Each(func(i int, s *goquery.Selection) {
+		href, exists := s.Attr("href")
+		if exists {
+			if len(href) > 3 && href[0:4] == "http" {
+				return
+			}
+			s.SetAttr("href", serverURL+href)
+		}
+	})
+	doc.Find("script").Each(func(i int, s *goquery.Selection) {
+		src, exists := s.Attr("src")
+		if exists {
+			if len(src) > 3 && src[0:4] == "http" {
+				return
+			}
+			s.SetAttr("src", serverURL+src)
 		}
 	})
 }
