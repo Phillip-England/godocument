@@ -106,13 +106,15 @@
        d="m -269.34683,7773.1555 c -9.5598,-4.6028 -13.10047,-9.2057 -15.93301,-19.8277 -2.83253,-12.3924 -2.47847,-14.1627 6.37321,-21.9522 l 9.91387,-8.4976 h 227.310918 c 202.880302,0 228.373122,0.7082 235.454452,5.6651 10.97608,7.7895 15.57895,20.5359 11.33014,31.512 -7.4354,19.4736 -9.20573,19.4736 -245.014258,19.4736 -199.693702,0 -218.105182,-0.354 -229.435322,-6.3732 z"
        id="path12"
        style="opacity:1;fill:#b8860b;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-dasharray:none;stroke-opacity:1" />
-    <text
-       xml:space="preserve"
-       transform="matrix(13.73586,0,0,-13.73586,-6332.6792,10353.343)"
-       id="text23"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:96px;font-family:'MV Boli';-inkscape-font-specification:'MV Boli, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect23);display:inline;opacity:1;fill:#b8860b;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:bevel;stroke-dasharray:none;stroke-opacity:1"><tspan
-         x="498.77539"
+      <text
+         xml:space="preserve"
+         transform="matrix(13.73586,0,0,-13.73586,-6332.6792,10353.343)"
+         id="text23"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:96px;font-family:'Fira Code';-inkscape-font-specification:'Fira Code, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect23);display:inline;opacity:1;fill:#b8860b;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:bevel;stroke-dasharray:none;stroke-opacity:1">
+      <tspan
+         x="520.77539"
          y="187.3755"
-         id="tspan1">Godocument</tspan></text>
+         id="tspan1">Godocument</tspan>
+      </text>
   </g>
 </svg>

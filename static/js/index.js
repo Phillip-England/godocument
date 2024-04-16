@@ -41,7 +41,7 @@
             }
             setActiveLink() {
                 this.items.forEach((item) => {
-                    if (item.getAttribute('href') == window.location.pathname) {
+                    if (item.getAttribute('href') == window.location.pathname || item.getAttribute('href') == window.location.href) {
                         item.classList.add('sitenav-item-active');
                         this.openActiveLinkParents(item)
                     } else {
