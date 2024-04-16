@@ -6,6 +6,7 @@ import (
 	"godocument/internal/config"
 	"godocument/internal/stypes"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -90,7 +91,7 @@ func writeNavbarHTML(html string) {
 
 func GenerateStaticAssets(cnf stypes.DocConfig) {
 	m := prepareMinify()
-	resetOutDir()
+	ResetOutDir()
 	copyDir(config.DevStaticPrefix, config.ProdStaticPrefix)
 	generateStaticHTML(cnf)
 	minifyStaticFiles(m, config.StaticAssetsDir)
@@ -107,7 +108,28 @@ func prepareMinify() *minify.M {
 	return m
 }
 
-func resetOutDir() {
+func ResetDocsDir() {
+	err := os.RemoveAll(config.StaticMarkdownPrefix)
+	if err != nil {
+		fmt.Printf("Error removing directory: %s\n", err)
+		return
+	}
+	if _, err := os.Stat(config.StaticMarkdownPrefix); os.IsNotExist(err) {
+		err := os.Mkdir(config.StaticMarkdownPrefix, 0755)
+		if err != nil {
+			fmt.Printf("Error creating directory: %s\n", err)
+			return
+		}
+	}
+	filePath := fmt.Sprintf("%s/introduction.md", config.StaticMarkdownPrefix)
+	content := "# Introduction"
+	err = ioutil.WriteFile(filePath, []byte(content), 0644)
+	if err != nil {
+		fmt.Printf("Error writing to file: %s\n", err)
+	}
+}
+
+func ResetOutDir() {
 	err := os.RemoveAll(config.StaticAssetsDir)
 	if err != nil {
 		fmt.Printf("Error removing directory: %s\n", err)
@@ -119,6 +141,17 @@ func resetOutDir() {
 			fmt.Printf("Error creating directory: %s\n", err)
 			return
 		}
+	}
+}
+
+func ResetGodocumentConfig() {
+	path := config.JSONConfigPath
+	jsonData := "{\n\t\"docs\": {\n\t\t\"Introduction\": \"/introduction.md\"\n\t}\n}"
+
+	// Write the JSON data to the file, creating it if it doesn't exist
+	err := ioutil.WriteFile(path, []byte(jsonData), 0644)
+	if err != nil {
+		panic(err)
 	}
 }
 
