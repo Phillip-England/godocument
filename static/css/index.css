@@ -22,6 +22,7 @@
     --dark-gray: #333333;
     --darkest-gray: #222222;
     --main-color: #B8860B;
+    --warning-color: #ed4444;
 }
 
 /* reset --------------------------------------------------------------------- */
@@ -466,8 +467,19 @@ html.dark #content-wrapper a {
     padding: 0.25rem;
 }
 
+
 html.dark #content-wrapper p code {
     background-color: var(--dark-gray);
+}
+
+#content-wrapper p span code {
+    background-color: var(--faint-gray);
+    border-radius: var(--rounded-sm);
+    padding: 0.25rem;
+}
+
+html.dark #content-wrapper p span code {
+    background-color: var(--gray);
 }
 
 #content-wrapper p:has(> span.content-important) {
@@ -488,6 +500,37 @@ html.dark #content-wrapper p:has(> span.content-important) {
     align-items: center;
     flex-direction: row;
     color: var(--main-color);
+    gap: 0.5rem;
+}
+
+#content-wrapper p div.content-warning-explode {
+    font-size: var(--text-sm);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    color: var(--main-color);
+    gap: 0.5rem;
+}
+
+#content-wrapper p:has(> span.content-warning) {
+    background-color: var(--codeblock-light-background);
+    border-left: solid var(--warning-color) 5px;
+    border-radius: var(--rounded-sm);
+    padding: 1rem;
+}
+
+html.dark #content-wrapper p:has(> span.content-warning) {
+    background-color: var(--dark-gray);
+}
+
+#content-wrapper p div.content-warning-explode {
+    font-size: var(--text-sm);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    color: var(--warning-color);
     gap: 0.5rem;
 }
 

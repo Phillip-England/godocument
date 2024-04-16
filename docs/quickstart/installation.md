@@ -19,3 +19,7 @@ go run main.go
 ```
 
 After serving the application, visit localhost:8080/quickstart/installation and you should see this exact page being served.
+
+## Resetting the Application
+
+<span class='content-warning'>Resetting the application will DELETE all files in `./docs`, `./out`, and `./godocument.config.json`</span>
