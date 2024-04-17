@@ -55,7 +55,7 @@
                     return
                 }
                 if (parent.classList.contains('sitenav-dropdown')) {
-                    let dropdownButton = parent.firstChild
+                    let dropdownButton = parent.children[0]
                     dropdownButton.classList.add('sitenav-dropdown-button-active');
                     let caret = dropdownButton.querySelector('.dropdown-caret')
                     caret.classList.add('dropdown-caret-active')
@@ -69,7 +69,7 @@
                     return element.classList.contains('sitenav-dropdown')
                 });
                 let childDropdowns = dropdown.querySelectorAll('.sitenav-dropdown');
-                let dropdownButton = dropdown.firstChild
+                let dropdownButton = dropdown.children[0]
                 let dropdownCaret = dropdownButton.querySelector('.dropdown-caret')
                 if (dropdownCaret.classList.contains('dropdown-caret-active')) {
                     this.closeDropdown(dropdown)
@@ -82,14 +82,14 @@
                 sessionStorage.setItem('sitenav', this.nav.innerHTML)
             }
             openDropdown(element) {
-                let dropdownButton = element.firstChild
+                let dropdownButton = element.children[0]
                 let caret = dropdownButton.querySelector('.dropdown-caret')
                 let hiddenSection = element.querySelector('.sitenav-dropdown-children');
                 caret.classList.add('dropdown-caret-active')
                 hiddenSection.classList.remove('hidden')
             }
             closeDropdown(element) {
-                let dropdownButton = element.firstChild
+                let dropdownButton = element.children[0]
                 let caret = dropdownButton.querySelector('.dropdown-caret')
                 let hiddenSection = element.querySelector('.sitenav-dropdown-children');
                 caret.classList.remove('dropdown-caret-active')

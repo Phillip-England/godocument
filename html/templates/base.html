@@ -6,9 +6,10 @@
     <script src="/static/js/prism.js" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/output.css">
     <title>{{ .Title }}</title>
 </head>
-<body hx-boost="true">
+<body hx-boost="true" class="flex flex-col justify-between">
     <main>
         {{ template "header.html" . }}
         <article id="article" class="custom-scroll">

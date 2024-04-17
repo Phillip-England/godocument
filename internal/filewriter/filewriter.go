@@ -25,23 +25,23 @@ import (
 // GenerateDynamicNavbar generates the dynamic navbar based on ./godocument.config.json
 func GenerateDynamicNavbar(cnf stypes.DocConfig) {
 	html := `
-		<nav id='sitenav'>
-			<div class='sitenav-mobile-header'>
-				<div class='sitenav-mobile-header-logo-wrapper'>
+		<nav id='sitenav' class='flex-col fixed z-max h-screen'>
+			<div class='sitenav-mobile-header flex flex-row justify-between items-center text-md'>
+				<div class='sitenav-mobile-header-logo-wrapper flex flex-row items-center justify-between'>
 					<div class="sitenav-mobile-header-logo">
 						<img class='logo' src="/static/img/logo.svg" alt="logo" id="logo">
 					</div>
 				</div>
-				<div class='sitenav-mobile-header-darkmode-wrapper'>
-					<svg class="sun-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+				<div class='flex items-center'>
+					<svg class="sun-icon cursor-pointer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
 						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5V3m0 18v-2M7.05 7.05 5.636 5.636m12.728 12.728L16.95 16.95M5 12H3m18 0h-2M7.05 16.95l-1.414 1.414M18.364 5.636 16.95 7.05M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"/>
 					</svg>
-					<svg class="moon-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+					<svg class="moon-icon cursor-pointer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
   						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 0 1-.5-17.986V3c-.354.966-.5 1.911-.5 3a9 9 0 0 0 9 9c.239 0 .254.018.488 0A9.004 9.004 0 0 1 12 21Z"/>
 					</svg>
 				</div>
 			</div>
-			<ul class='sitenav-list'>
+			<ul class='sitenav-list flex flex-col'>
 	`
 	for i := 0; i < len(cnf); i++ {
 		html = workOnNavbar(cnf[i], html)
@@ -53,21 +53,37 @@ func GenerateDynamicNavbar(cnf stypes.DocConfig) {
 func workOnNavbar(node stypes.DocNode, html string) string {
 	switch n := node.(type) {
 	case *stypes.ObjectNode:
-		dropdownCarat := `
-			<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
-  				<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
-			</svg>
-		`
-		html += "<li class='sitenav-dropdown " + fmt.Sprintf("depth-%d", n.BaseNodeData.Depth) + "'>"
-		html += "<button class='sitenav-dropdown-button sitenav-item'><summary>" + n.BaseNodeData.Name + "</summary><div class='dropdown-caret'>" + dropdownCarat + "</div></button>"
-		html += "<ul class='sitenav-dropdown-children hidden'>"
+		// to ensure tailwind classes are caught during build, we need to include this string
+		// tailwind will find this sting and include all these classes in our output.css
+		// this is needed because we are using integer values for padding in the navbar
+		// and tailwind does not include these classes by default
+		// for example, in the fmt.Sprintf() below we have included pl-%d which will be replaced by the integer value
+		_ = "pl-0 pl-1 pl-2 pl-3 pl-4 pl-5 pl-6 pl-7"
+		innerHTML := ""
 		for i := 0; i < len(n.Children); i++ {
-			html = workOnNavbar(n.Children[i], html)
+			innerHTML = workOnNavbar(n.Children[i], innerHTML)
 		}
-		html += "</ul>"
-		html += "</li>"
+		html += fmt.Sprintf(`
+		<li class='sitenav-dropdown flex flex-col pl-%d'>
+			<button class='sitenav-dropdown-button sitenav-item flex flex-row justify-between items-center rounded-sm font-bold'>
+				<summary>%s</summary>
+				<div class='dropdown-caret'>
+					<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
+						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
+					</svg>
+				</div>
+			</button>
+			<ul class='sitenav-dropdown-children hidden flex flex-col'>
+				%s
+			</ul>
+		</li>
+		`, n.BaseNodeData.Depth, n.BaseNodeData.Name, innerHTML)
 	case *stypes.MarkdownNode:
-		html += "<li class='" + fmt.Sprintf("depth-%d", n.BaseNodeData.Depth) + "'><a class='sitenav-item' href='" + n.RouterPath + "'>" + n.BaseNodeData.Name + "</a></li>"
+		html += fmt.Sprintf(`
+			<li class='pl-%d'>
+				<a class='sitenav-item flex flex-row justify-between items-center rounded-sm font-bold' href='%s'>%s</a>
+			</li>
+		`, n.BaseNodeData.Depth, n.RouterPath, n.BaseNodeData.Name)
 	}
 	return html
 }

@@ -3,6 +3,8 @@
 
 :root {
 
+    --font-base: 'Helvetica', sans-serif;
+    --text-base: 16px;
     --text-2xs: 0.75rem;
     --text-xs: 1rem;
     --text-sm: 1.25rem;
@@ -31,13 +33,11 @@ html, body {
     box-sizing: border-box;
     padding:0;
     margin:0;
-    font-size: 16px;
-    font-family: 'Helvetica', sans-serif;
+    font-size: var(--text-base);
+    font-family: var(--font-base);
     background-color: var(--white);
     overflow-y: hidden;
     overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
     height: 100%;
     color: var(--black);
 }
@@ -91,10 +91,6 @@ header {
     font-size: var(--text-xs);
     background-color: var(--white);
     border-bottom: solid var(--faint-gray) 1px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
 }
 
 html.dark header {
@@ -102,18 +98,7 @@ html.dark header {
     border-color: var(--dark-gray);
 }
 
-header h1 {
-    font-size: var(--text-md);
-}
-
-header .header-logo-wrapper {
-    display: flex;
-    align-items: center;
-}
-
 header .header-logo-wrapper .logo {
-    display: flex;
-    align-items: center;
     width: 200px;
 }
 
@@ -123,14 +108,8 @@ header .header-logo-wrapper .logo {
     }
 }
 
-header .header-bars {
-    display: block;
-    cursor: pointer;
-}
-
 header .sun-icon, header .moon-icon {
     display: none;
-    cursor: pointer;
 }
 
 @media (min-width: 992px) {
@@ -155,13 +134,9 @@ header .sun-icon, header .moon-icon {
 
 #sitenav {
     display: none;
-    flex-direction: column;
-    position: fixed;
     width: 80%;
     background-color: var(--white);
     border-right: solid var(--faint-gray) 1px;
-    height: 100vh;
-    z-index: 1000;
 }
 
 html.dark #sitenav {
@@ -174,13 +149,8 @@ html.dark #sitenav {
 }
 
 #sitenav .sitenav-mobile-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-direction: row;
     padding: 1rem;
     border-bottom: solid var(--faint-gray) 1px;
-    font-size: var(--text-md);
 }
 
 html.dark #sitenav .sitenav-mobile-header {
@@ -188,10 +158,6 @@ html.dark #sitenav .sitenav-mobile-header {
 }
 
 #sitenav .sitenav-mobile-header-logo-wrapper {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    justify-content: space-between;
     gap: 1rem;
 }
 
@@ -199,15 +165,6 @@ html.dark #sitenav .sitenav-mobile-header {
     display: flex;
     width: 200px;
     align-items: center;
-}
-
-#sitenav .sitenav-mobile-header-darkmode-wrapper {
-    display: flex;
-    align-items: center;
-}
-
-#sitenav .sun-icon, #sitenav .moon-icon {
-    cursor: pointer;
 }
 
 #sitenav .moon-icon {
@@ -232,25 +189,16 @@ html.dark #sitenav .moon-icon {
 }
 
 #sitenav ul {
-    display:flex;
-    flex-direction: column;
     gap: 0.25rem;
 }
 
 
 #sitenav li {
-    display: flex;
-    flex-direction: column;
     gap: 0.25rem;
 }
 
 #sitenav .sitenav-item {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
     padding: 0.5rem;
-    border-radius: var(--rounded-sm);
     color: var(--black);
     font-weight: bold;
 }
@@ -306,7 +254,6 @@ html.dark #sitenav .dropdown-caret {
         height: auto;
         padding: 0.5rem;
         width: 300px;
-        border-right: solid var(--faint-gray) 1px;
     }
     #sitenav .sitenav-mobile-header {
         display: none;
@@ -711,10 +658,6 @@ html.dark footer p {
 
 .depth-5 {
     padding-left: 2.5rem;
-}
-
-.hidden {
-    display: none !important;
 }
 
 /* light codeblocks ----------------------------------------------------------- */
