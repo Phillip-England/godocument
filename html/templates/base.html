@@ -9,22 +9,13 @@
     <link rel="stylesheet" type="text/css" href="/static/css/output.css">
     <title>{{ .Title }}</title>
 </head>
-<body hx-boost="true" class="flex flex-col justify-between">
-    <main>
-        {{ template "header.html" . }}
-        <article id="article" class="custom-scroll">
-            <div id="content-wrapper">
-                {{ .Content }}
-                {{ template "pageturn.html" . }}
-            </div>
-            <div id="pagenav-wrapper">
-                {{ template "pagenav.html" . }}
-            </div>
-        </article>
-        {{ template "sitenav.html" . }}
-        {{ template "footer.html" . }}
-        {{ template "mobile-nav-overlay.html" }}
-    </main>
+<body hx-boost="true" class="w-screen">
+    {{ template "header.html" . }}
+    {{ template "sitenav.html" . }}
+
+
     <script src="/static/js/index.js"></script>
 </body>
 </html>
+
+
