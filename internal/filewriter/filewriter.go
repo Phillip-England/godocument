@@ -25,7 +25,7 @@ import (
 // GenerateDynamicNavbar generates the dynamic navbar based on ./godocument.config.json
 func GenerateDynamicNavbar(cnf stypes.DocConfig) {
 	html := `
-		<nav id='sitenav' class='flex-col fixed lg:relative z-40 h-screen border-r bg-white' style="grid-area: sitenav;">
+		<nav id='sitenav' class='flex-col fixed lg:relative z-40 h-screen border-r bg-white w-[80%] lg:w-auto' style="grid-area: sitenav;">
 			<div class='sitenav-mobile-header flex flex-row justify-between items-center text-md h-[75px] p-4 border-b lg:hidden'>
 				<div class='sitenav-mobile-header-logo-wrapper flex flex-row items-center justify-between w-[250px]'>
 					<div class="sitenav-mobile-header-logo">
@@ -36,12 +36,12 @@ func GenerateDynamicNavbar(cnf stypes.DocConfig) {
 					<svg class="sun-icon cursor-pointer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
 						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5V3m0 18v-2M7.05 7.05 5.636 5.636m12.728 12.728L16.95 16.95M5 12H3m18 0h-2M7.05 16.95l-1.414 1.414M18.364 5.636 16.95 7.05M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"/>
 					</svg>
-					<svg class="moon-icon cursor-pointer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+					<svg class="moon-icon cursor-pointer hidden" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
   						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 0 1-.5-17.986V3c-.354.966-.5 1.911-.5 3a9 9 0 0 0 9 9c.239 0 .254.018.488 0A9.004 9.004 0 0 1 12 21Z"/>
 					</svg>
 				</div>
 			</div>
-			<ul class='sitenav-list flex flex-col'>
+			<ul class='sitenav-list flex flex-col p-2 gap-2'>
 	`
 	for i := 0; i < len(cnf); i++ {
 		html = workOnNavbar(cnf[i], html)
@@ -65,7 +65,7 @@ func workOnNavbar(node stypes.DocNode, html string) string {
 		}
 		html += fmt.Sprintf(`
 		<li class='sitenav-dropdown flex flex-col pl-%d'>
-			<button class='sitenav-dropdown-button sitenav-item flex flex-row justify-between items-center rounded-sm font-bold'>
+			<button class='sitenav-dropdown-button sitenav-item flex flex-row justify-between items-center rounded-sm font-bold p-2 bg-gray-200'>
 				<summary>%s</summary>
 				<div class='dropdown-caret'>
 					<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
@@ -73,7 +73,7 @@ func workOnNavbar(node stypes.DocNode, html string) string {
 					</svg>
 				</div>
 			</button>
-			<ul class='sitenav-dropdown-children hidden flex flex-col'>
+			<ul class='sitenav-dropdown-children flex flex-col gap-2 pt-2'>
 				%s
 			</ul>
 		</li>
@@ -81,7 +81,7 @@ func workOnNavbar(node stypes.DocNode, html string) string {
 	case *stypes.MarkdownNode:
 		html += fmt.Sprintf(`
 			<li class='pl-%d'>
-				<a class='sitenav-item flex flex-row justify-between items-center rounded-sm font-bold' href='%s'>%s</a>
+				<a class='sitenav-item flex flex-row justify-between items-center rounded-sm font-bold p-2 bg-gray-200' href='%s'>%s</a>
 			</li>
 		`, n.BaseNodeData.Depth, n.RouterPath, n.BaseNodeData.Name)
 	}
