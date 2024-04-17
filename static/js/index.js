@@ -97,11 +97,11 @@
             }
             toggleMobileNav() {
                 if (this.nav.classList.contains('sitenav-active')) {
-                    this.overlay.classList.remove('mobile-nav-overlay-active')
+                    this.overlay.classList.add('hidden')
                     this.nav.classList.remove('sitenav-active');
                     return
                 }
-                this.overlay.classList.add('mobile-nav-overlay-active')
+                this.overlay.classList.remove('hidden')
                 this.nav.classList.add('sitenav-active');
             }
         }

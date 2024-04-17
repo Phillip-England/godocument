@@ -572,30 +572,14 @@ html.dark footer p {
 
 /* mobile nav overlay ---------------------------------------------------------- */
 
-#mobile-nav-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 100vw;
-    z-index: 999;
-    background-color: var(--black);
-    opacity: 70%;
-    display: none;
-}
-
-#mobile-nav-overlay.mobile-nav-overlay-active {
-    display: block;
-}
-
-@media (min-width: 992px) {
+/* @media (min-width: 992px) {
     #mobile-nav-overlay {
         display: none;
     }
     #mobile-nav-overlay.mobile-nav-overlay-active {
         display: none;
     }
-}
+} */
 
 /* custom scroll ------------------------------------------------------------- */
 
@@ -632,32 +616,6 @@ html.dark footer p {
     html.dark .custom-scroll::-webkit-scrollbar-track {
         background: var(--darkest-gray);
     }
-}
-
-/* utility classes ----------------------------------------------------------- */
-
-.depth-0 {
-    padding-left: 0;
-}
-
-.depth-1 {
-    padding-left: 0.5rem;
-}
-
-.depth-2 {
-    padding-left: 1rem;
-}
-
-.depth-3 {
-    padding-left: 1.5rem;
-}
-
-.depth-4 {
-    padding-left: 2rem;
-}
-
-.depth-5 {
-    padding-left: 2.5rem;
 }
 
 /* light codeblocks ----------------------------------------------------------- */

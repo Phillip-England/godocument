@@ -56,11 +56,6 @@ func assignHandlers(cnf stypes.DocConfig) {
 				goldmark.WithRendererOptions(
 					html.WithUnsafe(),
 				),
-				// goldmark.WithExtensions(
-				// 	highlighting.NewHighlighting(
-				// 		highlighting.WithStyle("github"),
-				// 	),
-				// ),
 			)
 			mdContent, err := os.ReadFile(m.MarkdownFile)
 			if err != nil {
