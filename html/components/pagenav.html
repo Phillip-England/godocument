@@ -1,5 +1,5 @@
-<nav id="pagenav">
-    <ul>
+<nav id="pagenav" class="text-xs relative" style="grid-area: pagenav;">
+    <ul class="fixed p-4 border-l flex flex-col gap-2">
         {{ if .MarkdownHeaders }}
             {{ range .MarkdownHeaders }}
                 <li>

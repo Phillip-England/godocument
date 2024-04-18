@@ -29,25 +29,165 @@
 
  /* grids -------------------------------------------------------------------- */
 
- body {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-areas:
-        "header"
-        "sitenav"
-    ;
- }
+#root {
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 75px 1fr auto;
+	grid-template-areas: 
+		"header"
+		"content"
+		"footer"
+	;
+}
 
- @media (min-width: 1024px) {
-	body {
-		display: grid;
-		grid-template-columns: 25% 45% 30%;
-		grid-template-areas:
-			"header header header"
-			"sitenav . ."
+#content {
+	display: grid;
+	grid-template-columns: auto;
+	grid-template-areas: 
+		"main"
+	;
+}
+
+#main {
+	display: grid;
+	grid-template-columns: 100vw;
+	grid-template-areas: 
+		"article"
+}
+
+@media (min-width: 1024px) {
+	
+	#content {
+		grid-template-columns: 350px auto;
+		grid-template-areas: 
+			"sitenav main"
 		;
-	 }
- }
+	}
+
+	#main {
+		grid-template-columns: 70% 30%;
+		grid-template-rows: auto auto;
+		grid-template-areas: 
+			"article pagenav"
+	}
+
+
+}
+
+
+/* markdown styles ----------------------------------------------------------- */
+
+article h1 {
+    font-size: var(--text-2xl);
+}
+
+article h2 {
+    font-size: var(--text-xl);
+    padding-top: 2rem;
+}
+
+article h3 {
+    font-size: var(--text-lg);
+}
+
+article p {
+    font-size: var(--text-xs);
+    line-height: 1.75rem;
+}
+
+article pre {
+    font-size: var(--text-xs);
+    border-radius: var(--rounded-sm);
+    overflow-x: auto;
+    white-space: pre;
+}
+
+article code {
+    font-size: var(--text-xs);
+    border-radius: var(--rounded-sm);
+}
+
+article a {
+    color: var(--main-color);
+    text-decoration: underline;
+}
+
+html.dark article a {
+    color: var(--main-color);
+}
+
+article p code {
+    background-color: var(--faint-gray);
+    border-radius: var(--rounded-sm);
+    padding: 0.25rem;
+}
+
+
+html.dark article p code {
+    background-color: var(--dark-gray);
+}
+
+article p span code {
+    background-color: var(--faint-gray);
+    border-radius: var(--rounded-sm);
+    padding: 0.25rem;
+}
+
+html.dark article p span code {
+    background-color: var(--gray);
+}
+
+article p:has(> span.content-important) {
+    background-color: var(--codeblock-light-background);
+    border-left: solid var(--main-color) 5px;
+    border-radius: var(--rounded-sm);
+    padding: 1rem;
+}
+
+html.dark article p:has(> span.content-important) {
+    background-color: var(--dark-gray);
+}
+
+article p div.content-important-exclamation {
+    font-size: var(--text-sm);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    color: var(--main-color);
+    gap: 0.5rem;
+}
+
+article p div.content-warning-explode {
+    font-size: var(--text-sm);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    color: var(--main-color);
+    gap: 0.5rem;
+}
+
+article p:has(> span.content-warning) {
+    background-color: var(--codeblock-light-background);
+    border-left: solid var(--warning-color) 5px;
+    border-radius: var(--rounded-sm);
+    padding: 1rem;
+}
+
+html.dark article p:has(> span.content-warning) {
+    background-color: var(--dark-gray);
+}
+
+article p div.content-warning-explode {
+    font-size: var(--text-sm);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    color: var(--warning-color);
+    gap: 0.5rem;
+}
 
 
 /* custom scroll ------------------------------------------------------------- */
