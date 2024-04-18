@@ -9,12 +9,12 @@
     <link rel="stylesheet" type="text/css" href="/static/css/index.css">
     <title>{{ .Title }}</title>
 </head>
-<body hx-boost="true" class="h-screen">
+<body hx-boost="true" class="h-full w-full flex">
     <div id="root" class="min-h-screen">
         {{ template "header.html" . }}
         <div id="content" style="grid-area: content;">
             {{ template "sitenav.html" . }}
-            <main id="main" style="grid-area: main;">
+            <main id="main" class="flex h-full w-full" style="grid-area: main;">
                 <article id="content-wrapper" class="px-8 py-4 flex flex-col gap-6 break-words" style="grid-area: article;">
                     {{ .Content }}
                     {{ template "pageturn.html" . }}

@@ -16,6 +16,7 @@
             }
             return climbTreeUntil(parent, callback)
         }
+
     
         class SiteNav {
             constructor() {

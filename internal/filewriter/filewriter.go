@@ -25,7 +25,7 @@ import (
 // GenerateDynamicNavbar generates the dynamic navbar based on ./godocument.config.json
 func GenerateDynamicNavbar(cnf stypes.DocConfig) {
 	html := `
-		<nav id='sitenav' class='fixed top-0 w-[80%] lg:w-auto lg:sticky lg:top-[75px] h-screen border-r z-40 lg:z-0 bg-white' style="grid-area: sitenav;">
+		<nav id='sitenav' class='fixed top-0 w-[80%] lg:w-auto lg:sticky hidden lg:block lg:top-[75px] h-screen border-r z-40 lg:z-0 bg-white' style="grid-area: sitenav;">
 			<div class='sitenav-mobile-header flex flex-row justify-between items-center text-md h-[75px] p-4 border-b lg:hidden'>
 				<div class='sitenav-mobile-header-logo-wrapper flex flex-row items-center justify-between w-[250px]'>
 					<div class="sitenav-mobile-header-logo flex">
