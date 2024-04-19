@@ -1,16 +1,21 @@
 
-let mainColor = '#FF6363';
+let main = '#B8860B';
+let darkmain = '#8B4513';
 let black = '#1f1f1f';
+let faintgray = '#f9f9f9';
 
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'selector',
   content: ["./html/**/*.html", "./internal/**/*.go", "./static/js/**/*.js"],
   theme: {
     extend: {
       colors: {
-        'main': mainColor,
+        'main': main,
+        'darkmain': darkmain,
         'black': black,
+        'faintgray': faintgray,
       },
       fontFamily: {
         'body': ['Nunito']

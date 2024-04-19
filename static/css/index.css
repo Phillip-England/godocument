@@ -1,4 +1,10 @@
 
+/* handling scroll ------------------------------------------------------------- */
+
+html {
+	scroll-padding-top: 75px;
+}
+
 /* variables ----------------------------------------------------------------- */
 
 :root {
@@ -35,7 +41,7 @@
 	grid-template-rows: 75px 1fr auto;
 	grid-template-areas: 
 		"header"
-		"content"
+		"content-wrapper"
 		"footer"
 	;
 }
@@ -50,7 +56,7 @@
 	overflow: hidden;
 }
 
-#content {
+#content-wrapper {
 	display: grid;
 	grid-template-columns: auto;
 	grid-template-areas: 
@@ -61,8 +67,8 @@
 
 @media (min-width: 1024px) {
 	
-	#content {
-		grid-template-columns: 325px 1fr;
+	#content-wrapper {
+		grid-template-columns: 300px 1fr;
 		grid-template-areas: 
 			"sitenav main"
 		;
@@ -82,78 +88,78 @@
 
 /* markdown styles ----------------------------------------------------------- */
 
-#content-wrapper h1 {
+article h1 {
     font-size: var(--text-2xl);
 }
 
-#content-wrapper h2 {
+article h2 {
     font-size: var(--text-xl);
     padding-top: 2rem;
 }
 
-#content-wrapper h3 {
+article h3 {
     font-size: var(--text-lg);
 }
 
-#content-wrapper p {
+article p {
     font-size: var(--text-xs);
     line-height: 1.75rem;
 }
 
-#content-wrapper pre {
+article pre {
     font-size: var(--text-xs);
     border-radius: var(--rounded-sm);
     overflow-x: auto;
     white-space: pre;
 }
 
-#content-wrapper code {
+article code {
     font-size: var(--text-xs);
     border-radius: var(--rounded-sm);
 }
 
-#content-wrapper a {
+article a {
     color: var(--main-color);
     text-decoration: underline;
 }
 
-html.dark #content-wrapper a {
+html.dark article a {
     color: var(--main-color);
 }
 
-#content-wrapper p code {
+article p code {
     background-color: var(--faint-gray);
     border-radius: var(--rounded-sm);
     padding: 0.25rem;
 }
 
 
-html.dark #content-wrapper p code {
+html.dark article p code {
     background-color: var(--dark-gray);
 }
 
-#content-wrapper p span code {
+article p span code {
     background-color: var(--faint-gray);
     border-radius: var(--rounded-sm);
     padding: 0.25rem;
 }
 
-html.dark #content-wrapper p span code {
+html.dark article p span code {
     background-color: var(--gray);
 }
 
-#content-wrapper p:has(> span.content-important) {
+article p:has(> span.content-important) {
     background-color: var(--codeblock-light-background);
     border-left: solid var(--main-color) 5px;
     border-radius: var(--rounded-sm);
     padding: 1rem;
 }
 
-html.dark #content-wrapper p:has(> span.content-important) {
+html.dark article p:has(> span.content-important) {
     background-color: var(--dark-gray);
 }
 
-#content-wrapper p div.content-important-exclamation {
+article p div.content-important-exclamation {
     font-size: var(--text-sm);
     font-weight: bold;
     display: flex;
@@ -163,7 +169,7 @@ html.dark #content-wrapper p:has(> span.content-important) {
     gap: 0.5rem;
 }
 
-#content-wrapper p div.content-warning-explode {
+article p div.content-warning-explode {
     font-size: var(--text-sm);
     font-weight: bold;
     display: flex;
@@ -173,18 +179,18 @@ html.dark #content-wrapper p:has(> span.content-important) {
     gap: 0.5rem;
 }
 
-#content-wrapper p:has(> span.content-warning) {
+article p:has(> span.content-warning) {
     background-color: var(--codeblock-light-background);
     border-left: solid var(--warning-color) 5px;
     border-radius: var(--rounded-sm);
     padding: 1rem;
 }
 
-html.dark #content-wrapper p:has(> span.content-warning) {
+html.dark article p:has(> span.content-warning) {
     background-color: var(--dark-gray);
 }
 
-#content-wrapper p div.content-warning-explode {
+article p div.content-warning-explode {
     font-size: var(--text-sm);
     font-weight: bold;
     display: flex;

@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/static/js/prism.js" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="/static/css/output.css">
     <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/output.css">
     <title>{{ .Title }}</title>
 </head>
-<body hx-boost="true" class="h-full w-full flex">
-    <div id="root" class="min-h-screen">
+<body hx-boost="true" class="h-full w-full flex invisible" zez:loaded="!visible">
+    <div id="root" class="w-full">
         {{ template "header.html" . }}
-        <div id="content" style="grid-area: content;">
+        <div id="content-wrapper" style="grid-area: content-wrapper;">
             {{ template "sitenav.html" . }}
-            <main id="main" class="flex h-full w-full" style="grid-area: main;">
-                <article id="content-wrapper" class="px-8 py-4 flex flex-col gap-6 break-words" style="grid-area: article;">
+            <main id="main" style="grid-area: main;">
+                <article id="article" class="px-8 py-4 flex flex-col gap-6 break-words" style="grid-area: article;">
                     {{ .Content }}
                     {{ template "pageturn.html" . }}
                 </article>
@@ -23,7 +23,7 @@
             </main>
         </div>
         {{ template "footer.html" . }}
-        {{ template "mobile-nav-overlay.html" .}}
+        {{ template "overlay.html" .}}
     </div>
     <script src="/static/js/index.js"></script>
 </body>

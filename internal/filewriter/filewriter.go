@@ -64,16 +64,16 @@ func workOnNavbar(node stypes.DocNode, html string) string {
 			innerHTML = workOnNavbar(n.Children[i], innerHTML)
 		}
 		html += fmt.Sprintf(`
-		<li class='sitenav-dropdown flex flex-col pl-%d'>
-			<button class='sitenav-dropdown-button sitenav-item flex flex-row justify-between items-center rounded-sm font-bold p-2 bg-gray-200'>
-				<summary>%s</summary>
-				<div class='dropdown-caret'>
+		<li class='dropdown flex flex-col pl-%d'>
+			<button class='dropdown-btn flex flex-row justify-between items-center rounded-md font-bold p-2 border hover:bg-faintgray'>
+				<summary zez:active="text-main dark:text-darkmain">%s</summary>
+				<div zez:active="rotate-90">
 					<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
 						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
 					</svg>
 				</div>
 			</button>
-			<ul class='sitenav-dropdown-children flex flex-col gap-2 pt-2'>
+			<ul class='hidden flex-col gap-2 pt-2' zez:active="!flex">
 				%s
 			</ul>
 		</li>
@@ -81,7 +81,7 @@ func workOnNavbar(node stypes.DocNode, html string) string {
 	case *stypes.MarkdownNode:
 		html += fmt.Sprintf(`
 			<li class='pl-%d'>
-				<a class='sitenav-item flex flex-row justify-between items-center rounded-sm font-bold p-2 bg-gray-200' href='%s'>%s</a>
+				<a class='item flex flex-row justify-between items-center rounded-md border font-bold p-2 hover:bg-faintgray' zez:active="text-main dark:text-main" href='%s'>%s</a>
 			</li>
 		`, n.BaseNodeData.Depth, n.RouterPath, n.BaseNodeData.Name)
 	}

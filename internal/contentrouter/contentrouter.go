@@ -85,10 +85,18 @@ func assignHandlers(cnf stypes.DocConfig) {
 					if strings.Count(line, "#") == 1 {
 						continue
 					}
+					link := strings.ToLower(line)
+					link = strings.TrimLeft(link, "# ")
+					link = strings.ReplaceAll(link, "-", "")
+					link = strings.ReplaceAll(link, ".", "")
+					link = strings.ReplaceAll(link, "/", "")
+					link = strings.ReplaceAll(link, "?", "")
+					link = strings.ReplaceAll(link, " ", "-")
+					link = "#" + link
 					header := stypes.MarkdownHeader{
 						Line:       strings.TrimLeft(line, "# "),
 						DepthClass: "pl-" + fmt.Sprintf("%d", strings.Count(line, "#")-2), // ensures we start at a 0 index
-						Link:       "#" + strings.ToLower(strings.ReplaceAll(strings.TrimLeft(line, "# "), " ", "-")),
+						Link:       link,
 					}
 					headers = append(headers, header)
 				}
