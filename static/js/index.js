@@ -1,9 +1,5 @@
-
-
-// ==============================================================================
-// README
-
 /*
+README
 Here is how this script works.
 We are using hx-boost (https://htmx.org/attributes/hx-boost/) to load pages without refreshing the entire page.
 This means the <head> of our document is never reloaded.
@@ -15,7 +11,6 @@ Everytime you navigate, you have to detach and re-hook events to elements
 Failing to detach events will cause the event to be fired multiple times
 The utility function eReset(node, eventType, callback) is used to detach and re-hook events
 */
-// ==============================================================================
 
 
 (() => {
@@ -281,9 +276,7 @@ class Theme {
 
 // ==============================================================================
 
-
         function onLoad() {
-
 
             // elements
             const body = qs(document, 'body')
@@ -318,11 +311,7 @@ class Theme {
         eReset(window, 'DOMContentLoaded', onLoad) // initial page load
         eReset(document.getElementsByTagName('body')[0], "htmx:afterOnLoad", onLoad) // after htmx swaps
 
-
-
     }
-
-
 
 })();
 

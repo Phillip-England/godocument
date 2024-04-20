@@ -826,6 +826,10 @@ video {
   background-color: var(--bg-hover-light);
 }
 
+.bg-\[var\(--main\)\] {
+  background-color: var(--main);
+}
+
 .p-2 {
   padding: 0.5rem;
 }
@@ -906,6 +910,11 @@ video {
 
 .text-\[var\(--text-important\)\] {
   color: var(--text-important);
+}
+
+.text-blue-200 {
+  --tw-text-opacity: 1;
+  color: rgb(191 219 254 / var(--tw-text-opacity));
 }
 
 .underline {
