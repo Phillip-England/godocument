@@ -1,5 +1,21 @@
 
 
+// ==============================================================================
+// README
+
+/*
+Here is how this script works.
+We are using hx-boost (https://htmx.org/attributes/hx-boost/) to load pages without refreshing the entire page.
+This means the <head> of our document is never reloaded.
+The <head> is loaded on the initial page load, and then after navigating, the new HTML content is loaded into the <body> of the document.
+At the bottom of this file, we are referencing the htmx event "htmx:afterOnLoad" to run the script after the new content is loaded. 
+So, on the initial page load, we use the DOMContentLoaded event to run the script, and then after navigating, we use htmx:afterOnLoad to run the script.
+This changes the way we have to hook events
+Everytime you navigate, you have to detach and re-hook events to elements
+Failing to detach events will cause the event to be fired multiple times
+The utility function eReset(node, eventType, callback) is used to detach and re-hook events
+*/
+// ==============================================================================
 
 
 (() => {
