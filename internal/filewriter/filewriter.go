@@ -25,8 +25,8 @@ import (
 // GenerateDynamicNavbar generates the dynamic navbar based on ./godocument.config.json
 func GenerateDynamicNavbar(cnf stypes.DocConfig) {
 	html := `
-		<nav id='sitenav' class='fixed top-0 w-[80%] lg:w-auto lg:sticky hidden lg:block lg:top-[75px] h-screen border-r dark:border-[var(--dark-border)] z-50 lg:z-0 bg-[var(--white)] dark:bg-[var(--black)]' zez:active="!block" style="grid-area: sitenav;">
-			<div class='flex flex-row justify-between items-center text-md h-[75px] p-4 border-b dark:border-[var(--dark-border)] lg:hidden'>
+		<nav id='sitenav' class='fixed top-0 w-[80%] lg:w-auto lg:sticky hidden overflow-y-scroll custom-scroll sm-scroll lg:block lg:top-[75px] h-screen border-r border-[var(--border-light)] dark:border-[var(--border-dark)] z-50 lg:z-0 bg-[var(--white)] dark:bg-[var(--black)]' zez:active="!block" style="grid-area: sitenav;">
+			<div class='flex flex-row justify-between items-center text-md h-[75px] p-4 border-b border-[var(--border-light)] dark:border-[var(--border-dark)] lg:hidden'>
 				<div class='flex flex-row items-center justify-between w-[250px]'>
 					<div class="flex">
 						<img class='logo' src="/static/img/logo.svg" alt="logo" id="logo">
@@ -65,15 +65,15 @@ func workOnNavbar(node stypes.DocNode, html string) string {
 		}
 		html += fmt.Sprintf(`
 		<li class='dropdown flex flex-col pl-%d'>
-			<button class='dropdown-btn flex flex-row justify-between items-center rounded-md font-bold p-2 hover:dark:bg-[var(--dark-border)]'>
-				<summary zez:active="text-[var(--important-text)]">%s</summary>
+			<button class='dropdown-btn flex flex-row justify-between items-center rounded-md font-bold p-2 hover:bg-[var(--bg-hover-light)] hover:dark:bg-[var(--bg-hover-dark)]'>
+				<summary zez:active="text-[var(--text-important)]">%s</summary>
 				<div zez:active="rotate-90">
 					<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
 						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
 					</svg>
 				</div>
 			</button>
-			<ul class='hidden flex-col gap-1 pt-2' zez:active="!flex">
+			<ul class='hidden flex-col gap-1 pt-1' zez:active="!flex">
 				%s
 			</ul>
 		</li>
@@ -81,7 +81,7 @@ func workOnNavbar(node stypes.DocNode, html string) string {
 	case *stypes.MarkdownNode:
 		html += fmt.Sprintf(`
 			<li class='pl-%d'>
-				<a class='item flex flex-row justify-between items-center rounded-md font-bold p-2 hover:dark:bg-[var(--dark-border)]' zez:active="text-[var(--important-text)] dark:text-main" href='%s'>%s</a>
+				<a class='item flex flex-row justify-between items-center rounded-md font-bold p-2 hover:bg-[var(--bg-hover-light)] hover:dark:bg-[var(--bg-hover-dark)]' zez:active="text-[var(--text-important)] dark:text-main bg-[var(--bg-hover-light)] dark:bg-[var(--bg-hover-dark)]" href='%s'>%s</a>
 			</li>
 		`, n.BaseNodeData.Depth, n.RouterPath, n.BaseNodeData.Name)
 	}

@@ -1,9 +1,9 @@
-<nav id="pagenav" class="text-xs relative" style="grid-area: pagenav;">
-    <ul class="fixed p-4 border-l flex flex-col gap-2">
+<nav id="pagenav" class="text-xs relative overflow-y-scroll custom-scroll sm-scroll" style="grid-area: pagenav;">
+    <ul class="fixed p-4 border-l border-[var(--border-light)] dark:border-[var(--border-dark)] flex flex-col gap-2">
         {{ if .MarkdownHeaders }}
             {{ range .MarkdownHeaders }}
                 <li>
-                    <a href={{ .Link }} class="cursor-pointer {{ .DepthClass }}" zez:active="text-main">{{ .Line }}</a>
+                    <a href={{ .Link }} class="cursor-pointer {{ .DepthClass }}" zez:active="text-[var(--text-important)]">{{ .Line }}</a>
                 </li>
             {{ end }}
         {{ else }}

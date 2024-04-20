@@ -1,25 +1,25 @@
-<ul id="pageturn">
-    <li class="pageturn-prev">
+<ul class="flex flex-row justify-between gap-8 my-12">
+    <li class="w-full">
         {{ if .Prev }}
-            <a href={{ .Prev.RouterPath }} target="_self">
+            <a href={{ .Prev.RouterPath }} target="_self" class="border no-underline w-full p-4 flex-col hover:border-[var(--border-hover-light)] dark:hover:border-[var(--border-hover-dark)] flex rounded-md border-[var(--border-light)] dark:border-[var(--border-dark)]">
                 <div>
                     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m17 16-4-4 4-4m-6 8-4-4 4-4"/>
                     </svg>
                 </div>
-                <p>{{ .Prev.BaseNodeData.Name }}</p>
+                <p class="text-[var(--text-important)] font-bold">{{ .Prev.BaseNodeData.Name }}</p>
             </a>
         {{ end }}
     </li>
-    <li class="pageturn-next">
+    <li class="w-full">
         {{ if .Next }}
-            <a href={{ .Next.RouterPath }} target="_self">
+            <a href={{ .Next.RouterPath }} target="_self" class="border no-underline hover:border-[var(--border-hover-light)] dark:hover:border-[var(--border-hover-dark)] items-end w-full p-4 flex-col flex rounded-md border-[var(--border-light)] dark:border-[var(--border-dark)]">
                 <div>
                     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 16 4-4-4-4m6 8 4-4-4-4"/>
                     </svg>
                 </div>
-                <p >{{ .Next.BaseNodeData.Name }}</p>
+                <p class="text-[var(--text-important)] font-bold">{{ .Next.BaseNodeData.Name }}</p>
             </a>
         {{ end }}
     </li>
