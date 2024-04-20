@@ -21,15 +21,23 @@ html {
 
     --rounded-sm: 0.25rem;
 
+	/* color */
     --white: #fafafa;
     --black: #1f1f1f;
-    --codeblock-light-background: #f5f2f0;
+    --main: #B8860B;
+    --dark-gray: #333333;
+
+	/* element specific colors */
+	--dark-border: var(--dark-gray);
+	--important-text: var(--main);
+	
+	
+	
     --faint-gray: #e0e0e0;
+    --codeblock-light-background: #f5f2f0;
     --light-gray: #d0d0d0;
     --gray: #555555;
-    --dark-gray: #333333;
     --darkest-gray: #222222;
-    --main-color: #B8860B;
     --warning-color: #ed4444;
 }
 
@@ -49,7 +57,7 @@ html {
 #main {
 	display: grid;
 	overflow: hidden;
-	grid-template-columns: 100vw;
+	grid-template-columns: 100%;
 	grid-template-areas: 
 		"article"
 	;

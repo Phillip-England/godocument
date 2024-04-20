@@ -38,16 +38,20 @@
             node.addEventListener(eventType, callback)
         }
 
+// ==============================================================================
+
         class Zez {
             getState(node, key) {
                 return node.getAttribute("zez:" + key).split(" ")
             }
-            applyState(node, state) {
+            applyState(node, stateKey) {
+                let state = this.getState(node, stateKey)
                 for (let i = 0; i < state.length; i++) {
                     node.classList.add(state[i])
                 }
             }
-            removeState(node, state) {
+            removeState(node, key) {
+                let state = this.getState(node, key)
                 let classListArray = Array.from(node.classList)
                 for (let i = 0; i < state.length; i++) {
                     let index = classListArray.indexOf(state[i])
@@ -58,7 +62,8 @@
                 }
                 node.classList = classListArray.join(' ')
             }
-            containsState(node, state) {
+            containsState(node, key) {
+                let state = this.getState(node, key)
                 let classListArray = Array.from(node.classList)
                 for (let i = 0; i < state.length; i++) {
                     if (classListArray.includes(state[i])) {
@@ -69,32 +74,45 @@
             }
             applyStateAll(nodes, key) {
                 for (let i = 0; i < nodes.length; i++) {
-                    this.applyState(nodes[i], this.getState(nodes[i], key))
+                    this.applyState(nodes[i], key)
                 }
             }
             toggleState(node, key) {
-                let state = this.getState(node, key)
-                if (this.containsState(node, state)) {
-                    this.removeState(node, state)
+                let containsState = this.containsState(node, key)
+                if (containsState) {
+                    this.removeState(node, key)
                 } else {
-                    this.applyState(node, this.getState(node, key))
+                    this.applyState(node, key)
+                }
+            }
+            swapStates(node, key1, key2) {
+                if (this.containsState(node, key1)) {
+                    this.enforceState(node, key2, key1)
+                } else {
+                    this.enforceState(node, key1, key2)
                 }
             }
             toggleStateAll(nodes, key) {
                 for (let i = 0; i < nodes.length; i++) {
-                    let state = this.getState(nodes[i], key)
-                    this.toggleState(nodes[i], key, state)
+                    this.toggleState(nodes[i], key)
                 }
+            }
+            enforceState(node, keyToApply, keyToRemove) {
+                this.applyState(node, keyToApply)
+                this.removeState(node, keyToRemove)
             }
         }
 
         let zez = new Zez()
+
+// ==============================================================================
 
         class SiteNav {
             constructor(sitenav, sitenavItems, sitenavDropdowns) {
                 this.sitenav = sitenav
                 this.sitenavItems = sitenavItems
                 this.sitenavDropdowns = sitenavDropdowns
+                this.hook()
             }
             hook() {
                 this.setActiveNavItem()
@@ -119,7 +137,7 @@
                     let item = this.sitenavItems[i]
                     let href = item.getAttribute('href')
                     if (href == window.location.pathname || href == window.location.href) {
-                        zez.applyState(item, zez.getState(item, 'active'))
+                        zez.applyState(item, 'active')
                         climbTreeUntil(item, this.sitenav, (node) => {
                             if (node.classList.contains('dropdown')) {
                                 let hiddenChildren = qs(node, 'ul')
@@ -133,12 +151,15 @@
             }
         }
 
+// ==============================================================================
+
         class PageNav {
             constructor(pagenav, pagenavLinks, articleTitles, headerHeight) {
                 this.pagenav = pagenav
                 this.pagenavLinks = pagenavLinks
                 this.articleTitles = articleTitles
                 this.headerHeight = headerHeight
+                this.hook()
             }
             hook() {
                 this.setActivePageNavItem()
@@ -154,18 +175,18 @@
                     let title = this.articleTitles[i]
                     let titlePos = title.getBoundingClientRect().top
                     if (!found && i == this.articleTitles.length - 1) {
-                        zez.applyState(link, zez.getState(link, 'active'))
+                        zez.applyState(link, 'active')
                         continue
                     }
                     if (titlePos < this.headerHeight) {
-                        zez.removeState(link, zez.getState(link, 'active'))
+                        zez.removeState(link, 'active')
                         continue
                     }
                     if (!found) {
                         found = true
-                        zez.applyState(link, zez.getState(link, 'active'))
+                        zez.applyState(link, 'active')
                     } else {
-                        zez.removeState(link, zez.getState(link, 'active'))
+                        zez.removeState(link, 'active')
                     }
                 }
             }
@@ -177,6 +198,72 @@
                 }, 100);
             }
         }
+
+// ==============================================================================
+
+class Header {
+    constructor(headerBars, overlay, sitenav) {
+        this.headerBars = headerBars
+        this.overlay = overlay
+        this.sitenav = sitenav
+        this.hook()
+    }
+    hook() {
+        eReset(this.headerBars, "click", this.toggleMobileNav.bind(this))
+        eReset(this.overlay, "click", this.toggleMobileNav.bind(this))
+    }
+    toggleMobileNav() {
+        zez.toggleState(this.overlay, 'active')
+        zez.toggleState(this.sitenav, 'active')
+    }
+}
+
+// ==============================================================================
+
+class Theme {
+    constructor(sunIcons, moonIcons, htmlDocument) {
+        this.sunIcons = sunIcons
+        this.moonIcons = moonIcons
+        this.htmlDocument = htmlDocument
+        this.hook()
+    }
+    hook() {
+        this.initTheme()
+        for (let i = 0; i < this.sunIcons.length; i++) {
+            eReset(this.sunIcons[i], "click", this.toggleTheme.bind(this))
+        }
+        for (let i = 0; i < this.moonIcons.length; i++) {
+            eReset(this.moonIcons[i], "click", this.toggleTheme.bind(this))
+        }
+    }
+    initTheme() {
+        let theme = localStorage.getItem('theme')
+        if (theme) {
+            if (theme == 'dark') {
+                zez.enforceState(this.htmlDocument, 'dark', 'light')
+                return
+            }
+            zez.enforceState(this.htmlDocument, 'light', 'dark')
+            return
+        }
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            zez.enforceState(this.htmlDocument, 'dark', 'light')
+        } else {
+            zez.enforceState(this.htmlDocument, 'light', 'dark')
+        }
+    }
+    toggleTheme() {
+        zez.swapStates(this.htmlDocument, 'dark', 'light')
+        if (zez.containsState(this.htmlDocument, 'dark')) {
+            localStorage.setItem('theme', 'dark')
+            return
+        }
+        localStorage.setItem('theme', 'light')
+    }
+
+}
+
+// ==============================================================================
 
 
         function onLoad() {
@@ -192,19 +279,23 @@
             const article = qs(document, '#article')
             const articleTitles = qsa(article, 'h2, h3, h4, h5, h6')
             const header = qs(document, '#header')
+            const headerBars = qs(header, '#bars')
+            const overlay = qs(document, '#overlay')
+            const sunIcons = qsa(document, '.sun')
+            const moonIcons = qsa(document, '.moon')
+            const htmlDocument = qs(document, 'html')
 
             // hooking events and running initializations
-            new SiteNav(sitenav, sitenavItems, sitenavDropdowns).hook()
-            new PageNav(pagenav, pagenavLinks, articleTitles, header.offsetHeight).hook()
-
+            new SiteNav(sitenav, sitenavItems, sitenavDropdowns, header, overlay)
+            new PageNav(pagenav, pagenavLinks, articleTitles, header.offsetHeight)
+            new Header(headerBars, overlay, sitenav)
+            new Theme(sunIcons, moonIcons, htmlDocument)
 
             // init
             Prism.highlightAll();
 
-
             // reveal body
-            zez.applyState(body, zez.getState(body, 'loaded'))
-
+            zez.applyState(body, 'loaded')
 
         }
 

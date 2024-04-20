@@ -25,23 +25,23 @@ import (
 // GenerateDynamicNavbar generates the dynamic navbar based on ./godocument.config.json
 func GenerateDynamicNavbar(cnf stypes.DocConfig) {
 	html := `
-		<nav id='sitenav' class='fixed top-0 w-[80%] lg:w-auto lg:sticky hidden lg:block lg:top-[75px] h-screen border-r z-40 lg:z-0 bg-white' style="grid-area: sitenav;">
-			<div class='sitenav-mobile-header flex flex-row justify-between items-center text-md h-[75px] p-4 border-b lg:hidden'>
-				<div class='sitenav-mobile-header-logo-wrapper flex flex-row items-center justify-between w-[250px]'>
-					<div class="sitenav-mobile-header-logo flex">
+		<nav id='sitenav' class='fixed top-0 w-[80%] lg:w-auto lg:sticky hidden lg:block lg:top-[75px] h-screen border-r dark:border-[var(--dark-border)] z-50 lg:z-0 bg-[var(--white)] dark:bg-[var(--black)]' zez:active="!block" style="grid-area: sitenav;">
+			<div class='flex flex-row justify-between items-center text-md h-[75px] p-4 border-b dark:border-[var(--dark-border)] lg:hidden'>
+				<div class='flex flex-row items-center justify-between w-[250px]'>
+					<div class="flex">
 						<img class='logo' src="/static/img/logo.svg" alt="logo" id="logo">
 					</div>
 				</div>
 				<div class='flex items-center'>
-					<svg class="sun-icon cursor-pointer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+					<svg class="sun cursor-pointer dark:hidden" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
 						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5V3m0 18v-2M7.05 7.05 5.636 5.636m12.728 12.728L16.95 16.95M5 12H3m18 0h-2M7.05 16.95l-1.414 1.414M18.364 5.636 16.95 7.05M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"/>
 					</svg>
-					<svg class="moon-icon cursor-pointer hidden" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+					<svg class="moon cursor-pointer hidden dark:block" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
 						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 0 1-.5-17.986V3c-.354.966-.5 1.911-.5 3a9 9 0 0 0 9 9c.239 0 .254.018.488 0A9.004 9.004 0 0 1 12 21Z"/>
 					</svg>
 				</div>
 			</div>
-			<ul class='sitenav-list flex flex-col p-2 gap-2'>
+			<ul class='sitenav-list flex flex-col p-2 gap-1'>
 	`
 	for i := 0; i < len(cnf); i++ {
 		html = workOnNavbar(cnf[i], html)
@@ -65,15 +65,15 @@ func workOnNavbar(node stypes.DocNode, html string) string {
 		}
 		html += fmt.Sprintf(`
 		<li class='dropdown flex flex-col pl-%d'>
-			<button class='dropdown-btn flex flex-row justify-between items-center rounded-md font-bold p-2 border hover:bg-faintgray'>
-				<summary zez:active="text-main dark:text-darkmain">%s</summary>
+			<button class='dropdown-btn flex flex-row justify-between items-center rounded-md font-bold p-2 hover:dark:bg-[var(--dark-border)]'>
+				<summary zez:active="text-[var(--important-text)]">%s</summary>
 				<div zez:active="rotate-90">
 					<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
 						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
 					</svg>
 				</div>
 			</button>
-			<ul class='hidden flex-col gap-2 pt-2' zez:active="!flex">
+			<ul class='hidden flex-col gap-1 pt-2' zez:active="!flex">
 				%s
 			</ul>
 		</li>
@@ -81,7 +81,7 @@ func workOnNavbar(node stypes.DocNode, html string) string {
 	case *stypes.MarkdownNode:
 		html += fmt.Sprintf(`
 			<li class='pl-%d'>
-				<a class='item flex flex-row justify-between items-center rounded-md border font-bold p-2 hover:bg-faintgray' zez:active="text-main dark:text-main" href='%s'>%s</a>
+				<a class='item flex flex-row justify-between items-center rounded-md font-bold p-2 hover:dark:bg-[var(--dark-border)]' zez:active="text-[var(--important-text)] dark:text-main" href='%s'>%s</a>
 			</li>
 		`, n.BaseNodeData.Depth, n.RouterPath, n.BaseNodeData.Name)
 	}

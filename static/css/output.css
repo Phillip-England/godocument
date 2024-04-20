@@ -634,6 +634,14 @@ video {
   z-index: 40;
 }
 
+.z-50 {
+  z-index: 50;
+}
+
+.\!block {
+  display: block !important;
+}
+
 .block {
   display: block;
 }
@@ -642,20 +650,16 @@ video {
   display: inline;
 }
 
-.flex {
-  display: flex;
-}
-
 .\!flex {
   display: flex !important;
 }
 
-.hidden {
-  display: none;
+.flex {
+  display: flex;
 }
 
-.h-6 {
-  height: 1.5rem;
+.hidden {
+  display: none;
 }
 
 .h-\[75px\] {
@@ -668,10 +672,6 @@ video {
 
 .h-screen {
   height: 100vh;
-}
-
-.w-6 {
-  width: 1.5rem;
 }
 
 .w-\[250px\] {
@@ -707,14 +707,6 @@ video {
   resize: both;
 }
 
-.scroll-pt-\[75px\] {
-  scroll-padding-top: 75px;
-}
-
-.scroll-pb-\[75px\] {
-  scroll-padding-bottom: 75px;
-}
-
 .flex-row {
   flex-direction: row;
 }
@@ -741,6 +733,10 @@ video {
 
 .gap-6 {
   gap: 1.5rem;
+}
+
+.gap-1 {
+  gap: 0.25rem;
 }
 
 .break-words {
@@ -771,39 +767,18 @@ video {
   border-top-width: 1px;
 }
 
+.bg-\[var\(--white\)\] {
+  background-color: var(--white);
+}
+
 .bg-black {
   --tw-bg-opacity: 1;
-  background-color: rgb(31 31 31 / var(--tw-bg-opacity));
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
 
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-.bg-blue-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(191 219 254 / var(--tw-bg-opacity));
-}
-
-.bg-blue-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(96 165 250 / var(--tw-bg-opacity));
-}
-
-.bg-blue-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(37 99 235 / var(--tw-bg-opacity));
-}
-
-.bg-blue-900 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(30 58 138 / var(--tw-bg-opacity));
-}
-
-.bg-red-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(254 202 202 / var(--tw-bg-opacity));
 }
 
 .p-2 {
@@ -816,16 +791,6 @@ video {
 
 .p-6 {
   padding: 1.5rem;
-}
-
-.px-8 {
-  padding-left: 2rem;
-  padding-right: 2rem;
-}
-
-.py-4 {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
 }
 
 .pl-0 {
@@ -878,23 +843,20 @@ video {
   font-weight: 700;
 }
 
-.text-gray-800 {
-  --tw-text-opacity: 1;
-  color: rgb(31 41 55 / var(--tw-text-opacity));
+.text-\[var\(--black\)\] {
+  color: var(--black);
 }
 
-.text-main {
-  --tw-text-opacity: 1;
-  color: rgb(184 134 11 / var(--tw-text-opacity));
+.text-\[var\(--main\)\] {
+  color: var(--main);
+}
+
+.text-\[var\(--important-text\)\] {
+  color: var(--important-text);
 }
 
 .opacity-70 {
   opacity: 0.7;
-}
-
-.hover\:bg-faintgray:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(249 249 249 / var(--tw-bg-opacity));
 }
 
 @media (min-width: 1024px) {
@@ -921,19 +883,60 @@ video {
   .lg\:w-auto {
     width: auto;
   }
+
+  .lg\:px-8 {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .lg\:py-4 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
 }
 
-.dark\:text-darkmain:where(.dark, .dark *) {
-  --tw-text-opacity: 1;
-  color: rgb(139 69 19 / var(--tw-text-opacity));
+.dark\:block:where(.dark, .dark *) {
+  display: block;
 }
 
-.dark\:text-white:where(.dark, .dark *) {
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
+.dark\:hidden:where(.dark, .dark *) {
+  display: none;
 }
 
-.dark\:text-main:where(.dark, .dark *) {
-  --tw-text-opacity: 1;
-  color: rgb(184 134 11 / var(--tw-text-opacity));
+.dark\:border-\[var\(--dark-gray\)\]:where(.dark, .dark *) {
+  border-color: var(--dark-gray);
+}
+
+.dark\:border-\[var\(--dark-border\)\]:where(.dark, .dark *) {
+  border-color: var(--dark-border);
+}
+
+.dark\:bg-\[var\(--black\)\]:where(.dark, .dark *) {
+  background-color: var(--black);
+}
+
+.dark\:text-\[var\(--white\)\]:where(.dark, .dark *) {
+  color: var(--white);
+}
+
+.dark\:text-\[var\(--darkmain\)\]:where(.dark, .dark *) {
+  color: var(--darkmain);
+}
+
+.hover\:dark\:border-\[var\(--dark-border\)\]:where(.dark, .dark *):hover {
+  border-color: var(--dark-border);
+}
+
+.hover\:dark\:bg-\[var\(--dark-border\)\]:where(.dark, .dark *):hover {
+  background-color: var(--dark-border);
+}
+
+@media (min-width: 1024px) {
+  .dark\:lg\:block:where(.dark, .dark *) {
+    display: block;
+  }
+
+  .dark\:lg\:hidden:where(.dark, .dark *) {
+    display: none;
+  }
 }
