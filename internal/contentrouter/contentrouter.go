@@ -91,6 +91,7 @@ func assignHandlers(cnf stypes.DocConfig) {
 					link = strings.ReplaceAll(link, ".", "")
 					link = strings.ReplaceAll(link, "/", "")
 					link = strings.ReplaceAll(link, "?", "")
+					link = strings.ReplaceAll(link, ",", "")
 					link = strings.ReplaceAll(link, " ", "-")
 					link = "#" + link
 					header := stypes.MarkdownHeader{

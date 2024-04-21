@@ -25,9 +25,9 @@ func main() {
 	mux.HandleFunc("GET /favicon.ico", handler.ServeFavicon)
 
 	if len(args) > 1 && args[1] == "--reset" {
-		filewriter.ResetOutDir()
+		// filewriter.ResetOutDir()
 		filewriter.ResetDocsDir()
-		filewriter.ResetGodocumentConfig()
+		// filewriter.ResetGodocumentConfig()
 		return
 	}
 

@@ -191,6 +191,16 @@ article h1 {
 	font-weight: bold;
 }
 
+article ol {
+	list-style-type: decimal;
+	list-style-position: inside;
+}
+
+artivle ul {
+	list-style-type: disc;
+	list-style-position: inside;
+}
+
 article h2 {
     font-size: var(--mkd-h2-size);
     padding-top: 2rem;
@@ -218,6 +228,11 @@ article h5 {
 article p {
     font-size: var(--mkd-p-size);
     line-height: 1.75rem;
+	font-weight: 400;
+}
+
+article p strong {
+	font-weight: bold;
 }
 
 article pre {
@@ -486,7 +501,6 @@ html.light .token.deleted {
 html.light .token.attr-name,
 html.light .token.string,
 html.light .token.char,
-html.light .token.builtin,
 html.light .token.inserted {
 	color: var(--code-string);
 }
@@ -506,12 +520,13 @@ html.light .style .token.string {
 
 html.light .token.atrule,
 html.light .token.attr-value,
+html.light .token.builtin,
+html.light .token.class-name,
 html.light .token.keyword {
 	color: var(--code-keyword);
 }
 
-html.light .token.function,
-html.light .token.class-name {
+html.light .token.function {
 	color: var(--code-function);
 }
 

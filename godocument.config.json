@@ -2,8 +2,7 @@
     "docs": {
         "Introduction": "/introduction.md",
         "Quickstart": {
-            "Installation": "/quickstart/installation.md",
-            "Configuration": "/quickstart/configuration.md"
+            "Installation": "/quickstart/installation.md"
         }
     }
 }

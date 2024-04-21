@@ -137,7 +137,7 @@ func ResetDocsDir() {
 		}
 	}
 	filePath := fmt.Sprintf("%s/introduction.md", config.StaticMarkdownPrefix)
-	content := "# Introduction"
+	content := "# Introduction\n\n## Hello, World\nGenerated using `go run main.go --reset`. Edit `./docs/introduction.md` and see the changes here!"
 	err = os.WriteFile(filePath, []byte(content), 0644)
 	if err != nil {
 		fmt.Printf("Error writing to file: %s\n", err)
