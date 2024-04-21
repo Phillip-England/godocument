@@ -29,7 +29,6 @@ html {
 	/* colors */
     --color-white: #fafafa;
     --color-black: #1f1f1f;
-    --color-main: #B8860B;
 	--color-gray-800: #333333;
 	--color-gray-700: #555555;
 	--color-gray-600: #777777;
@@ -48,23 +47,24 @@ html {
 	--color-dark-green: #057d2f;
 	--color-pink: #b370b1;
 	--color-yellow: #ffea6b;
-	--color-dark-yellow: #7e6f01;
+	--color-dark-yellow: #7f7108;
 	--color-orange: #ffa763;
 	--color-dark-orange: #a93a12;
-	--color-blue: #1180c4;
+	--color-blue: #2494da;
+	--color-dark-blue: #1b6dbf;
 
 /* element specific variables ----------------------------------------------------------------- */
 
 	/* border colors */
 	--b-color: var(--color-gray-200);
 	--dark-b-color: var(--color-gray-800);
-	--b-hover-color: var(--color-gray);
+	--b-hover-color: var(--color-gray-300);
 	--dark-b-hover-color: var(--color-gray);
 
 	/* text colors */
 	--default-text-color: var(--color-black);
 	--dark-default-text-color: var(--color-white);
-	--text-important: var(--color-blue);
+	--text-important: var(--color-dark-blue);
 	--dark-text-important: var(--color-blue);
 
 	/* background colors */
@@ -72,13 +72,23 @@ html {
 	--dark-default-bg-color: var(--color-black);
 	--bg-hover-color: var(--color-gray-200);
 	--dark-bg-hover-color: var(--color-gray-800);
+
+	/* header */
 	--header-bg-color: var(--color-white);
 	--dark-header-bg-color: var(--color-black);
+
+	/* footer */
 	--footer-bg-color: var(--color-white);
 	--dark-footer-bg-color: var(--color-black);
+
+	/* overlay */
 	--overlay-bg-color: var(--color-black);
+
+	/* sitenav */
 	--sitenav-bg-color: var(--color-white);
 	--dark-sitenav-bg-color: var(--color-black);
+
+	/* pagenav */
 	--pagenav-bg-color: var(--color-white);
 	--dark-pagenav-bg-color: var(--color-black);
 	
@@ -95,12 +105,14 @@ html {
 	--mkd-h6-size: var(--text-xs);
 	--mkd-p-size: var(--text-xs);
 
-	/* markdown inline code appearance */
+	/* light inline code */
 	--inline-code-b-radius: var(--rounded-sm);
 	--inline-code-bg-color: var(--color-gray-200);
+
+	/* dark inline code */
 	--dark-inline-code-bg-color: var(--color-gray-800);
 
-	/* markdown code block appearance */
+	/* light code blocks */
 	--code-b-radius: var(--rounded-sm);
 	--code-bg-color: var(--color-gray-200);
 	--code-token-property: var(--color-dark-purple);
@@ -111,6 +123,7 @@ html {
 	--code-operator: var(--color-black);
 	--code-punctuation: var(--color-black);
 
+	/* dark code blocks */
 	--dark-code-bg-color: var(--color-gray-800);
 	--dark-code-token-property: var(--color-purple);
 	--dark-code-string: var(--color-green);

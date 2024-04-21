@@ -1121,6 +1121,22 @@ video {
   color: var(--dark-default-text-color);
 }
 
+.dark\:text-\[var\(--dark-text-important\)\]:where(.dark, .dark *) {
+  color: var(--dark-text-important);
+}
+
+.dark\:text-\[var\(--text-important\)\]:where(.dark, .dark *) {
+  color: var(--text-important);
+}
+
+.dark\:text-\[var\(--dark-important\)\]:where(.dark, .dark *) {
+  color: var(--dark-important);
+}
+
+.dark\:text-\[var\(--dark-important-text\)\]:where(.dark, .dark *) {
+  color: var(--dark-important-text);
+}
+
 .hover\:dark\:border-\[var\(--dark-border\)\]:where(.dark, .dark *):hover {
   border-color: var(--dark-border);
 }

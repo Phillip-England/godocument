@@ -3,7 +3,7 @@
         {{ if .MarkdownHeaders }}
             {{ range .MarkdownHeaders }}
                 <li>
-                    <a href={{ .Link }} class="cursor-pointer {{ .DepthClass }}" zez:active="text-[var(--text-important)]">{{ .Line }}</a>
+                    <a href={{ .Link }} class="cursor-pointer {{ .DepthClass }}" zez:active="text-[var(--text-important)] dark:text-[var(--dark-text-important)]">{{ .Line }}</a>
                 </li>
             {{ end }}
         {{ else }}
