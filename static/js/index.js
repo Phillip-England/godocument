@@ -271,10 +271,11 @@ class Theme {
         }
         localStorage.setItem('theme', 'light')
     }
-
 }
 
 // ==============================================================================
+
+
 
         function onLoad() {
 
@@ -295,6 +296,7 @@ class Theme {
             const htmlDocument = qs(document, 'html')
 
             // hooking events and running initializations
+            window.scrollTo(0, 0, { behavior: 'auto' })
             new SiteNav(sitenav, sitenavItems, sitenavDropdowns, header, overlay)
             new PageNav(pagenav, pagenavLinks, articleTitles, header.offsetHeight)
             new Header(headerBars, overlay, sitenav)
@@ -305,6 +307,7 @@ class Theme {
 
             // reveal body
             zez.applyState(body, 'loaded')
+
 
         }
 

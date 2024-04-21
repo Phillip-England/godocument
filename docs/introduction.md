@@ -14,6 +14,24 @@ Why make something complex if it doesn't have to be? Static site generation shou
 
 And Godocument was born.
 
+### Testing
+
+Godocument's workflow is straightforward: clone the repo, setup your config, write your markdown files, build the static assets, and deploy.
+
+Everything starts with your godocument.config.json file. Here is what the config file looks like for this site. Yes, I use my own software. 😉
+
+#### Again
+
+Godocument's workflow is straightforward: clone the repo, setup your config, write your markdown files, build the static assets, and deploy.
+
+Everything starts with your godocument.config.json file. Here is what the config file looks like for this site. Yes, I use my own software. 😉
+
+##### Again
+
+Godocument's workflow is straightforward: clone the repo, setup your config, write your markdown files, build the static assets, and deploy.
+
+Everything starts with your godocument.config.json file. Here is what the config file looks like for this site. Yes, I use my own software. 😉
+
 ## How Does it Work?
 
 Godocument's workflow is straightforward: clone the repo, setup your config, write your markdown files, build the static assets, and deploy.
@@ -39,7 +57,32 @@ Everything starts with your godocument.config.json file. Here is what the config
         }
     }
 }
+```
 
+```css
+html.dark pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+}
+```
+
+```go
+func writeNavbarHTML(html string) {
+	f, err := os.Create(config.GeneratedNavPath)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+	_, err = f.WriteString("<!-- This file is auto-generated. Do not modify. -->\n")
+	if err != nil {
+		panic(err)
+	}
+	_, err = f.WriteString(html)
+	if err != nil {
+		panic(err)
+	}
+}
 ```
 
 Godocument takes this config file and uses it to build a series of routes. You can use these routes during development to test your application. Once you get things looking how you want, you can read the static html from the routes and generate an ./out directory containing your static assets.

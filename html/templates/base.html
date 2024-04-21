@@ -9,12 +9,12 @@
     <link rel="stylesheet" type="text/css" href="/static/css/output.css">
     <title>{{ .Title }}</title>
 </head>
-<body hx-boost="true" class="custom-scroll h-full w-full flex invisible text-[var(--black)] bg-[var(--white)] dark:text-[var(--white)] dark:bg-[var(--black)]" zez:loaded="!visible">
-    <div id="root" class="w-full">
+<body hx-boost="true" class="custom-scroll h-full w-full flex invisible text-[var(--default-text-color)] bg-[var(--default-bg-color)] dark:text-[var(--dark-default-text-color)] dark:bg-[var(--dark-default-bg-color)]" zez:loaded="!visible">
+    <div id="root" class="w-full grid">
         {{ template "header.html" . }}
-        <div id="content-wrapper" style="grid-area: content-wrapper;">
+        <div id="content-wrapper" class="grid" style="grid-area: content-wrapper;">
             {{ template "sitenav.html" . }}
-            <main id="main" style="grid-area: main;">
+            <main id="main" class="grid" style="grid-area: main;">
                 <article id="article" class="lg:px-8 lg:py-4 p-4 flex flex-col gap-6 break-words" style="grid-area: article;">
                     {{ .Content }}
                     {{ template "pageturn.html" . }}

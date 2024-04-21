@@ -6,7 +6,6 @@ import (
 	"godocument/internal/config"
 	"godocument/internal/stypes"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -25,8 +24,8 @@ import (
 // GenerateDynamicNavbar generates the dynamic navbar based on ./godocument.config.json
 func GenerateDynamicNavbar(cnf stypes.DocConfig) {
 	html := `
-		<nav id='sitenav' class='fixed top-0 w-[80%] lg:w-auto lg:sticky hidden overflow-y-scroll custom-scroll sm-scroll lg:block lg:top-[75px] h-screen border-r border-[var(--border-light)] dark:border-[var(--border-dark)] z-50 lg:z-0 bg-[var(--white)] dark:bg-[var(--black)]' zez:active="!block" style="grid-area: sitenav;">
-			<div class='flex flex-row justify-between items-center text-md h-[75px] p-4 border-b border-[var(--border-light)] dark:border-[var(--border-dark)] lg:hidden'>
+		<nav id='sitenav' class='fixed top-0 w-[80%] lg:w-auto lg:sticky hidden overflow-y-scroll custom-scroll sm-scroll lg:block lg:top-[75px] h-screen border-r border-[var(--b-color)] dark:border-[var(--dark-b-color)] z-50 lg:z-0 bg-[var(--sitenav-bg-color)] dark:bg-[var(--dark-sitenav-bg-color)]' zez:active="!block" style="grid-area: sitenav;">
+			<div class='flex flex-row justify-between items-center text-md h-[75px] p-4 border-b border-[var(--b-color)] dark:border-[var(--dark-b-color)] lg:hidden'>
 				<div class='flex flex-row items-center justify-between w-[250px]'>
 					<div class="flex">
 						<img class='logo' src="/static/img/logo.svg" alt="logo" id="logo">
@@ -65,7 +64,7 @@ func workOnNavbar(node stypes.DocNode, html string) string {
 		}
 		html += fmt.Sprintf(`
 		<li class='dropdown flex flex-col pl-%d'>
-			<button class='dropdown-btn flex flex-row justify-between items-center rounded-md font-bold p-2 hover:bg-[var(--bg-hover-light)] hover:dark:bg-[var(--bg-hover-dark)]'>
+			<button class='dropdown-btn flex flex-row justify-between items-center rounded-md font-bold p-2 hover:bg-[var(--bg-hover-color)] hover:dark:bg-[var(--dark-bg-hover-color)]'>
 				<summary zez:active="text-[var(--text-important)]">%s</summary>
 				<div zez:active="rotate-90">
 					<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
@@ -81,7 +80,7 @@ func workOnNavbar(node stypes.DocNode, html string) string {
 	case *stypes.MarkdownNode:
 		html += fmt.Sprintf(`
 			<li class='pl-%d'>
-				<a class='item flex flex-row justify-between items-center rounded-md font-bold p-2 hover:bg-[var(--bg-hover-light)] hover:dark:bg-[var(--bg-hover-dark)]' zez:active="text-[var(--text-important)] dark:text-main bg-[var(--bg-hover-light)] dark:bg-[var(--bg-hover-dark)]" href='%s'>%s</a>
+				<a class='item flex flex-row justify-between items-center rounded-md font-bold p-2 hover:bg-[var(--bg-hover-color)] hover:dark:bg-[var(--dark-bg-hover-color)]' zez:active="text-[var(--text-important)] dark:text-main bg-[var(--bg-hover-color)] dark:bg-[var(--dark-bg-hover-color)]" href='%s'>%s</a>
 			</li>
 		`, n.BaseNodeData.Depth, n.RouterPath, n.BaseNodeData.Name)
 	}
@@ -139,7 +138,7 @@ func ResetDocsDir() {
 	}
 	filePath := fmt.Sprintf("%s/introduction.md", config.StaticMarkdownPrefix)
 	content := "# Introduction"
-	err = ioutil.WriteFile(filePath, []byte(content), 0644)
+	err = os.WriteFile(filePath, []byte(content), 0644)
 	if err != nil {
 		fmt.Printf("Error writing to file: %s\n", err)
 	}
@@ -165,7 +164,7 @@ func ResetGodocumentConfig() {
 	jsonData := "{\n\t\"docs\": {\n\t\t\"Introduction\": \"/introduction.md\"\n\t}\n}"
 
 	// Write the JSON data to the file, creating it if it doesn't exist
-	err := ioutil.WriteFile(path, []byte(jsonData), 0644)
+	err := os.WriteFile(path, []byte(jsonData), 0644)
 	if err != nil {
 		panic(err)
 	}

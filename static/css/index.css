@@ -9,6 +9,9 @@ html {
 
 :root {
 
+/* utility ----------------------------------------------------------------- */
+
+	/* font sizes */
     --font-base: 'Helvetica', sans-serif;
     --text-base: 16px;
     --text-2xs: 0.75rem;
@@ -19,37 +22,109 @@ html {
     --text-xl: 2rem;
     --text-2xl: 3rem;
 
+	/* border radius */
     --rounded-sm: 0.25rem;
+	--rounded-md: 0.5rem;
 
-	/* color */
-    --white: #fafafa;
-    --black: #1f1f1f;
-    --main: #B8860B;
-    --dark-gray: #333333;
-	--faint-gray: #e0e0e0;
-    --codeblock-light-background: #f5f2f0;
-    --light-gray: #d0d0d0;
-    --gray: #555555;
-    --darkest-gray: #222222;
-    --warning-color: #ed4444;
+	/* colors */
+    --color-white: #fafafa;
+    --color-black: #1f1f1f;
+    --color-main: #B8860B;
+	--color-gray-800: #333333;
+	--color-gray-700: #555555;
+	--color-gray-600: #777777;
+	--color-gray-500: #999999;
+	--color-gray-400: #bbbbbb;
+	--color-gray-300: #dddddd;
+	--color-gray-200: #f0f0f0;
+	--color-gray-100: #f5f5f5;
+    --color-light-gray: #d0d0d0;
+    --color-gray: #555555;
+    --color-darkest-gray: #222222;
+    --color-warning: #ed4444;
+	--color-purple: #ba8ef7;
+	--color-dark-purple: #712fec;
+	--color-green: #3bec74;
+	--color-dark-green: #057d2f;
+	--color-pink: #b370b1;
+	--color-yellow: #ffea6b;
+	--color-dark-yellow: #7e6f01;
+	--color-orange: #ffa763;
+	--color-dark-orange: #a93a12;
+	--color-blue: #1180c4;
 
-	/* element specific colors */
-	--border-light: var(--faint-gray);
-	--border-dark: var(--dark-gray);
-	--text-important: var(--main);
-	--bg-hover-dark: var(--dark-gray);
-	--bg-hover-light: var(--faint-gray);
-	--border-hover-dark: var(--gray);
-	--border-hover-light: var(--gray);
-	--scroll-thumb-light: var(--light-gray);
-	--scroll-thumb-dark: var(--dark-gray);
+/* element specific variables ----------------------------------------------------------------- */
+
+	/* border colors */
+	--b-color: var(--color-gray-200);
+	--dark-b-color: var(--color-gray-800);
+	--b-hover-color: var(--color-gray);
+	--dark-b-hover-color: var(--color-gray);
+
+	/* text colors */
+	--default-text-color: var(--color-black);
+	--dark-default-text-color: var(--color-white);
+	--text-important: var(--color-blue);
+	--dark-text-important: var(--color-blue);
+
+	/* background colors */
+	--default-bg-color: var(--color-white);
+	--dark-default-bg-color: var(--color-black);
+	--bg-hover-color: var(--color-gray-200);
+	--dark-bg-hover-color: var(--color-gray-800);
+	--header-bg-color: var(--color-white);
+	--dark-header-bg-color: var(--color-black);
+	--footer-bg-color: var(--color-white);
+	--dark-footer-bg-color: var(--color-black);
+	--overlay-bg-color: var(--color-black);
+	--sitenav-bg-color: var(--color-white);
+	--dark-sitenav-bg-color: var(--color-black);
+	--pagenav-bg-color: var(--color-white);
+	--dark-pagenav-bg-color: var(--color-black);
+	
+	/* scroll colors */
+	--scroll-thumb-light: var(--color-gray-400);
+	--scroll-thumb-dark: var(--color-gray-800);
+
+	/* markdown text sizes  */
+	--mkd-h1-size: var(--text-2xl);
+	--mkd-h2-size: var(--text-xl);
+	--mkd-h3-size: var(--text-lg);
+	--mkd-h4-size: var(--text-md);
+	--mkd-h5-size: var(--text-sm);
+	--mkd-h6-size: var(--text-xs);
+	--mkd-p-size: var(--text-xs);
+
+	/* markdown inline code appearance */
+	--inline-code-b-radius: var(--rounded-sm);
+	--inline-code-bg-color: var(--color-gray-200);
+	--dark-inline-code-bg-color: var(--color-gray-800);
+
+	/* markdown code block appearance */
+	--code-b-radius: var(--rounded-sm);
+	--code-bg-color: var(--color-gray-200);
+	--code-token-property: var(--color-dark-purple);
+	--code-string: var(--color-dark-green);
+	--code-token-selector: var(--color-dark-orange);
+	--code-function: var(--color-dark-yellow);
+	--code-keyword: var(--color-dark-purple);
+	--code-operator: var(--color-black);
+	--code-punctuation: var(--color-black);
+
+	--dark-code-bg-color: var(--color-gray-800);
+	--dark-code-token-property: var(--color-purple);
+	--dark-code-string: var(--color-green);
+	--dark-code-token-selector: var(--color-orange);
+	--dark-code-function: var(--color-yellow);
+	--dark-code-keyword: var(--color-purple);
+	--dark-code-operator: var(--color-white);
+	--dark-code-punctuation: var(--color-gray-300);
 
 }
 
  /* grids -------------------------------------------------------------------- */
 
 #root {
-	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: 75px 1fr auto;
 	grid-template-areas: 
@@ -60,8 +135,6 @@ html {
 }
 
 #main {
-	display: grid;
-	overflow: hidden;
 	grid-template-columns: 100%;
 	grid-template-areas: 
 		"article"
@@ -70,7 +143,6 @@ html {
 }
 
 #content-wrapper {
-	display: grid;
 	grid-template-columns: auto;
 	grid-template-areas: 
 		"main"
@@ -102,114 +174,128 @@ html {
 /* markdown styles ----------------------------------------------------------- */
 
 article h1 {
-    font-size: var(--text-2xl);
+    font-size: var(--mkd-h1-size);
+	font-weight: bold;
 }
 
 article h2 {
-    font-size: var(--text-xl);
+    font-size: var(--mkd-h2-size);
     padding-top: 2rem;
+	font-weight: 500;
 }
 
 article h3 {
-    font-size: var(--text-lg);
+    font-size: var(--mkd-h3-size);
+    padding-top: 2rem;
+	font-weight: 500;
+}
+
+article h4 {
+	font-size: var(--mkd-h4-size);
+    padding-top: 2rem;
+	font-weight: 500;
+}
+
+article h5 {
+	font-size: var(--mkd-h5-size);
+    padding-top: 2rem;
+	font-weight: 500;
 }
 
 article p {
-    font-size: var(--text-xs);
+    font-size: var(--mkd-p-size);
     line-height: 1.75rem;
 }
 
 article pre {
-    font-size: var(--text-xs);
-    border-radius: var(--rounded-sm);
+    border-radius: var(--code-b-radius);
     overflow-x: auto;
     white-space: pre;
 }
 
 article code {
-    font-size: var(--text-xs);
-    border-radius: var(--rounded-sm);
+    border-radius: var(--code-b-radius);
 }
 
 article a {
-    color: var(--main-color);
+    color: var(--text-important);
     text-decoration: underline;
 }
 
 html.dark article a {
-    color: var(--main-color);
+    color: var(--dark-text-important);
 }
 
 article p code {
-    background-color: var(--faint-gray);
-    border-radius: var(--rounded-sm);
+    background-color: var(--inline-code-bg-color);
+    border-radius: var(--inline-code-b-radius);
     padding: 0.25rem;
 }
 
 
 html.dark article p code {
-    background-color: var(--dark-gray);
+    background-color: var(--dark-inline-code-bg-color);
 }
 
 article p span code {
-    background-color: var(--faint-gray);
-    border-radius: var(--rounded-sm);
+    /* background-color: var(--color-gray-200); */
+    /* border-radius: var(--rounded-sm); */
     padding: 0.25rem;
 }
 
 html.dark article p span code {
-    background-color: var(--gray);
+    /* background-color: var(--gray); */
 }
 
 article p:has(> span.content-important) {
-    background-color: var(--codeblock-light-background);
-    border-left: solid var(--main-color) 5px;
-    border-radius: var(--rounded-sm);
+    /* background-color: var(--codeblock-light-background); */
+    /* border-left: solid var(--main-color) 5px; */
+    /* border-radius: var(--rounded-sm); */
     padding: 1rem;
 }
 
 html.dark article p:has(> span.content-important) {
-    background-color: var(--dark-gray);
+    /* background-color: var(--code-bg-color); */
 }
 
 article p div.content-important-exclamation {
-    font-size: var(--text-sm);
+    /* font-size: var(--text-sm); */
     font-weight: bold;
     display: flex;
     align-items: center;
     flex-direction: row;
-    color: var(--main-color);
+    /* color: var(--main-color); */
     gap: 0.5rem;
 }
 
 article p div.content-warning-explode {
-    font-size: var(--text-sm);
+    /* font-size: var(--text-sm); */
     font-weight: bold;
     display: flex;
     align-items: center;
     flex-direction: row;
-    color: var(--main-color);
+    /* color: var(--main-color); */
     gap: 0.5rem;
 }
 
 article p:has(> span.content-warning) {
-    background-color: var(--codeblock-light-background);
+    /* background-color: var(--code-bg-color);
     border-left: solid var(--warning-color) 5px;
-    border-radius: var(--rounded-sm);
+    border-radius: var(--rounded-sm); */
     padding: 1rem;
 }
 
 html.dark article p:has(> span.content-warning) {
-    background-color: var(--dark-gray);
+    /* background-color: var(--code-bg-color); */
 }
 
 article p div.content-warning-explode {
-    font-size: var(--text-sm);
+    /* font-size: var(--text-sm); */
     font-weight: bold;
     display: flex;
     align-items: center;
     flex-direction: row;
-    color: var(--warning-color);
+    /* color: var(--warning-color); */
     gap: 0.5rem;
 }
 
@@ -324,13 +410,13 @@ html.light pre[class*="language-"] {
 html.light pre[class*="language-"]::-moz-selection, html.light pre[class*="language-"] ::-moz-selection,
 html.light code[class*="language-"]::-moz-selection, html.light code[class*="language-"] ::-moz-selection {
 	text-shadow: none;
-	background: #b3d4fc;
+	/* background: #b3d4fc; */
 }
 
 html.light pre[class*="language-"]::selection, html.light pre[class*="language-"] ::selection,
 html.light code[class*="language-"]::selection, html.light code[class*="language-"] ::selection {
 	text-shadow: none;
-	background: #b3d4fc;
+	/* background: #b3d4fc; */
 }
 
 @media print {
@@ -349,7 +435,7 @@ html.light pre[class*="language-"] {
 
 html.light :not(pre) > code[class*="language-"],
 html.light pre[class*="language-"] {
-	background: var(--codeblock-light-background);
+	background: var(--code-bg-color);
 }
 
 /* Inline code */
@@ -363,11 +449,11 @@ html.light .token.comment,
 html.light .token.prolog,
 html.light .token.doctype,
 html.light .token.cdata {
-	color: slategray;
+	color: var(--code-punctuation);
 }
 
 html.light .token.punctuation {
-	color: #999;
+	color: var(--code-punctuation);
 }
 
 html.light .token.namespace {
@@ -381,16 +467,19 @@ html.light .token.number,
 html.light .token.constant,
 html.light .token.symbol,
 html.light .token.deleted {
-	color: #905;
+	color: var(--code-token-property);
 }
 
-html.light .token.selector,
 html.light .token.attr-name,
 html.light .token.string,
 html.light .token.char,
 html.light .token.builtin,
 html.light .token.inserted {
-	color: rgb(83, 122, 5);
+	color: var(--code-string);
+}
+
+html.light .token.selector {
+	color: var(--code-token-selector);
 }
 
 html.light .token.operator,
@@ -398,19 +487,19 @@ html.light .token.entity,
 html.light .token.url,
 html.light .language-css .token.string,
 html.light .style .token.string {
-	color: #9a6e3a;
+	color: var(--code-operator);
 	background: var(--codeblock-light-background);
 }
 
 html.light .token.atrule,
 html.light .token.attr-value,
 html.light .token.keyword {
-	color: #07a;
+	color: var(--code-keyword);
 }
 
 html.light .token.function,
 html.light .token.class-name {
-	color: #b0374f;
+	color: var(--code-function);
 }
 
 html.light .token.regex,
@@ -467,7 +556,7 @@ html.dark pre[class*="language-"] {
 
 html.dark :not(pre) > code[class*="language-"],
 html.dark pre[class*="language-"] {
-	background: #2d2d2d;
+	background: var(--dark-code-bg-color);
 }
 
 /* Inline code */
@@ -482,11 +571,11 @@ html.dark .token.block-comment,
 html.dark .token.prolog,
 html.dark .token.doctype,
 html.dark .token.cdata {
-	color: #999;
+	color: var(--dark-code-punctuation);
 }
 
 html.dark .token.punctuation {
-	color: #ccc;
+	color: var(--dark-code-punctuation);
 }
 
 html.dark .token.tag,
@@ -503,22 +592,25 @@ html.dark .token.function-name {
 html.dark .token.boolean,
 html.dark .token.number,
 html.dark .token.function {
-	color: #f08d49;
+	color: var(--dark-code-function);
 }
 
 html.dark .token.property,
 html.dark .token.class-name,
 html.dark .token.constant,
 html.dark .token.symbol {
-	color: #f8c555;
+	color: var(--dark-code-token-property);
 }
 
 html.dark .token.selector,
 html.dark .token.important,
-html.dark .token.atrule,
+html.dark .token.atrule {
+	color: var(--dark-code-token-selector);
+}
+
 html.dark .token.keyword,
 html.dark .token.builtin {
-	color: #cc99cd;
+	color: var(--dark-code-keyword);
 }
 
 html.dark .token.string,
@@ -526,13 +618,13 @@ html.dark .token.char,
 html.dark .token.attr-value,
 html.dark .token.regex,
 html.dark .token.variable {
-	color: #7ec699;
+	color: var(--dark-code-string);
 }
 
 html.dark .token.operator,
 html.dark .token.entity,
 html.dark .token.url {
-	color: #67cdcc;
+	color: var(--dark-code-operator);
 }
 
 html.dark .token.important,

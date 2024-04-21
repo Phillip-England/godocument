@@ -667,6 +667,10 @@ video {
   display: flex;
 }
 
+.grid {
+  display: grid;
+}
+
 .hidden {
   display: none;
 }
@@ -804,6 +808,22 @@ video {
   border-color: var(--border-light);
 }
 
+.border-\[var\(--light-b\)\] {
+  border-color: var(--light-b);
+}
+
+.border-\[var\(--light-b-clr-clr\)\] {
+  border-color: var(--light-b-clr-clr);
+}
+
+.border-\[var\(--light-b-clr-clr-clr\)\] {
+  border-color: var(--light-b-clr-clr-clr);
+}
+
+.border-\[var\(--b-color\)\] {
+  border-color: var(--b-color);
+}
+
 .bg-\[var\(--white\)\] {
   background-color: var(--white);
 }
@@ -828,6 +848,38 @@ video {
 
 .bg-\[var\(--main\)\] {
   background-color: var(--main);
+}
+
+.bg-\[var\(--bg-hover-color\)\] {
+  background-color: var(--bg-hover-color);
+}
+
+.bg-\[var\(--clr-white\)\] {
+  background-color: var(--clr-white);
+}
+
+.bg-\[var\(--default-bg-color\)\] {
+  background-color: var(--default-bg-color);
+}
+
+.bg-\[var\(--header-bg-color\)\] {
+  background-color: var(--header-bg-color);
+}
+
+.bg-\[var\(--footer-bg-color\)\] {
+  background-color: var(--footer-bg-color);
+}
+
+.bg-\[var\(--overlay-bg-color\)\] {
+  background-color: var(--overlay-bg-color);
+}
+
+.bg-\[var\(--sitenav-bg-color\)\] {
+  background-color: var(--sitenav-bg-color);
+}
+
+.bg-\[var\(--pagenav-bg-color\)\] {
+  background-color: var(--pagenav-bg-color);
 }
 
 .p-2 {
@@ -917,6 +969,10 @@ video {
   color: rgb(191 219 254 / var(--tw-text-opacity));
 }
 
+.text-\[var\(--default-text-color\)\] {
+  color: var(--default-text-color);
+}
+
 .underline {
   text-decoration-line: underline;
 }
@@ -933,12 +989,20 @@ video {
   border-color: var(--border-hover-light);
 }
 
+.hover\:border-\[var\(--b-hover-color\)\]:hover {
+  border-color: var(--b-hover-color);
+}
+
 .hover\:bg-\[var\(--light-hover\)\]:hover {
   background-color: var(--light-hover);
 }
 
 .hover\:bg-\[var\(--bg-hover-light\)\]:hover {
   background-color: var(--bg-hover-light);
+}
+
+.hover\:bg-\[var\(--bg-hover-color\)\]:hover {
+  background-color: var(--bg-hover-color);
 }
 
 @media (min-width: 1024px) {
@@ -997,6 +1061,14 @@ video {
   border-color: var(--border-dark);
 }
 
+.dark\:border-\[var\(--dark-b\)\]:where(.dark, .dark *) {
+  border-color: var(--dark-b);
+}
+
+.dark\:border-\[var\(--dark-b-color\)\]:where(.dark, .dark *) {
+  border-color: var(--dark-b-color);
+}
+
 .dark\:bg-\[var\(--black\)\]:where(.dark, .dark *) {
   background-color: var(--black);
 }
@@ -1009,6 +1081,34 @@ video {
   background-color: var(--bg-hover-dark);
 }
 
+.dark\:bg-\[var\(--dark-bg-hover-color\)\]:where(.dark, .dark *) {
+  background-color: var(--dark-bg-hover-color);
+}
+
+.dark\:bg-\[var\(--clr-black\)\]:where(.dark, .dark *) {
+  background-color: var(--clr-black);
+}
+
+.dark\:bg-\[var\(--dark-default-bg-color\)\]:where(.dark, .dark *) {
+  background-color: var(--dark-default-bg-color);
+}
+
+.dark\:bg-\[var\(--dark-header-bg-color\)\]:where(.dark, .dark *) {
+  background-color: var(--dark-header-bg-color);
+}
+
+.dark\:bg-\[var\(--dark-footer-bg-color\)\]:where(.dark, .dark *) {
+  background-color: var(--dark-footer-bg-color);
+}
+
+.dark\:bg-\[var\(--dark-sitenav-bg-color\)\]:where(.dark, .dark *) {
+  background-color: var(--dark-sitenav-bg-color);
+}
+
+.dark\:bg-\[var\(--dark-pagenav-bg-color\)\]:where(.dark, .dark *) {
+  background-color: var(--dark-pagenav-bg-color);
+}
+
 .dark\:text-\[var\(--white\)\]:where(.dark, .dark *) {
   color: var(--white);
 }
@@ -1017,12 +1117,20 @@ video {
   color: var(--darkmain);
 }
 
+.dark\:text-\[var\(--dark-default-text-color\)\]:where(.dark, .dark *) {
+  color: var(--dark-default-text-color);
+}
+
 .hover\:dark\:border-\[var\(--dark-border\)\]:where(.dark, .dark *):hover {
   border-color: var(--dark-border);
 }
 
 .dark\:hover\:border-\[var\(--border-hover-dark\)\]:hover:where(.dark, .dark *) {
   border-color: var(--border-hover-dark);
+}
+
+.dark\:hover\:border-\[var\(--dark-b-hover-color\)\]:hover:where(.dark, .dark *) {
+  border-color: var(--dark-b-hover-color);
 }
 
 .hover\:dark\:bg-\[var\(--dark-border\)\]:where(.dark, .dark *):hover {
@@ -1035,6 +1143,10 @@ video {
 
 .hover\:dark\:bg-\[var\(--bg-hover-dark\)\]:where(.dark, .dark *):hover {
   background-color: var(--bg-hover-dark);
+}
+
+.hover\:dark\:bg-\[var\(--dark-bg-hover-color\)\]:where(.dark, .dark *):hover {
+  background-color: var(--dark-bg-hover-color);
 }
 
 @media (min-width: 1024px) {

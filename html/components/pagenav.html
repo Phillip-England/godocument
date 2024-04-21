@@ -1,5 +1,5 @@
-<nav id="pagenav" class="text-xs relative overflow-y-scroll custom-scroll sm-scroll" style="grid-area: pagenav;">
-    <ul class="fixed p-4 border-l border-[var(--border-light)] dark:border-[var(--border-dark)] flex flex-col gap-2">
+<nav id="pagenav" class="text-xs relative overflow-y-scroll custom-scroll sm-scroll bg-[var(--pagenav-bg-color)] dark:bg-[var(--dark-pagenav-bg-color)]" style="grid-area: pagenav;">
+    <ul class="fixed p-4 border-l border-[var(--b-color)] dark:border-[var(--dark-b-color)] flex flex-col gap-2">
         {{ if .MarkdownHeaders }}
             {{ range .MarkdownHeaders }}
                 <li>
