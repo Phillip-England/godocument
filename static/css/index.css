@@ -40,7 +40,6 @@ html {
     --light-gray: #d0d0d0;
     --gray: #555555;
     --darkest-gray: #222222;
-    --warning: #ed4444;
 	--purple: #ba8ef7;
 	--dark-purple: #712fec;
 	--green: #3bec74;
@@ -52,6 +51,8 @@ html {
 	--dark-orange: #a93a12;
 	--blue: #2494da;
 	--dark-blue: #1b6dbf;
+	--red: #ff4d3f;
+	--dark-red: #c82216;
 
 /* element specific variables ----------------------------------------------------------------- */
 
@@ -135,13 +136,21 @@ html {
 	--dark-code-operator: var(--white);
 	--dark-code-punctuation: var(--gray-300);
 
+	/* custom mkd elements */
+	--mkd-bg-color: var(--gray-200);
+	--dark-mkd-bg-color: var(--gray-800);
+
 	/* <mkd-important> */
-	--mkd-important-bg-color: var(--gray-200);
-	--dark-mkd-important-bg-color: var(--gray-800);
 	--mkd-important-text-color: var(--dark-blue);
 	--dark-mkd-important-text-color: var(--blue);
 	--mkd-important-border-color: var(--dark-blue);
 	--dark-mkd-important-border-color: var(--blue);
+
+	/* <mkd-warning> */
+	--mkd-warning-text-color: var(--dark-red);
+	--dark-mkd-warning-text-color: var(--red);
+	--mkd-warning-border-color: var(--dark-red);
+	--dark-mkd-warning-border-color: var(--red);
 
 }
 
