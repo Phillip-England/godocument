@@ -1,8 +1,9 @@
 {
     "docs": {
         "Introduction": "/introduction.md",
-        "Quickstart": {
-            "Installation": "/quickstart/installation.md"
+        "Overview": {
+            "Installation": "/overview/installation.md",
+            "File System": "/overview/file-system.md"
         }
     }
 }

@@ -55,6 +55,7 @@ func GetDocConfig() stypes.DocConfig {
 	c = purgeMarkdownNodes(c)
 	c = purgeNonRootObjectNodes(c)
 	ensureMarkdownsFileExists(c)
+	ensureIntroductionFileExists(c)
 	return c
 }
 
@@ -236,7 +237,7 @@ func purgeNonRootObjectNodes(docConfig stypes.DocConfig) stypes.DocConfig {
 
 }
 
-// workOnMarkdownNodes applies the action function to each MarkdownNode in the structured data
+// WorkOnMarkdownNodes applies the action function to each MarkdownNode in the structured data
 func WorkOnMarkdownNodes(docConfig stypes.DocConfig, action func(*stypes.MarkdownNode)) {
 	for i := 0; i < len(docConfig); i++ {
 		switch docConfig[i].(type) {
@@ -255,4 +256,15 @@ func ensureMarkdownsFileExists(docConfig stypes.DocConfig) {
 			panic(fmt.Sprintf("Markdown file %s does not exist", m.MarkdownFile))
 		}
 	})
+}
+
+// ensures the first markdown file in godocument.config.json is the introduction file
+func ensureIntroductionFileExists(docConfig stypes.DocConfig) {
+	name := docConfig[0].(*stypes.MarkdownNode).BaseNodeData.Name
+	file := docConfig[0].(*stypes.MarkdownNode).MarkdownFile
+	parent := docConfig[0].(*stypes.MarkdownNode).BaseNodeData.Parent
+	if name != IntroductionString || parent != DocRoot || file != StaticMarkdownPrefix+"/introduction.md" {
+		panic("First entry of \"docs\" section of godocument.config.json must be:\n{\n  \"docs\": {\n    \"Introduction\": \"/introduction.md\"\n  }\n}")
+	}
+
 }

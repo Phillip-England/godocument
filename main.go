@@ -24,13 +24,15 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /favicon.ico", handler.ServeFavicon)
 
+	// reset - need to remove this in production, just using it for testing
 	if len(args) > 1 && args[1] == "--reset" {
-		// filewriter.ResetOutDir()
+		filewriter.ResetOutDir()
 		filewriter.ResetDocsDir()
-		// filewriter.ResetGodocumentConfig()
+		filewriter.ResetGodocumentConfig()
 		return
 	}
 
+	// building
 	if len(args) > 1 && args[1] == "--build" {
 		port := os.Getenv("STATIC_PORT")
 		if port == "" {
