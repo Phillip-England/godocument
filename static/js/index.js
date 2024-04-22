@@ -17,9 +17,6 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
 
     if (document.getElementsByTagName('html')[0].getAttribute('loaded') == 'false') {
 
-        document.getElementsByTagName('html')[0].setAttribute('loaded', 'true')
-        sessionStorage.setItem('sitenav', '')
-
         function qs(root, selector) {
             if (!root) {
                 console.error('Root is not defined in qs()')
@@ -44,9 +41,33 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
             }
         }
 
+        function getLoadState() {
+            return document.getElementsByTagName('html')[0].getAttribute('loaded')
+        }
+
+        function doOnce(callback) {
+            if (getLoadState() == 'false') {
+                callback()
+            }
+        }
+
         function eReset(node, eventType, callback) {
             node.removeEventListener(eventType, callback)
             node.addEventListener(eventType, callback)
+        }
+
+        function replaceBackticksWithCodeTags(text) {
+            for (let i = 0; i < text.length; i++) {
+                if (text[i] == '`') {
+                    text = text.slice(0, i) + '<code class="custom-inline-code">' + text.slice(i + 1)
+                    i++
+                    while (i < text.length && text[i] != '`') {
+                        i++
+                    }
+                    text = text.slice(0, i) + '</code>' + text.slice(i + 1)
+                }
+            }
+            return text
         }
 
 // ==============================================================================
@@ -212,70 +233,123 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
 
 // ==============================================================================
 
-class Header {
-    constructor(headerBars, overlay, sitenav) {
-        this.headerBars = headerBars
-        this.overlay = overlay
-        this.sitenav = sitenav
-        this.hook()
-    }
-    hook() {
-        eReset(this.headerBars, "click", this.toggleMobileNav.bind(this))
-        eReset(this.overlay, "click", this.toggleMobileNav.bind(this))
-    }
-    toggleMobileNav() {
-        zez.toggleState(this.overlay, 'active')
-        zez.toggleState(this.sitenav, 'active')
-    }
-}
-
-// ==============================================================================
-
-class Theme {
-    constructor(sunIcons, moonIcons, htmlDocument) {
-        this.sunIcons = sunIcons
-        this.moonIcons = moonIcons
-        this.htmlDocument = htmlDocument
-        this.hook()
-    }
-    hook() {
-        this.initTheme()
-        for (let i = 0; i < this.sunIcons.length; i++) {
-            eReset(this.sunIcons[i], "click", this.toggleTheme.bind(this))
-        }
-        for (let i = 0; i < this.moonIcons.length; i++) {
-            eReset(this.moonIcons[i], "click", this.toggleTheme.bind(this))
-        }
-    }
-    initTheme() {
-        let theme = localStorage.getItem('theme')
-        if (theme) {
-            if (theme == 'dark') {
-                zez.enforceState(this.htmlDocument, 'dark', 'light')
-                return
+        class Header {
+            constructor(headerBars, overlay, sitenav) {
+                this.headerBars = headerBars
+                this.overlay = overlay
+                this.sitenav = sitenav
+                this.hook()
             }
-            zez.enforceState(this.htmlDocument, 'light', 'dark')
-            return
+            hook() {
+                eReset(this.headerBars, "click", this.toggleMobileNav.bind(this))
+                eReset(this.overlay, "click", this.toggleMobileNav.bind(this))
+            }
+            toggleMobileNav() {
+                zez.toggleState(this.overlay, 'active')
+                zez.toggleState(this.sitenav, 'active')
+            }
         }
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            zez.enforceState(this.htmlDocument, 'dark', 'light')
-        } else {
-            zez.enforceState(this.htmlDocument, 'light', 'dark')
-        }
-    }
-    toggleTheme() {
-        zez.swapStates(this.htmlDocument, 'dark', 'light')
-        if (zez.containsState(this.htmlDocument, 'dark')) {
-            localStorage.setItem('theme', 'dark')
-            return
-        }
-        localStorage.setItem('theme', 'light')
-    }
-}
 
 // ==============================================================================
 
+        class Theme {
+            constructor(sunIcons, moonIcons, htmlDocument) {
+                this.sunIcons = sunIcons
+                this.moonIcons = moonIcons
+                this.htmlDocument = htmlDocument
+                this.hook()
+            }
+            hook() {
+                this.initTheme()
+                for (let i = 0; i < this.sunIcons.length; i++) {
+                    eReset(this.sunIcons[i], "click", this.toggleTheme.bind(this))
+                }
+                for (let i = 0; i < this.moonIcons.length; i++) {
+                    eReset(this.moonIcons[i], "click", this.toggleTheme.bind(this))
+                }
+            }
+            initTheme() {
+                let theme = localStorage.getItem('theme')
+                if (theme) {
+                    if (theme == 'dark') {
+                        zez.enforceState(this.htmlDocument, 'dark', 'light')
+                        return
+                    }
+                    zez.enforceState(this.htmlDocument, 'light', 'dark')
+                    return
+                }
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    zez.enforceState(this.htmlDocument, 'dark', 'light')
+                } else {
+                    zez.enforceState(this.htmlDocument, 'light', 'dark')
+                }
+            }
+            toggleTheme() {
+                zez.swapStates(this.htmlDocument, 'dark', 'light')
+                if (zez.containsState(this.htmlDocument, 'dark')) {
+                    localStorage.setItem('theme', 'dark')
+                    return
+                }
+                localStorage.setItem('theme', 'light')
+            }
+        }
 
+// ==============================================================================
+
+        class Important extends HTMLElement {
+            constructor() {
+                super()
+                this.hook()
+            }
+            hook() {
+                this.parentElement.replaceWith(this)
+                let text = this.getAttribute('text')
+                text = replaceBackticksWithCodeTags(text)
+                this.classList.add('custom-element')
+                this.innerHTML = `
+                    <div class='bg-[var(--mkd-important-bg-color)] dark:bg-[var(--dark-mkd-important-bg-color)] p-4 rounded-md border-l-4 border-[var(--mkd-important-border-color)] dark:border-[var(--dark-mkd-important-border-color)] flex flex-col gap-2'>
+                        <span class='flex flex-row item-center gap-2 dark:text-[var(--dark-mkd-important-text-color)] text-[var(--mkd-important-text-color)]'>
+                            <span class='flex items-center dark:text-[var(--dark-mkd-important-text-color)] text-[var(--mkd-important-text-color)]'>
+                                <svg class="h-6 w-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V8m0 8h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                </svg>
+                            </span>
+                            <p class='font-bold'>Important</p>                   
+                        </span>
+                        <p>${text}</p>
+                    </div>
+                `
+            }    
+        }
+
+// ==============================================================================
+
+        class Warning extends HTMLElement {
+            constructor() {
+                super()
+                this.hook()
+            }
+            hook() {
+                this.parentElement.replaceWith(this)
+                let text = this.getAttribute('text')
+                text = replaceBackticksWithCodeTags(text)
+                this.innerHTML = `
+                    <div class='bg-[var(--mkd-important-bg-color)] dark:bg-[var(--dark-mkd-important-bg-color)] p-4 rounded-md border-l-4 border-[var(--mkd-important-border-color)] dark:border-[var(--dark-mkd-important-border-color)] flex flex-col gap-2'>
+                        <span class='flex flex-row item-center gap-2 dark:text-[var(--dark-mkd-important-text-color)] text-[var(--mkd-important-text-color)]'>
+                            <span class='flex items-center dark:text-[var(--dark-mkd-important-text-color)] text-[var(--mkd-important-text-color)]'>
+                                <svg class="h-6 w-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V8m0 8h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                </svg>
+                            </span>
+                            <p class='font-bold'>Important</p>                   
+                        </span>
+                        <p>${text}</p>
+                    </div>
+                `
+            }    
+        }
+
+// ==============================================================================
 
         function onLoad() {
 
@@ -302,11 +376,21 @@ class Theme {
             new Header(headerBars, overlay, sitenav)
             new Theme(sunIcons, moonIcons, htmlDocument)
 
+            // web components
+            doOnce(() => {
+                customElements.define('mkd-important', Important)
+                customElements.define('mkd-warning', Warning)
+            })
+
             // init
             Prism.highlightAll();
 
             // reveal body
             zez.applyState(body, 'loaded')
+
+            // setting document as loaded
+            document.getElementsByTagName('html')[0].setAttribute('loaded', 'true')
+
 
 
         }
