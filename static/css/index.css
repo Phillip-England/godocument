@@ -48,7 +48,7 @@ html {
 	--yellow: #ffea6b;
 	--dark-yellow: #7f7108;
 	--orange: #ffa763;
-	--dark-orange: #a93a12;
+	--dark-orange: #c64719;
 	--blue: #2494da;
 	--dark-blue: #1b6dbf;
 	--red: #ff4d3f;
@@ -57,9 +57,9 @@ html {
 /* element specific variables ----------------------------------------------------------------- */
 
 	/* border colors */
-	--b-color: var(--gray-200);
+	--b-color: var(--gray-300);
 	--dark-b-color: var(--gray-800);
-	--b-hover-color: var(--gray-300);
+	--b-hover-color: var(--gray-400);
 	--dark-b-hover-color: var(--gray);
 
 	/* text colors */
@@ -124,7 +124,8 @@ html {
 	--code-function: var(--dark-yellow);
 	--code-keyword: var(--dark-purple);
 	--code-operator: var(--black);
-	--code-punctuation: var(--black);
+	--code-punctuation: var(--gray-700);
+	--code-important: var(--dark-orange);
 
 	/* dark code blocks */
 	--dark-code-bg-color: var(--gray-800);
@@ -215,7 +216,7 @@ article ol {
 	list-style-position: inside;
 }
 
-artivle ul {
+article ul {
 	list-style-type: disc;
 	list-style-position: inside;
 }
@@ -279,20 +280,20 @@ article p code {
     padding: 0.25rem;
 }
 
-article p code.custom-inline-code {
+article p.custom-inline-code code {
 	background-color: var(--inline-code-web-component-bg-color);
 }
 
-html.dark p code.custom-inline-code {
+html.dark p.custom-inline-code code {
 	background-color: var(--dark-inline-code-web-component-bg-color);
 }
 
 
-html.dark article p code {
+html.dark article * code {
     background-color: var(--dark-inline-code-bg-color);
 }
 
-article p span code {
+article * code {
     padding: 0.25rem;
 }
 
@@ -500,7 +501,7 @@ html.light .token.function {
 
 html.light .token.regex,
 html.light .token.important {
-	color: #e90;
+	color: var(--code-important);
 }
 
 html.light .token.important,

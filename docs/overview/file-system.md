@@ -6,43 +6,25 @@ The structure of the application is as follows:
 
 ```bash
 ├── docs/
-├── godocument.config.json
 ├── html/
 ├── internal/
 ├── out/
 ├── static/
-├── main.go
 ```
 
 Let's go through each directory so you can have a solid grasp of what each directory is responsible for.
 
-## docs/
+## /docs
 
-`docs/` will contain all of your markdown files. During development, Godocument will use this directory along with your `godocument.config.json` file to generate a series of routes. These routes will be served at localhost:8080.
+`/docs` will contain all of your markdown files. During development, Godocument will use this directory along with your `godocument.config.json` file to generate a series of routes. These routes will be served at localhost:8080.
 
-Inside of `docs/` you will see a file named `introduction.md`. This file is **required** and Godocument will crash without it.
-
-
-
-## godocument.config.json
-
-`godocument.config.json` is the configuration file for your application. It contains the information needed to generate the routes for your website. Here is the base config needed to generate a site using Godocument.
-
-```json
-{
-    "docs":{
-        "Introduction": "/introduction.md"
-    }
-}
-```
-
-<mkd-warning text='The `/docs` directory and the `/docs/introduction.md` file are required for Godocument. Also, the json object `"docs"` must be named `"docs"` and the first entry beneath `"docs"` must be `"Introduction": "/introduction.md"`. Failing to meet these requirements will result in a panic.'></mkd-warning>
+<md-warning>Inside of `/docs` you will see a file named `introduction.md`. This file is **required** and Godocument will crash without it.</md-warning>
 
 ## /html
 
 `/html` contains all of the html templates and components needed for your site. Godocument uses [Golang's standard html templating](https://pkg.go.dev/html/template). This directory is pretty straight forward and only comes with one caveat: `/html/components/sitenav.html` is auto-generated every time you run `go run main.go`.
 
-<mkd-important text="To make changes to `/html/components/sitenav.html`, you can edit the funcs `GenerateDynamicNavbar()` and `workOnNavbar()` found at `/internal/filewriter/filewriter.go`. These funcs are both responsible for generating and writing the html in `/html/components/sitenav.html`."></mkd-important>
+<md-important>To make changes to `/html/components/sitenav.html`, you can edit the funcs `GenerateDynamicNavbar()` and `workOnNavbar()` found at `/internal/filewriter/filewriter.go`. These funcs are both responsible for generating and writing the html to `/html/components/sitenav.html`.</md-important>
 
 
 ## /internal

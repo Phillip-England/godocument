@@ -3,6 +3,8 @@
         "Introduction": "/introduction.md",
         "Overview": {
             "Installation": "/overview/installation.md",
+            "Configuration": "/overview/configuration.md",
+            "Core Technologies": "/overview/core-technologies.md",
             "File System": "/overview/file-system.md"
         }
     }

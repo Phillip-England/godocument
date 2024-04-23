@@ -36,7 +36,10 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
                 if (node == stopNode) {
                     return
                 }
-                callback(node)
+                let exit = callback(node)
+                if (exit == true) {
+                    return
+                }
                 climbTreeUntil(node.parentNode, stopNode, callback)
             }
         }
@@ -67,6 +70,13 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
                     text = text.slice(0, i) + '</code>' + text.slice(i + 1)
                 }
             }
+            return text
+        }
+        
+        function initMdComponent(node) {
+            node.parentElement.replaceWith(node)
+            let text = node.innerHTML
+            text = replaceBackticksWithCodeTags(text)
             return text
         }
 
@@ -157,12 +167,12 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
                 climbTreeUntil(e.target, this.sitenav, (node) => {
                     if (node.tagName == 'LI') {
                         dropdown = node
+                        return true
                     }
                 })
                 let hiddenChildren = qs(dropdown, 'ul')
                 let caret = qs(dropdown, 'div')
-                let summary = qs(dropdown, 'summary')
-                zez.toggleStateAll([summary, caret, hiddenChildren], 'active')
+                zez.toggleStateAll([caret, hiddenChildren], 'active')
             }
             setActiveNavItem() {
                 for (let i = 0; i < this.sitenavItems.length; i++) {
@@ -302,9 +312,7 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
                 this.hook()
             }
             hook() {
-                this.parentElement.replaceWith(this)
-                let text = this.getAttribute('text')
-                text = replaceBackticksWithCodeTags(text)
+                let text = initMdComponent(this)   
                 this.innerHTML = `
                     <div class='bg-[var(--mkd-bg-color)] dark:bg-[var(--dark-mkd-bg-color)] p-4 rounded-md border-l-4 border-[var(--mkd-important-border-color)] dark:border-[var(--dark-mkd-important-border-color)] flex flex-col gap-2'>
                         <span class='flex flex-row item-center gap-2 dark:text-[var(--dark-mkd-important-text-color)] text-[var(--mkd-important-text-color)]'>
@@ -315,7 +323,7 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
                             </span>
                             <p class='font-bold'>Important</p>                   
                         </span>
-                        <p>${text}</p>
+                        <p class='custom-inline-code'>${text}</p>
                     </div>
                 `
             }    
@@ -329,9 +337,7 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
                 this.hook()
             }
             hook() {
-                this.parentElement.replaceWith(this)
-                let text = this.getAttribute('text')
-                text = replaceBackticksWithCodeTags(text)
+                let text = initMdComponent(this)   
                 this.innerHTML = `
                     <div class='bg-[var(--mkd-bg-color)] dark:bg-[var(--dark-mkd-bg-color)] p-4 rounded-md border-l-4 border-[var(--mkd-warning-border-color)] dark:border-[var(--dark-mkd-warning-border-color)] flex flex-col gap-2'>
                         <span class='flex flex-row item-center gap-2 dark:text-[var(--dark-mkd-warning-text-color)] text-[var(--mkd-warning-text-color)]'>
@@ -344,7 +350,7 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
                             </span>
                             <p class='font-bold'>Warning</p>                   
                         </span>
-                        <p>${text}</p>
+                        <p class='custom-inline-code'>${text}</p>
                     </div>
                 `
             }    
@@ -379,8 +385,8 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
 
             // web components
             doOnce(() => {
-                customElements.define('mkd-important', Important)
-                customElements.define('mkd-warning', Warning)
+                customElements.define('md-important', Important)
+                customElements.define('md-warning', Warning)
             })
 
             // init

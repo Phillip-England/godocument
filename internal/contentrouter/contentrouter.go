@@ -79,8 +79,17 @@ func assignHandlers(cnf stypes.DocConfig) {
 			// read the file line by line
 			scanner := bufio.NewScanner(file)
 			headers := []stypes.MarkdownHeader{}
+			backticksFound := 0
 			for scanner.Scan() {
 				line := scanner.Text()
+				if strings.Contains(line, "```") {
+					backticksFound++
+					continue
+				}
+				// if we are in a code block, skip the line
+				if backticksFound%2 == 1 {
+					continue
+				}
 				if strings.Contains(line, "# ") {
 					if strings.Count(line, "#") == 1 {
 						continue
