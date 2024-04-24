@@ -24,6 +24,20 @@ cd <your-apps-name>
 git clone https://github.com/phillip-england/godocument .
 ```
 
+- create a .env file:
+
+```bash
+touch .env
+```
+
+- add the following environment variables:
+
+```bash
+PORT=8080
+STATIC_PORT=8000
+SERVER_URL=<the base url to wherever you intend to deploy>
+```
+
 - Add some new entries to `godocument.config.json`:
 
 ```json
@@ -88,10 +102,4 @@ go run main.go
 go run main.go --build
 ```
 
-- To test your static assests locally, run:
-
-```bash
-go run main.go --static
-```
-
-That's it! Your example is deployment-ready and can be found at `./out`. You can easily deploy on Github Pages, Amazon S3, or a CDN of your choice.
+That's it! Your example is deployment-ready and can be found at `/out`. You can easily deploy on Github Pages, Amazon S3, or a CDN of your choice.

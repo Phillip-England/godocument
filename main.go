@@ -35,9 +35,6 @@ func main() {
 	// building
 	if len(args) > 1 && args[1] == "--build" {
 		port := os.Getenv("STATIC_PORT")
-		if port == "" {
-			port = "8000"
-		}
 		cnf := config.GetDocConfig()
 		filewriter.GenerateStaticAssets(cnf)
 		mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
@@ -76,9 +73,6 @@ func main() {
 	filewriter.GenerateDynamicNavbar(cnf)
 
 	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
 
 	fmt.Println("Server is running on port: " + port)
 	err = http.ListenAndServe(":"+port, mux)

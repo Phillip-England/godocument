@@ -141,20 +141,9 @@ For example, here is a `godocument.config.json` file which does not follow the p
 }
 ```
 
-To correct the above `godocument.config.json` change:
+It does not follow the convensions because `/about.md` should have a file path which mirrors the structure of `godocument.config.json`.
 
-```json
-{
-    "docs": {
-        ...
-        "More Info": {
-            "About": "/about.md"
-        }
-    }
-}
-```
-
-to:
+<md-correct>To correct the above `godocument.config.json` make the changes below.</md-correct>
 
 ```json
 {

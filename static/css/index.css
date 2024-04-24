@@ -98,13 +98,13 @@ html {
 	--scroll-thumb-dark: var(--gray-800);
 
 	/* markdown text sizes  */
-	--mkd-h1-size: var(--text-2xl);
-	--mkd-h2-size: var(--text-xl);
-	--mkd-h3-size: var(--text-lg);
-	--mkd-h4-size: var(--text-md);
-	--mkd-h5-size: var(--text-sm);
-	--mkd-h6-size: var(--text-xs);
-	--mkd-p-size: var(--text-xs);
+	--md-h1-size: var(--text-2xl);
+	--md-h2-size: var(--text-xl);
+	--md-h3-size: var(--text-lg);
+	--md-h4-size: var(--text-md);
+	--md-h5-size: var(--text-sm);
+	--md-h6-size: var(--text-xs);
+	--md-p-size: var(--text-xs);
 
 	/* light inline code */
 	--inline-code-b-radius: var(--rounded-sm);
@@ -115,8 +115,10 @@ html {
 	/* dark inline code */
 	--dark-inline-code-bg-color: var(--gray-800);
 
-	/* light code blocks */
+	/* all code blocks */
 	--code-b-radius: var(--rounded-sm);
+
+	/* light code blocks */
 	--code-bg-color: var(--gray-200);
 	--code-token-property: var(--dark-purple);
 	--code-string: var(--dark-green);
@@ -126,6 +128,7 @@ html {
 	--code-operator: var(--black);
 	--code-punctuation: var(--gray-700);
 	--code-important: var(--dark-orange);
+	--code-comment: var(--gray-700);
 
 	/* dark code blocks */
 	--dark-code-bg-color: var(--gray-800);
@@ -136,22 +139,29 @@ html {
 	--dark-code-keyword: var(--purple);
 	--dark-code-operator: var(--white);
 	--dark-code-punctuation: var(--gray-300);
+	--dark-code-comment: var(--gray-300)
 
-	/* custom mkd elements */
-	--mkd-bg-color: var(--gray-200);
-	--dark-mkd-bg-color: var(--gray-800);
+	/* custom md elements */
+	--md-bg-color: var(--gray-200);
+	--dark-md-bg-color: var(--gray-800);
 
-	/* <mkd-important> */
-	--mkd-important-text-color: var(--dark-blue);
-	--dark-mkd-important-text-color: var(--blue);
-	--mkd-important-border-color: var(--dark-blue);
-	--dark-mkd-important-border-color: var(--blue);
+	/* <md-important> */
+	--md-important-text-color: var(--dark-blue);
+	--dark-md-important-text-color: var(--blue);
+	--md-important-border-color: var(--dark-blue);
+	--dark-md-important-border-color: var(--blue);
 
-	/* <mkd-warning> */
-	--mkd-warning-text-color: var(--dark-red);
-	--dark-mkd-warning-text-color: var(--red);
-	--mkd-warning-border-color: var(--dark-red);
-	--dark-mkd-warning-border-color: var(--red);
+	/* <md-warning> */
+	--md-warning-text-color: var(--dark-red);
+	--dark-md-warning-text-color: var(--red);
+	--md-warning-border-color: var(--dark-red);
+	--dark-md-warning-border-color: var(--red);
+
+	/* <md-correct> */
+	--md-correct-text-color: var(--dark-green);
+	--dark-md-correct-text-color: var(--green);
+	--md-correct-border-color: var(--dark-green);
+	--dark-md-correct-border-color: var(--green);
 
 }
 
@@ -207,7 +217,7 @@ html {
 /* markdown styles ----------------------------------------------------------- */
 
 article h1 {
-    font-size: var(--mkd-h1-size);
+    font-size: var(--md-h1-size);
 	font-weight: bold;
 }
 
@@ -222,31 +232,31 @@ article ul {
 }
 
 article h2 {
-    font-size: var(--mkd-h2-size);
+    font-size: var(--md-h2-size);
     padding-top: 2rem;
 	font-weight: 500;
 }
 
 article h3 {
-    font-size: var(--mkd-h3-size);
+    font-size: var(--md-h3-size);
     padding-top: 2rem;
 	font-weight: 500;
 }
 
 article h4 {
-	font-size: var(--mkd-h4-size);
+	font-size: var(--md-h4-size);
     padding-top: 2rem;
 	font-weight: 500;
 }
 
 article h5 {
-	font-size: var(--mkd-h5-size);
+	font-size: var(--md-h5-size);
     padding-top: 2rem;
 	font-weight: 500;
 }
 
 article p {
-    font-size: var(--mkd-p-size);
+    font-size: var(--md-p-size);
     line-height: 1.75rem;
 	font-weight: 400;
 }
@@ -295,6 +305,10 @@ html.dark article * code {
 
 article * code {
     padding: 0.25rem;
+}
+
+article pre code {
+	padding: 0;
 }
 
 
@@ -441,12 +455,16 @@ html.light :not(pre) > code[class*="language-"] {
 	white-space: normal;
 }
 
-html.light .token.comment,
 html.light .token.prolog,
 html.light .token.doctype,
 html.light .token.cdata {
 	color: var(--code-punctuation);
 }
+
+html.light .token.comment {
+	color: var(--code-comment);
+}
+
 
 html.light .token.punctuation {
 	color: var(--code-punctuation);
@@ -561,12 +579,15 @@ html.dark :not(pre) > code[class*="language-"] {
 	white-space: normal;
 }
 
-html.dark .token.comment,
-html.dark .token.block-comment,
 html.dark .token.prolog,
 html.dark .token.doctype,
 html.dark .token.cdata {
 	color: var(--dark-code-punctuation);
+}
+
+html.dark .token.block-comment,
+html.dark .token.comment {
+	color: var(--dark-code-comment);
 }
 
 html.dark .token.punctuation {
