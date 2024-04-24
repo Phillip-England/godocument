@@ -122,7 +122,7 @@ I create a page within a sub-section using Godocument!
 
 To test the results, run `go run main.go` from the root of your application and visit `localhost:8080`
 
-## /docs directory structure
+## /docs structure
 
 Godocument does not require you to structure your `/docs` directory in any particual way, **BUT** it is highly recommended to have your `/docs` directory mirror the structure of your `godocument.config.json` file.
 

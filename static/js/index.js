@@ -196,11 +196,13 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
 // ==============================================================================
 
         class PageNav {
-            constructor(pagenav, pagenavLinks, articleTitles, headerHeight) {
+            constructor(pagenav, pagenavLinks, articleTitles) {
                 this.pagenav = pagenav
                 this.pagenavLinks = pagenavLinks
                 this.articleTitles = articleTitles
-                this.headerHeight = headerHeight
+                this.windowTimeout = null
+                this.bufferZone = 200
+                this.activeLink = null
                 this.hook()
             }
             hook() {
@@ -211,21 +213,32 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
                 if (this.pagenavLinks.length == 0 || this.articleTitles.length == 0) {
                     return
                 }
-                let found = false
                 for (let i = 0; i < this.articleTitles.length; i++) {
                     let link = this.pagenavLinks[i]
+                    let nextLink = this.pagenavLinks[i + 1]
                     let title = this.articleTitles[i]
                     let titlePos = title.getBoundingClientRect().top
-                    if (!found && i == this.articleTitles.length - 1) {
-                        zez.applyState(link, 'active')
-                        continue
+                    let nextTitle = this.articleTitles[i + 1]
+                    let nextTitlePos = nextTitle ? nextTitle.getBoundingClientRect().top : 0
+                    if (i == 0 && titlePos > 0) {
+                        this.activeLink = link
+                        break
                     }
-                    if (titlePos < this.headerHeight) {
-                        zez.removeState(link, 'active')
-                        continue
+                    if (i == this.articleTitles.length - 1 && titlePos < 0) {
+                        this.activeLink = link
+                        break
                     }
-                    if (!found) {
-                        found = true
+                    if (titlePos < 0 && nextTitlePos > 0) {
+                        if (nextTitlePos < this.bufferZone) {
+                            this.activeLink = nextLink
+                            continue
+                        }
+                        this.activeLink = link
+                    }
+                }
+                for (let i = 0; i < this.pagenavLinks.length; i++) {
+                    let link = this.pagenavLinks[i]
+                    if (link == this.activeLink) {
                         zez.applyState(link, 'active')
                     } else {
                         zez.removeState(link, 'active')
@@ -233,9 +246,8 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
                 }
             }
             handleWindowScroll() {
-                let windowTimeout;
-                clearTimeout(windowTimeout);
-                windowTimeout = setTimeout(() => {
+                clearTimeout(this.windowTimeout);
+                this.windowTimeout = setTimeout(() => {
                     this.setActivePageNavItem()
                 }, 100);
             }
@@ -379,7 +391,7 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
             // hooking events and running initializations
             window.scrollTo(0, 0, { behavior: 'auto' })
             new SiteNav(sitenav, sitenavItems, sitenavDropdowns, header, overlay)
-            new PageNav(pagenav, pagenavLinks, articleTitles, header.offsetHeight)
+            new PageNav(pagenav, pagenavLinks, articleTitles)
             new Header(headerBars, overlay, sitenav)
             new Theme(sunIcons, moonIcons, htmlDocument)
 
