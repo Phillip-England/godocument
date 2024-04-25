@@ -4,6 +4,8 @@
 
 `godocument.config.json` is the configuration file for your application. It contains the information needed to generate the routes for your website. 
 
+<md-important>The order of items `godocument.config.json` will determine the order of your pages in your website.</md-important>
+
 Here is the base configuration needed to generate a site using Godocument:
 
 ```json

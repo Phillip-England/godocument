@@ -96,16 +96,29 @@ func assignHandlers(cnf stypes.DocConfig) {
 					}
 					link := strings.ToLower(line)
 					link = strings.TrimLeft(link, "# ")
-					link = strings.ReplaceAll(link, "-", "")
-					link = strings.ReplaceAll(link, ".", "")
-					link = strings.ReplaceAll(link, "/", "")
-					link = strings.ReplaceAll(link, "?", "")
-					link = strings.ReplaceAll(link, ",", "")
+					// when parsing headers using goldmark, the id of the header will have special chars stripped
+					// for example a header of /docs will be converted to docs
+					// also, spaces are replaced with dashes and text is converted to lowercase
+					// for a header of Custom Components will be converted to custom-components
+					// so when pointing to these headers, we need to ensure we are using the correct id
+					// therefore, we need to also strip the hrefs of our pagenav links as well
+					// here we are stripping those characters
+					// if you find a case where a pagenav link is not working, this is most likely the issue
+					// be sure to check their hrefs to see if they line up with the associated headers id
+					unwantedLinkChars := []string{"!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "=", "{", "}", "[", "]", "|", "\\", ":", ";", "\"", "'", "<", ">", ",", ".", "/", "?"}
+					for _, char := range unwantedLinkChars {
+						link = strings.ReplaceAll(link, char, "")
+					}
 					link = strings.ReplaceAll(link, " ", "-")
 					link = "#" + link
+					depthClass := ""
+					leftPadding := strings.Count(line, "#") - 2 // ensures we start at 0
+					if leftPadding != 0 {
+						depthClass = "pl-" + fmt.Sprintf("%d", leftPadding+2)
+					}
 					header := stypes.MarkdownHeader{
 						Line:       strings.TrimLeft(line, "# "),
-						DepthClass: "pl-" + fmt.Sprintf("%d", strings.Count(line, "#")-2), // ensures we start at a 0 index
+						DepthClass: depthClass, // ensures we start at a 0 index
 						Link:       link,
 					}
 					headers = append(headers, header)

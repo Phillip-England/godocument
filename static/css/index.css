@@ -139,7 +139,7 @@ html {
 	--dark-code-keyword: var(--purple);
 	--dark-code-operator: var(--white);
 	--dark-code-punctuation: var(--gray-300);
-	--dark-code-comment: var(--gray-300)
+	--dark-code-comment: var(--gray-300);
 
 	/* custom md elements */
 	--md-bg-color: var(--gray-200);
@@ -224,6 +224,10 @@ article h1 {
 article ol {
 	list-style-type: decimal;
 	list-style-position: inside;
+}
+
+article ol li, article ul li {
+	line-height: 1.75rem;
 }
 
 article ul {

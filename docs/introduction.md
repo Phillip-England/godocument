@@ -8,7 +8,7 @@ Godocument is a static site generator inspired by [Docusaurus](https://docusauru
 ## Hello, World
 
 
-A simple Godocument website can be created using the following steps:
+A Godocument website can be created using the following steps:
 
 
 - Make a directory
@@ -34,7 +34,6 @@ touch .env
 
 ```bash
 PORT=8080
-STATIC_PORT=8000
 SERVER_URL=<the base url to wherever you intend to deploy>
 ```
 

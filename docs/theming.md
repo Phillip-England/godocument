@@ -1,5 +1,22 @@
 # Theming
 
+## Code Blocks
+
+Code blocks are made possible by [Prism](https://prismjs.com/). 
+
+Godocument comes shipped with support for all languages. This is to make it easy to get started with your website. However, when you plan to deploy, it is a good idea to go over to [Prism's download page](https://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javascript) and select only the languages used in your application.
+
+<md-important>When downloading the required languages for your site, you only need to download the `.js` file and replace `/static/js/prism.js` with the newly downloaded file. Be sure the file is named, `prims.js`.</md-important>
+
+## CSS Usage
+
+Godocument uses both Vanilla CSS and Tailwind for styling. If you intend to make changes to the Tailwind classes in your markup, you will need to download the [Tailwind binary](https://tailwindcss.com/blog/standalone-cli) and run `tailwindcss -i './static/css/input.css' -o './static/css/output.css'` from the root of your project. Doing so will recompile your `/static/css/output.css` and adjust to any changes.
+
+The `tailwind.config.json` file provided in the Godocument repo will contain the proper configuration needed to target all the `.html` and `.go` files in your project.
+
+Vanilla CSS is used in Godocument for things like the page layout, scrollbar appearance, and a few other things. All Vanilla CSS can be found at `/static/css/index.css`.
+
+
 ## CSS Variables
 
 Godocument makes use of CSS variables to give users more control of their theme. Variables are either viewed as *utility* variables or *element-specific* variables.

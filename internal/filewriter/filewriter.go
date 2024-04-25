@@ -62,6 +62,10 @@ func workOnNavbar(node stypes.DocNode, html string) string {
 		for i := 0; i < len(n.Children); i++ {
 			innerHTML = workOnNavbar(n.Children[i], innerHTML)
 		}
+		leftPadding := 0
+		if n.BaseNodeData.Depth > 0 {
+			leftPadding = n.BaseNodeData.Depth + 2
+		}
 		html += fmt.Sprintf(`
 		<li class='dropdown flex flex-col pl-%d'>
 			<button class='dropdown-btn flex flex-row justify-between items-center rounded-md font-bold p-2 hover:bg-[var(--bg-hover-color)] hover:dark:bg-[var(--dark-bg-hover-color)]'>
@@ -76,13 +80,17 @@ func workOnNavbar(node stypes.DocNode, html string) string {
 				%s
 			</ul>
 		</li>
-		`, n.BaseNodeData.Depth, n.BaseNodeData.Name, innerHTML)
+		`, leftPadding, n.BaseNodeData.Name, innerHTML)
 	case *stypes.MarkdownNode:
+		leftPadding := 0
+		if n.BaseNodeData.Depth > 0 {
+			leftPadding = n.BaseNodeData.Depth + 2
+		}
 		html += fmt.Sprintf(`
 			<li class='pl-%d'>
 				<a class='item flex flex-row justify-between items-center rounded-md font-bold p-2 hover:bg-[var(--bg-hover-color)] hover:dark:bg-[var(--dark-bg-hover-color)]' zez:active="text-[var(--text-important)] dark:text-[var(--dark-text-important)] bg-[var(--bg-hover-color)] dark:bg-[var(--dark-bg-hover-color)]" href='%s'>%s</a>
 			</li>
-		`, n.BaseNodeData.Depth, n.RouterPath, n.BaseNodeData.Name)
+		`, leftPadding, n.RouterPath, n.BaseNodeData.Name)
 	}
 	return html
 }

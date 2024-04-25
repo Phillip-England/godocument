@@ -916,6 +916,10 @@ video {
   padding-top: 0.25rem;
 }
 
+.pr-8 {
+  padding-right: 2rem;
+}
+
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -928,6 +932,10 @@ video {
 
 .font-bold {
   font-weight: 700;
+}
+
+.lowercase {
+  text-transform: lowercase;
 }
 
 .italic {
@@ -991,6 +999,12 @@ video {
   background-color: var(--bg-hover-color);
 }
 
+@media (min-width: 768px) {
+  .md\:pl-8 {
+    padding-left: 2rem;
+  }
+}
+
 @media (min-width: 1024px) {
   .lg\:sticky {
     position: sticky;
@@ -1024,6 +1038,60 @@ video {
   .lg\:py-4 {
     padding-top: 1rem;
     padding-bottom: 1rem;
+  }
+
+  .lg\:pl-16 {
+    padding-left: 4rem;
+  }
+
+  .lg\:pr-8 {
+    padding-right: 2rem;
+  }
+
+  .lg\:pl-8 {
+    padding-left: 2rem;
+  }
+
+  .lg\:pl-32 {
+    padding-left: 8rem;
+  }
+
+  .lg\:pr-16 {
+    padding-right: 4rem;
+  }
+
+  .lg\:pl-48 {
+    padding-left: 12rem;
+  }
+
+  .lg\:pl-40 {
+    padding-left: 10rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .xl\:py-4 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .xl\:pl-40 {
+    padding-left: 10rem;
+  }
+
+  .xl\:pr-8 {
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .\32xl\:py-4 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .\32xl\:pl-40 {
+    padding-left: 10rem;
   }
 }
 

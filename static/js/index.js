@@ -62,7 +62,7 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
         function replaceBackticksWithCodeTags(text) {
             for (let i = 0; i < text.length; i++) {
                 if (text[i] == '`') {
-                    text = text.slice(0, i) + '<code class="custom-inline-code">' + text.slice(i + 1)
+                    text = text.slice(0, i) + '<code>' + text.slice(i + 1)
                     i++
                     while (i < text.length && text[i] != '`') {
                         i++

@@ -1,15 +1,12 @@
 {
     "docs": {
         "Introduction": "/introduction.md",
-        "First Steps": {
-            "Installation": "/first-steps/installation.md",
-            "Configuration": "/first-steps/configuration.md",
-            "Theming": "/first-steps/theming.md",
-            "Building": "/first-steps/building.md"
-        },
-        "Overview": {
-            "Core Technologies": "/overview/core-technologies.md",
-            "File System": "/overview/file-system.md"
-        }
+        "Installation": "/installation.md",
+        "Configuration": "/configuration.md",
+        "Theming": "/theming.md",
+        "Custom Components": "/custom-components.md",
+        "Scripting": "/scripting.md",
+        "Building": "/building.md",
+        "File System": "/file-system.md"
     }
 }
