@@ -33,8 +33,8 @@ touch .env
 - Add the following environment variables:
 
 ```bash
-PORT=8080
-SERVER_URL=<the base url to wherever you intend to deploy>
+PORT=8080 # for development
+STATIC_PORT=8000 # for testing static assets
 ```
 
 - Add some new entries to `godocument.config.json`:
