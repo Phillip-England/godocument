@@ -1,5 +1,9 @@
 # Godocument
 
+## Documentation
+
+To read the full documentation, check out [godocument.dev](https://godocument.dev)
+
 ## What is Godocument?
 Godocument is a static site generator inspired by [Docusaurus](https://docusaurus.io/) and powered by [Htmx](https://htmx.org). Documenting your code should be *simple*.
 
