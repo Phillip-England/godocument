@@ -10,7 +10,7 @@ Web Components are defined in `/static/js/index.js` and can be used directly in 
 
 Since we are using [Goldmark](https://github.com/yuin/goldmark) to convert `.md` files into workable HTML, we have to use the `html.WithUnsafe()` renderer option when instantiating Goldmark in our project. This will allow us to place HTML elements directly in our `.md` files.
 
-This is only considered *unsafe* if the content within our `.md` files are controlled by our users. In our case, since we will be the ones writing the markup directly, it is not considered unsafe.
+This is only considered *unsafe* if the content within our `.md` files is controlled by our users. In our case, since we will be the ones writing the markup directly, it is not considered unsafe.
 
 <md-important>Removing `html.WithUnsafe()` from Goldmark's rendering options will cause Goldmark to ignore any HTML markup within our `.md` files.</md-important>
 
@@ -18,7 +18,7 @@ This is only considered *unsafe* if the content within our `.md` files are contr
 
 Custom components require some initialization to work as expected. This is due to the way Goldmark parses `.md` files. These initialization steps are to ensure the component renders properly as well as enabling users to utilize backticks to convey inline code examples.
 
-Within a components constructor, do the following to initialize the component properly and get the text from within the component:
+Within a component's constructor, do the following to initialize the component properly and get the text from within the component:
 
 ```js
 class MdImportant extends HTMLElement {
@@ -55,7 +55,7 @@ let text = initMdComponent(this)
 
 ### Removing the Parent
 
-When Goldmark find HTML within a `.md` file, it will wrap the HTML with a `<p>` tag. To ensure things render the way you expect, it is important to remove the `<p>` tag when instantiating our components.
+When Goldmark finds HTML within a `.md` file, it will wrap the HTML with a `<p>` tag. To ensure proper rendering, it is important to remove the `<p>` tag when initializing our components.
 
 A special function named `initMdComponent()` serves to enable custom components behave as expected.
 
@@ -72,7 +72,7 @@ function initMdComponent(node) {
 
 Goldmark will not wrap backticks with `<code>` tags within our HTML markup found within `.md` files. To prevent users from manually having to type out `<code>some code example</code>` each time, `initMdComponent()` handles this as well.
 
-`initMdComponent` references another function, `replaceBackticksWithCodeTags()`. Here is that functions declaration:
+`initMdComponent` references another function, `replaceBackticksWithCodeTags()`. Here is that function's declaration:
 
 ```js
 function replaceBackticksWithCodeTags(text) {

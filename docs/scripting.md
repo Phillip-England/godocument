@@ -14,7 +14,7 @@ Basically, when you click on a navigational link within your website, Htmx will 
 
 1. An AJAX request will be sent to the `href` of the clicked `<a>`.
 2. When the response is received, the `<body>` from the response will be isolated.
-3. Our page's current `<body>` will be replaced with the newly recieved `<body>`.
+3. Our page's current `<body>` will be replaced with the newly received `<body>`.
 
 All of this will be done without a full-page refresh. Since we are generating static pages, the wait time between when a request is clicked and when the response is receieved will be minimal, giving the illusion of a single page experience to the user.
 
@@ -24,5 +24,88 @@ Using Htmx's `hx-boost` attribute has implications on how we need to think about
 
 <md-important>Since the `<body>` is the only thing changed when using `hx-boost`, the Javascript located in the `<head>` of our document will only be loaded once. However, Javascript located in the `<body>` will be ran on each request.</md-important>
 
-This can create issues when declaring function, delcaring variables, and mounting event listeners.
+This can create issues when declaring functions, declaring variables, and mounting event listeners.
+
+## loaded atrribute
+
+Godocument makes use of an attribute, `loaded`, on the `<html>` tag to avoid reinstantiating variables multiple times.
+
+```html
+<html lang="en" loaded="false" ..>
+```
+
+After the page is loaded on the initial visit, this attribute is set to `true`. This will prevent our variables and functions from being instantiated more than once.
+
+<md-warning>Failing to set `loaded="true"` on `<html>` will result in unexpected behavior</md-warning>
+
+## onLoad function
+
+Godocument makes use of the function `onLoad()` to run the appropriate Javascript on all page loads.
+
+```js
+function onLoad() {
+
+    // elements
+    const body = qs(document, 'body')
+    const sitenav = qs(document, '#sitenav')
+    const sitenavItems = qsa(sitenav, '.item')
+    const sitenavDropdowns = qsa(sitenav, '.dropdown')
+    const pagenav = qs(document, '#pagenav')
+    const pagenavLinks = qsa(pagenav, 'a')
+    const article = qs(document, '#article')
+    const articleTitles = qsa(article, 'h2, h3, h4, h5, h6')
+    const header = qs(document, '#header')
+    const headerBars = qs(header, '#bars')
+    const overlay = qs(document, '#overlay')
+    const sunIcons = qsa(document, '.sun')
+    const moonIcons = qsa(document, '.moon')
+    const htmlDocument = qs(document, 'html')
+
+    // hooking events and running initializations
+    window.scrollTo(0, 0, { behavior: 'auto' })
+    new SiteNav(sitenav, sitenavItems, sitenavDropdowns, header, overlay)
+    new PageNav(pagenav, pagenavLinks, articleTitles)
+    new Header(headerBars, overlay, sitenav)
+    new Theme(sunIcons, moonIcons, htmlDocument)
+
+    // web components
+    doOnce(() => {
+        customElements.define('md-important', MdImportant)
+        customElements.define('md-warning', MdWarning)
+        customElements.define('md-correct', MdCorrect)
+    })
+
+    // init
+    Prism.highlightAll();
+
+    // reveal body
+    zez.applyState(body, 'loaded')
+
+}
+```
+
+`onLoad()` is mounted to the `window` and `<body>` using the `DOMContentLoaded` and `htmx:afterOnLoad` events. Click [here](https://htmx.org/events/) to read more about Htmx events.
+
+```js
+eReset(window, 'DOMContentLoaded', onLoad) // initial page load
+eReset(document.getElementsByTagName('body')[0], "htmx:afterOnLoad", onLoad) // after htmx swaps
+```
+
+<md-important>`DOMContentLoaded` will handle the initial page load, while `hmtx:afterOnLoad` will handle all other navigations.</md-important>
+
+## Managing Events
+
+Since the page is never refreshed using Htmx, we need to make sure we are unmounting events and remounting them on every navigation. `eReset()` is a handy function that does just that.
+
+```js
+function eReset(node, eventType, callback) {
+    node.removeEventListener(eventType, callback)
+    node.addEventListener(eventType, callback)
+}
+```
+
+Instead of calling `element.addEventListener()`, it is better to use `eReset()` to ensure events are properly managed between page navigations.
+
+<md-warning>Failing to unhook events upon navigation will result in the same events being hooked multiple times to the target element, which can have unexpected consequences and lead to poor memory management.</md-warning>
+
 

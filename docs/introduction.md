@@ -24,13 +24,13 @@ cd <your-apps-name>
 git clone https://github.com/phillip-england/godocument .
 ```
 
-- create a .env file:
+- Create a .env file:
 
 ```bash
 touch .env
 ```
 
-- add the following environment variables:
+- Add the following environment variables:
 
 ```bash
 PORT=8080
@@ -51,7 +51,7 @@ SERVER_URL=<the base url to wherever you intend to deploy>
 }
 ```
 
-- Inside of `/docs` create `first-page.md`
+- Inside of `/docs`, create `first-page.md`
 
 ```bash
 touch /docs/first-page.md
@@ -73,7 +73,7 @@ This is the first page I've created using Godocument!
 mkdir /docs/first-section
 ```
 
-- Inside of `/docs/first-section` create a file called `second-page.md`
+- Inside of `/docs/first-section`, create a file called `second-page.md`
 
 ```bash
 touch /docs/first-section/second-page.md
@@ -89,7 +89,7 @@ touch /docs/first-section/second-page.md
 This is the second page I've created using Godocument!
 ```
 
-- From the root of your application, run the following to view the results on `localhost:8080`:
+- From your application's root directory, run the following command to view the results on localhost:8080:
 
 ```bash
 go run main.go

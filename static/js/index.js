@@ -435,10 +435,8 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
             // reveal body
             zez.applyState(body, 'loaded')
 
-            // setting document as loaded
+            // set loaded attribute
             document.getElementsByTagName('html')[0].setAttribute('loaded', 'true')
-
-
 
         }
 

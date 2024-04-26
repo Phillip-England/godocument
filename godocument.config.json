@@ -6,7 +6,6 @@
         "Theming": "/theming.md",
         "Custom Components": "/custom-components.md",
         "Scripting": "/scripting.md",
-        "Building": "/building.md",
-        "File System": "/file-system.md"
+        "Building": "/building.md"
     }
 }

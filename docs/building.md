@@ -2,11 +2,11 @@
 
 ## go run main.go --build
 
-This command will build all of your static assets and place them in `/out`. In order to use this command, you will need to make sure your `SERVER_URL` environment variable is set in your `.env` file.
+This command will build all of your static assets and place them in `/out`. In order to use this command, ensure `SERVER_URL` environment variable is set in your `.env` file.
 
-Godocument will take all of the relative paths you use during development and modify them into absolute paths for production.
+Godocument will take all the relative paths you use during development and modify them into absolute paths for production.
 
-<md-important>If you do not set a value on `SERVER_URL` in `.env`, Godocument will use `localhost:8080` when setting absolute paths.</md-important>
+<md-important>If you do not set a value for `SERVER_URL` in `.env`, Godocument will use `localhost:8080` when setting absolute paths.</md-important>
 
 ## Bundling Stylesheets
 
@@ -23,8 +23,8 @@ After bundling, these will be converted into:
 <link rel="stylesheet" type="text/css" href="<SERVER_URL>/static/css/index.css">
 ```
 
-The Vanilla CSS will be stacked on top of the Tailwind CSS, giving Tailwind priority.
+The vanilla CSS will be stacked on top of the Tailwind CSS, giving Tailwind priority.
 
 ## Minification
 
-Godocument uses [Minify](https://github.com/tdewolff/minify) to compress and minify static assets, which helps to reduce the file sizes of HTML, CSS, and Javascript files. This optimizations improves loading times and bandwidth usage in production.
+Godocument uses [Minify](https://github.com/tdewolff/minify) to compress and minify static assets, which helps to reduce the file sizes of HTML, CSS, and Javascript files. These optimizations improves loading times and bandwidth usage in production.

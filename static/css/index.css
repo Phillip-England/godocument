@@ -288,7 +288,7 @@ html.dark article a {
     color: var(--dark-text-important);
 }
 
-article p code {
+article * code {
     background-color: var(--inline-code-bg-color);
     border-radius: var(--inline-code-b-radius);
     padding: 0.25rem;

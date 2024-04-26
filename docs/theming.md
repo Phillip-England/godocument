@@ -4,9 +4,9 @@
 
 Code blocks are made possible by [Prism](https://prismjs.com/). 
 
-Godocument comes shipped with support for all languages. This is to make it easy to get started with your website. However, when you plan to deploy, it is a good idea to go over to [Prism's download page](https://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javascript) and select only the languages used in your application.
+Godocument includes support for all languages supported by Prism. This is to make it easy to get started with your website. However, when you plan to deploy, it is a good idea to go over to [Prism's download page](https://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javascript) and select only the languages used in your application.
 
-<md-important>When downloading the required languages for your site, you only need to download the `.js` file and replace `/static/js/prism.js` with the newly downloaded file. Be sure the file is named, `prims.js`.</md-important>
+<md-important>When downloading the required languages for your site, you only need to download the `.js` file and replace `/static/js/prism.js` with the newly downloaded file. Be sure the file is named, `primsm.js`.</md-important>
 
 ## CSS Usage
 
@@ -21,7 +21,7 @@ Vanilla CSS is used in Godocument for things like the page layout, scrollbar app
 
 Godocument makes use of CSS variables to give users more control of their theme. Variables are either viewed as *utility* variables or *element-specific* variables.
 
-<md-important>To adjust the themeing for your site, edit the variables found at the top of `/static/css/index.css`.</md-important>
+<md-important>To adjust the theming for your site, edit the variables found at the top of `/static/css/index.css`.</md-important>
 
 ## Utility Variables
 
@@ -108,14 +108,18 @@ Godocument makes use of Tailwind's ability to use CSS variables within Tailwind 
 
 Take note of the classes on the `<header>` element itself. You'll see classes such as `bg-[var(--header-bg-color)]` or `dark:border-[var(--dark-b-color)]`.
 
-Albeit, the syntax is *ugly*. But it does come with its perks. 
+Although the syntax is *ugly*, it does come with its perks. 
 
-You can adjust the colors of the elements on the page using variables instead of having to change the markup for each induvidual element. 
+You can adjust the colors of the elements on the page using variables instead of having to change the markup for each individual element. 
+
+## Styling Markdown Content
+
+Markdown content is styled using Vanilla CSS. This is done to minimize the amount of text found in `.md` files. To adjust the styling of markdown content, edit the `// markdown styles ------` section of `/static/css/index.css`.
 
 ## Logo
 
-To change the logo for your site, simply replace `/static/img/logo.svg` with your logo. There is only one caveat, logos with a large height may shift the navbar in unexpected ways. For this reason, it is reccomended to use a logo which is wide, not tall.
+To change the logo for your site, simply replace `/static/img/logo.svg` with your logo. There is only one caveat, logos with a large height may shift the navbar in unexpected ways. For this reason, it is recommended to use a logo which is wide, not tall.
 
 ## favicon.ico
 
-During development, the server will look for your favicon.ico at `/static/favicon.ico`. When you go to build your static assest, the favicon will be placed in `/out/favicon.ico`. To change your favicon.ico, simply replace the icon found at `/static/favicon.ico`.
+During development, the server searches for your favicon.ico at /static/favicon.ico. When you go to build your static assest, the favicon will be placed in `/out/favicon.ico`. To change your favicon.ico, simply replace the icon found at `/static/favicon.ico`.
