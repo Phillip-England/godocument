@@ -89,7 +89,7 @@ touch /docs/first-section/second-page.md
 This is the second page I've created using Godocument!
 ```
 
-- From your application's root directory, run the following command to view the results on localhost:8080:
+- From your application's root directory, run the following command to view the results on `localhost:8080`:
 
 ```bash
 go run main.go
