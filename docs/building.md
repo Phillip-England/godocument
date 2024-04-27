@@ -11,7 +11,7 @@ Godocument will take all the relative paths you use during development and modif
 
 <md-warning>Using relative paths during development is a requirement. Not doing so will result in unexpected behaviour when building.</md-warning>
 
-## Providing an absolute path
+## Providing an Absolute Path
 
 When you are ready to build your site for production, you will need to provide an absolute path.
 
@@ -41,7 +41,7 @@ Godocument will bundle your stylesheets to reduce the number of network calls ne
 After bundling, these will be converted into:
 
 ```html
-<link rel="stylesheet" type="text/css" href="<SERVER_URL>/static/css/index.css">
+<link rel="stylesheet" type="text/css" href="/<absolute-path>/static/css/index.css">
 ```
 
 The vanilla CSS will be stacked on top of the Tailwind CSS, giving Tailwind priority.

@@ -23,7 +23,6 @@ func main() {
 	port := "8080"
 
 	if len(args) > 1 && args[1] == "--reset" {
-		// ask user for confirmation
 		fmt.Println("WARNING: Resetting the project cannot be undone. All progress will be lost.")
 		fmt.Println("Are you sure you want to reset the project?")
 		fmt.Println("type 'reset' to confirm")

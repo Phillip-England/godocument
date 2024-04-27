@@ -241,7 +241,7 @@ func resetOutDir() {
 // ResetGodocumentConfig resets the ./godocument.config.json file to its initial state
 func resetGodocumentConfig() {
 	path := config.JSONConfigPath
-	jsonData := "{\n\t\"docs\": {\n\t\t\"Introduction\": \"/introduction.md\"\n\t}\n}"
+	jsonData := "{\n\t\"docs\": {\n\t\t\"Introduction\": \"/introduction.md\"\n\t},\n\t\"meta\": {\n\t\t\"title\": \"Godocument\"\n\t}\n}"
 
 	// Write the JSON data to the file, creating it if it doesn't exist
 	err := os.WriteFile(path, []byte(jsonData), 0644)
