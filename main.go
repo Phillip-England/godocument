@@ -134,6 +134,8 @@ func parseTemplates() {
 		return nil
 	})
 	if err != nil {
+		fmt.Println("Error parsing templates")
+		fmt.Println(err)
 		panic(err)
 	}
 }
