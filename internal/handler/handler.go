@@ -7,7 +7,7 @@ import (
 
 func ServeFavicon(w http.ResponseWriter, r *http.Request) {
 	filePath := "favicon.ico"
-	fullPath := filepath.Join(".", "static", filePath)
+	fullPath := filepath.Join(".", ".", filePath)
 	http.ServeFile(w, r, fullPath)
 }
 

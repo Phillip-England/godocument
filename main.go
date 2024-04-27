@@ -17,6 +17,15 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// change favicon notes
+// change build notes
+// starting with relative paths during dev
+// adding an absolute path during production
+// hot realoding with air
+// adding ability to provide meta data for pages
+// document how to add meta tags
+// add ability to change page titles
+
 var templates *template.Template
 
 func main() {
@@ -33,6 +42,9 @@ func main() {
 		if absolutePath == "" {
 			fmt.Println("No absolute path provided, defaulting to localhost:8080")
 			absolutePath = "http://localhost:8080"
+		}
+		if absolutePath[len(absolutePath)-1:] == "/" {
+			panic("The absolute path should not end with a '/'")
 		}
 		serverDone := make(chan bool)
 		shutdownComplete := make(chan bool)

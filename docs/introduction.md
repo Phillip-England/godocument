@@ -1,3 +1,6 @@
+
+<meta name="description" content="Learn how to set up and use Godocument, a static site generator inspired by Docusaurus and powered by Htmx, to easily document your code. Start building with Godocument using simple steps to create, configure, and deploy your documentation site.">
+
 # Introduction
 
 ## What is Godocument?

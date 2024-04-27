@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/tdewolff/minify/v2"
@@ -49,6 +50,7 @@ func GenerateDynamicNavbar(cnf stypes.DocConfig) {
 	writeNavbarHTML(html)
 }
 
+// workOnNavbar is a recursive function that generates the navbar html
 func workOnNavbar(node stypes.DocNode, html string) string {
 	switch n := node.(type) {
 	case *stypes.ObjectNode:
@@ -112,17 +114,72 @@ func writeNavbarHTML(html string) {
 	}
 }
 
+// GenerateStaticAssets generates all static assets for ./out using godocument.config.json
 func GenerateStaticAssets(cnf stypes.DocConfig, absolutePath string, port string) {
 	m := prepareMinify()
 	ResetOutDir()
 	copyDir(config.DevStaticPrefix, config.ProdStaticPrefix)
-	// move favicon to /out
-	// combine all css files into index.css
+	copyOverFavicon()
+	bundleCSSFiles()
 	generateStaticHTML(cnf, absolutePath, port)
-	// remove all links to output.css in all html files
 	minifyStaticFiles(m, config.StaticAssetsDir)
 }
 
+func removeUnusedCSSLinks(doc *goquery.Document) {
+	doc.Find("link").Each(func(i int, s *goquery.Selection) {
+		href, exists := s.Attr("href")
+		if exists {
+			if strings.Contains(href, "output.css") {
+				s.Remove()
+			}
+		}
+	})
+}
+
+// bundleCSSFiles bundles all css files in ./out/css into a single file
+// also removes all css files except the bundled file
+func bundleCSSFiles() {
+	cssFiles := []string{
+		config.ProdStaticPrefix + "/css/index.css",
+		config.ProdStaticPrefix + "/css/output.css",
+	}
+	bundle := ""
+	for _, file := range cssFiles {
+		f, err := os.Open(file)
+		if err != nil {
+			panic(err)
+		}
+		defer f.Close()
+		fileBytes, err := io.ReadAll(f)
+		if err != nil {
+			panic(err)
+		}
+		bundle += string(fileBytes)
+		os.Remove(file)
+	}
+	f, err := os.Create(config.ProdStaticPrefix + "/css/index.css")
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+	_, err = f.WriteString(bundle)
+	if err != nil {
+		panic(err)
+	}
+	os.Remove(config.ProdStaticPrefix + "/css/input.css")
+}
+
+// takes the favicon from ./ and moves it to ./out
+func copyOverFavicon() {
+	src := "./favicon.ico"
+	dst := config.StaticAssetsDir + "/favicon.ico"
+	err := copyFile(src, dst)
+	if err != nil {
+		panic("error moving favicon from " + src + " to " + dst)
+	}
+}
+
+// prepareMinify prepares the minify.M object with all the minification functions
 func prepareMinify() *minify.M {
 	m := minify.New()
 	m.AddFunc("text/css", css.Minify)
@@ -134,6 +191,7 @@ func prepareMinify() *minify.M {
 	return m
 }
 
+// ResetDocsDir resets the ./docs directory to its initial state
 func ResetDocsDir() {
 	err := os.RemoveAll(config.StaticMarkdownPrefix)
 	if err != nil {
@@ -155,6 +213,7 @@ func ResetDocsDir() {
 	}
 }
 
+// ResetOutDir resets the ./out directory to its initial state
 func ResetOutDir() {
 	err := os.RemoveAll(config.StaticAssetsDir)
 	if err != nil {
@@ -170,6 +229,7 @@ func ResetOutDir() {
 	}
 }
 
+// ResetGodocumentConfig resets the ./godocument.config.json file to its initial state
 func ResetGodocumentConfig() {
 	path := config.JSONConfigPath
 	jsonData := "{\n\t\"docs\": {\n\t\t\"Introduction\": \"/introduction.md\"\n\t}\n}"
@@ -198,6 +258,7 @@ func createStaticAssetFile(staticAssetPath string) *os.File {
 	return f
 }
 
+// takes our godocument.config.json and generates static html files from it
 func generateStaticHTML(cnf stypes.DocConfig, absolutePath string, port string) {
 	config.WorkOnMarkdownNodes(cnf, func(n *stypes.MarkdownNode) {
 		client := &http.Client{}
@@ -224,6 +285,7 @@ func generateStaticHTML(cnf stypes.DocConfig, absolutePath string, port string) 
 		}
 		modifyAnchorTagsForStatic(doc, absolutePath)
 		setOtherAbsolutePaths(doc, absolutePath)
+		removeUnusedCSSLinks(doc)
 		htmlString, err := doc.Html()
 		if err != nil {
 			fmt.Printf("Error converting doc to html: %s\n", err)
@@ -238,6 +300,7 @@ func generateStaticHTML(cnf stypes.DocConfig, absolutePath string, port string) 
 	})
 }
 
+// getQueryDoc returns a *goquery.Document to parse and modify html
 func getQueryDoc(body []byte) (*goquery.Document, error) {
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(body))
 	if err != nil {
@@ -299,6 +362,7 @@ func setOtherAbsolutePaths(doc *goquery.Document, absolutePath string) {
 	})
 }
 
+// minifyStaticFiles minifies all static files in the ./out directory
 func minifyStaticFiles(m *minify.M, dirPath string) {
 	err := filepath.Walk(dirPath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {

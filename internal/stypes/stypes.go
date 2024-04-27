@@ -9,6 +9,7 @@ type BaseTemplate struct {
 	Prev            *MarkdownNode
 	Next            *MarkdownNode
 	MarkdownHeaders []MarkdownHeader
+	MetaTags        []MarkdownMetaTag
 }
 
 // a slice of DocConfig representing the structured data
@@ -44,6 +45,11 @@ type MarkdownHeader struct {
 	Line       string
 	Link       string
 	DepthClass string
+}
+
+// MarkdownMetaTag represets a meta tag found within a markdown file
+type MarkdownMetaTag struct {
+	Tag string
 }
 
 // ObjectNode represents a non-leaf node in the structured data

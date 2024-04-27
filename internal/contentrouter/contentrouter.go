@@ -69,7 +69,7 @@ func assignHandlers(cnf stypes.DocConfig) {
 				return
 			}
 
-			// reading all headers from the markdown file content
+			// reading all headers from the markdown file content and parsing out any <meta> tags
 			file, err := os.Open(m.MarkdownFile)
 			if err != nil {
 				http.Error(w, "Error reading markdown file", http.StatusInternalServerError)
@@ -79,15 +79,25 @@ func assignHandlers(cnf stypes.DocConfig) {
 			// read the file line by line
 			scanner := bufio.NewScanner(file)
 			headers := []stypes.MarkdownHeader{}
+			metaTags := []stypes.MarkdownMetaTag{}
 			backticksFound := 0
 			for scanner.Scan() {
 				line := scanner.Text()
+				// skipping and backticks
 				if strings.Contains(line, "```") {
 					backticksFound++
 					continue
 				}
 				// if we are in a code block, skip the line
 				if backticksFound%2 == 1 {
+					continue
+				}
+				// if we find a meta tag,
+				if strings.Contains(line, "<meta") && strings.Contains(line, ">") {
+					metaTag := stypes.MarkdownMetaTag{
+						Tag: line,
+					}
+					metaTags = append(metaTags, metaTag)
 					continue
 				}
 				if strings.Contains(line, "# ") {
@@ -125,13 +135,20 @@ func assignHandlers(cnf stypes.DocConfig) {
 				}
 			}
 
+			// removing meta tags from the markdown content
+			mdContentString := mdBuf.String()
+			for _, metaTag := range metaTags {
+				mdContentString = strings.Replace(mdContentString, metaTag.Tag, "", 1)
+			}
+
 			// Create a new instance of tdata.Base with the title and markdown content as HTML
 			baseData := &stypes.BaseTemplate{
 				Title:           "Godocument - " + m.BaseNodeData.Name,
-				Content:         mdBuf.String(),
+				Content:         mdContentString,
 				Prev:            m.Prev,
 				Next:            m.Next,
 				MarkdownHeaders: headers,
+				MetaTags:        metaTags,
 			}
 
 			// Assuming you have already parsed your templates (including the base template) elsewhere
