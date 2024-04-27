@@ -117,8 +117,12 @@ func writeNavbarHTML(html string) {
 
 // removes the generated navbar between builds
 func removeGeneratedNavbar() {
-	err := os.Remove(config.GeneratedNavPath)
-	if err != nil {
+	if _, err := os.Stat(config.GeneratedNavPath); err == nil {
+		if err := os.Remove(config.GeneratedNavPath); err != nil {
+			panic(err)
+		}
+	} else if os.IsNotExist(err) {
+	} else {
 		panic(err)
 	}
 }
