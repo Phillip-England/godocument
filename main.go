@@ -65,7 +65,10 @@ func main() {
 		return
 	}
 
-	runDevServer(nil, nil, port)
+	err := runDevServer(nil, nil, port)
+	if err != nil {
+		panic(err)
+	}
 
 }
 
@@ -95,9 +98,10 @@ func runDevServer(serverDone chan bool, shutdownComplete chan bool, port string)
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /favicon.ico", handler.ServeFavicon)
 	mux.HandleFunc("GET /static/", handler.ServeStaticFiles)
-	cnf := contentrouter.GenerateRoutes(mux, templates)
+	cnf := config.GetDocConfig()
 	filewriter.GenerateDynamicNavbar(cnf)
-	parseTemplates() // must occur after generating the navbar or a parse error will occur
+	parseTemplates()
+	contentrouter.GenerateRoutes(mux, templates)
 	server := &http.Server{Addr: ":" + port, Handler: mux}
 	go func() {
 		if serverDone != nil {

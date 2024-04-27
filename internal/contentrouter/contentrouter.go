@@ -20,11 +20,10 @@ import (
 
 // GenerateRoutes generates code for application routes based on the ./godocument.config.json file "docs" section
 // this function populates ./internal/generated/generated.go
-func GenerateRoutes(mux *http.ServeMux, templates *template.Template) stypes.DocConfig {
+func GenerateRoutes(mux *http.ServeMux, templates *template.Template) {
 	cnf := config.GetDocConfig()
 	assignHandlers(cnf)
 	hookDocRoutes(mux, templates, cnf)
-	return cnf
 }
 
 // hookDocRoutes links our routes to the http.ServeMux
