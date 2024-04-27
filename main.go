@@ -31,7 +31,7 @@ func main() {
 		fmt.Scanln(&response)
 		if response == "reset" {
 			fmt.Println("resetting project...")
-
+			filewriter.ResetProject()
 		}
 		return
 	}

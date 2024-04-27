@@ -114,10 +114,19 @@ func writeNavbarHTML(html string) {
 	}
 }
 
+// WARNING: This function will reset the project to its initial state.
+// This will delete all progress and cannot be undone.
+// Use with caution.
+func ResetProject() {
+	resetDocsDir()
+	resetOutDir()
+	resetGodocumentConfig()
+}
+
 // GenerateStaticAssets generates all static assets for ./out using godocument.config.json
 func GenerateStaticAssets(cnf stypes.DocConfig, absolutePath string, port string) {
 	m := prepareMinify()
-	ResetOutDir()
+	resetOutDir()
 	copyDir(config.DevStaticPrefix, config.ProdStaticPrefix)
 	copyOverFavicon()
 	bundleCSSFiles()
@@ -192,7 +201,7 @@ func prepareMinify() *minify.M {
 }
 
 // ResetDocsDir resets the ./docs directory to its initial state
-func ResetDocsDir() {
+func resetDocsDir() {
 	err := os.RemoveAll(config.StaticMarkdownPrefix)
 	if err != nil {
 		fmt.Printf("Error removing directory: %s\n", err)
@@ -214,7 +223,7 @@ func ResetDocsDir() {
 }
 
 // ResetOutDir resets the ./out directory to its initial state
-func ResetOutDir() {
+func resetOutDir() {
 	err := os.RemoveAll(config.StaticAssetsDir)
 	if err != nil {
 		fmt.Printf("Error removing directory: %s\n", err)
@@ -230,7 +239,7 @@ func ResetOutDir() {
 }
 
 // ResetGodocumentConfig resets the ./godocument.config.json file to its initial state
-func ResetGodocumentConfig() {
+func resetGodocumentConfig() {
 	path := config.JSONConfigPath
 	jsonData := "{\n\t\"docs\": {\n\t\t\"Introduction\": \"/introduction.md\"\n\t}\n}"
 
