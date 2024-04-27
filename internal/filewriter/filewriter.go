@@ -24,6 +24,7 @@ import (
 
 // GenerateDynamicNavbar generates the dynamic navbar based on ./godocument.config.json
 func GenerateDynamicNavbar(cnf stypes.DocConfig) {
+	removeGeneratedNavbar()
 	html := `
 		<nav id='sitenav' class='fixed top-0 w-[80%] lg:w-auto lg:sticky hidden overflow-y-scroll custom-scroll sm-scroll lg:block lg:top-[75px] h-screen border-r border-[var(--b-color)] dark:border-[var(--dark-b-color)] z-50 lg:z-0 bg-[var(--sitenav-bg-color)] dark:bg-[var(--dark-sitenav-bg-color)]' zez:active="!block" style="grid-area: sitenav;">
 			<div class='flex flex-row justify-between items-center text-md h-[75px] p-4 border-b border-[var(--b-color)] dark:border-[var(--dark-b-color)] lg:hidden'>
@@ -114,6 +115,14 @@ func writeNavbarHTML(html string) {
 	}
 }
 
+// removes the generated navbar between builds
+func removeGeneratedNavbar() {
+	err := os.Remove(config.GeneratedNavPath)
+	if err != nil {
+		panic(err)
+	}
+}
+
 // WARNING: This function will reset the project to its initial state.
 // This will delete all progress and cannot be undone.
 // Use with caution.
@@ -121,6 +130,7 @@ func ResetProject() {
 	resetDocsDir()
 	resetOutDir()
 	resetGodocumentConfig()
+	removeGeneratedNavbar()
 }
 
 // GenerateStaticAssets generates all static assets for ./out using godocument.config.json

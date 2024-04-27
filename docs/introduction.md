@@ -27,6 +27,12 @@ cd <your-apps-name>
 git clone https://github.com/phillip-england/godocument .
 ```
 
+- Reset the project
+
+```bash
+go run main.go --reset
+```
+
 - Add some new entries to `godocument.config.json`:
 
 ```json
