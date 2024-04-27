@@ -93,11 +93,11 @@ func runStaticServer(port string) {
 // runs the development server
 func runDevServer(serverDone chan bool, shutdownComplete chan bool, port string) error {
 	mux := http.NewServeMux()
-	parseTemplates()
 	mux.HandleFunc("GET /favicon.ico", handler.ServeFavicon)
 	mux.HandleFunc("GET /static/", handler.ServeStaticFiles)
 	cnf := contentrouter.GenerateRoutes(mux, templates)
 	filewriter.GenerateDynamicNavbar(cnf)
+	parseTemplates() // must occur after generating the navbar or a parse error will occur
 	server := &http.Server{Addr: ":" + port, Handler: mux}
 	go func() {
 		if serverDone != nil {
