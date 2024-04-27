@@ -92,10 +92,16 @@ This is the second page I've created using Godocument!
 go run main.go
 ```
 
-- To build your static assets, run:
+- To test your static assets locally, run:
 
 ```bash
 go run main.go --build
+```
+
+-- To build for production, run:
+
+```bash
+go run main.go --build <your-server-url>
 ```
 
 That's it! Your example is deployment-ready and can be found at `/out`. You can easily deploy on Github Pages, Amazon S3, or a CDN of your choice.

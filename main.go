@@ -27,11 +27,13 @@ func main() {
 
 	if len(args) > 1 && args[1] == "--build" {
 		absolutePath := ""
+		testLocally := false
 		if len(args) > 2 {
 			absolutePath = args[2]
 		}
 		if absolutePath == "" {
 			fmt.Println("No absolute path provided, defaulting to localhost:8080")
+			testLocally = true
 			absolutePath = "http://localhost:8080"
 		}
 		if absolutePath[len(absolutePath)-1:] == "/" {
@@ -47,7 +49,9 @@ func main() {
 		build(absolutePath, port)
 		serverDone <- true
 		<-shutdownComplete
-		runStaticServer(port)
+		if testLocally {
+			runStaticServer(port)
+		}
 		return
 	}
 
