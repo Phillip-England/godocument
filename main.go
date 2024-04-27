@@ -15,15 +15,26 @@ import (
 	"time"
 )
 
-// document how to add meta tags
-// document how to use air for hot reloading
-
 var templates *template.Template
 
 func main() {
 
 	args := os.Args
 	port := "8080"
+
+	if len(args) > 1 && args[1] == "--reset" {
+		// ask user for confirmation
+		fmt.Println("WARNING: Resetting the project cannot be undone. All progress will be lost.")
+		fmt.Println("Are you sure you want to reset the project?")
+		fmt.Println("type 'reset' to confirm")
+		var response string
+		fmt.Scanln(&response)
+		if response == "reset" {
+			fmt.Println("resetting project...")
+
+		}
+		return
+	}
 
 	if len(args) > 1 && args[1] == "--build" {
 		absolutePath := ""
