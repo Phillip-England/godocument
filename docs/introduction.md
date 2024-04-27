@@ -27,19 +27,6 @@ cd <your-apps-name>
 git clone https://github.com/phillip-england/godocument .
 ```
 
-- Create a .env file:
-
-```bash
-touch .env
-```
-
-- Add the following environment variables:
-
-```bash
-PORT=8080 # for development
-STATIC_PORT=8000 # for testing static assets
-```
-
 - Add some new entries to `godocument.config.json`:
 
 ```json
@@ -50,6 +37,9 @@ STATIC_PORT=8000 # for testing static assets
         "First Section": {
             "Second Page": "/first-section/second-page.md"
         }
+    },
+    "meta": {
+        "title": "My Website"
     }
 }
 ```
@@ -63,6 +53,8 @@ touch /docs/first-page.md
 - Add the following lines to `/docs/first-page.md`
 
 ```md
+<meta name="description" content="Explore my first page with Godocument"></meta>
+
 # First Page
 
 ## Hello, World
@@ -85,6 +77,8 @@ touch /docs/first-section/second-page.md
 - Add the following lines to `/docs/first-section/second-page.md`
 
 ```md
+<meta name="description" content="Explore my second page with Godocument"></meta>
+
 # Second Page
 
 ## Hello, World

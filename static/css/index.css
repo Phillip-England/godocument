@@ -12,7 +12,6 @@ html {
 /* utility ----------------------------------------------------------------- */
 
 	/* font sizes */
-    --font-base: 'Helvetica', sans-serif;
     --text-base: 16px;
     --text-2xs: 0.75rem;
     --text-xs: 1rem;

@@ -1,3 +1,6 @@
+<meta name="description" content="Discover how to enhance your Godocument markdown files with Web Components and custom HTML elements using Goldmark's html.WithUnsafe renderer. Learn to initialize and use custom elements like md-important, md-warning, and md-correct directly in your documentation to emphasize important content effectively.">
+
+
 # Custom Components
 
 ## Web Components

@@ -4,10 +4,15 @@
 
 To read the full documentation, check out [godocument.dev](https://godocument.dev)
 
+
+<meta name="description" content="Learn how to set up and use Godocument, a static site generator inspired by Docusaurus and powered by Htmx, to easily document your code. Start building with Godocument using simple steps to create, configure, and deploy your documentation site.">
+
+# Introduction
+
 ## What is Godocument?
 Godocument is a static site generator inspired by [Docusaurus](https://docusaurus.io/) and powered by [Htmx](https://htmx.org). Documenting your code should be *simple*.
 
-Godocument requires Go version 1.22.0 or greater
+<md-important>Godocument requires Go version 1.22.0 or greater</md-important>
 
 ## Hello, World
 
@@ -28,19 +33,6 @@ cd <your-apps-name>
 git clone https://github.com/phillip-england/godocument .
 ```
 
-- Create a .env file:
-
-```bash
-touch .env
-```
-
-- Add the following environment variables:
-
-```bash
-PORT=8080 # for development
-STATIC_PORT=8000 # for testing static assets
-```
-
 - Add some new entries to `godocument.config.json`:
 
 ```json
@@ -51,6 +43,9 @@ STATIC_PORT=8000 # for testing static assets
         "First Section": {
             "Second Page": "/first-section/second-page.md"
         }
+    },
+    "meta": {
+        "title": "My Website"
     }
 }
 ```
@@ -64,6 +59,8 @@ touch /docs/first-page.md
 - Add the following lines to `/docs/first-page.md`
 
 ```md
+<meta name="description" content="Explore my first page with Godocument"></meta>
+
 # First Page
 
 ## Hello, World
@@ -86,6 +83,8 @@ touch /docs/first-section/second-page.md
 - Add the following lines to `/docs/first-section/second-page.md`
 
 ```md
+<meta name="description" content="Explore my second page with Godocument"></meta>
+
 # Second Page
 
 ## Hello, World

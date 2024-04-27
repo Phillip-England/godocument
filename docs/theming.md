@@ -1,3 +1,6 @@
+<meta name="description" content="Explore theming options in Godocument including Prism for code blocks, Tailwind and Vanilla CSS for styling, and advanced CSS variable management for customizable themes. Learn how to configure colors, styles, and layouts to tailor the appearance of your documentation site to your branding needs.">
+
+
 # Theming
 
 ## Code Blocks
@@ -122,4 +125,4 @@ To change the logo for your site, simply replace `/static/img/logo.svg` with you
 
 ## favicon.ico
 
-During development, the server searches for your favicon.ico at /static/favicon.ico. When you go to build your static assest, the favicon will be placed in `/out/favicon.ico`. To change your favicon.ico, simply replace the icon found at `/static/favicon.ico`.
+During development, the server searches for your favicon.ico at /favicon.ico. When you go to build your static assest, the favicon will be placed in `/out/favicon.ico`. To change your favicon.ico, simply replace the icon found at `/favicon.ico`.

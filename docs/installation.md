@@ -1,3 +1,6 @@
+<meta name="description" content="Get started with Godocument by cloning the official repository. This guide provides step-by-step instructions on how to create a directory, clone the Godocument repo, and begin setting up your documentation site using a Unix-based terminal.">
+
+
 # Installation
 
 ## The Repo

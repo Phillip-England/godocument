@@ -1,3 +1,6 @@
+<meta name="description" content="Explore the integration of Htmx in Godocument to achieve a Single Page Application experience without the complexity of a full JavaScript framework. Learn about the implications of using hx-boost, managing JavaScript execution, and handling event listeners to ensure smooth navigation and interaction within your documentation site.">
+
+
 # Scripting
 
 ## Single Page Application
@@ -26,7 +29,7 @@ Using Htmx's `hx-boost` attribute has implications on how we need to think about
 
 This can create issues when declaring functions, declaring variables, and mounting event listeners.
 
-## loaded atrribute
+## loaded attribute
 
 Godocument makes use of an attribute, `loaded`, on the `<html>` tag to avoid reinstantiating variables multiple times.
 

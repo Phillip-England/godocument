@@ -141,9 +141,15 @@ func assignHandlers(cnf stypes.DocConfig) {
 				mdContentString = strings.Replace(mdContentString, metaTag.Tag, "", 1)
 			}
 
+			// getting title from godocument.config.json
+			title := config.GetTitle()
+			if title == "" {
+				title = "Godocument"
+			}
+
 			// Create a new instance of tdata.Base with the title and markdown content as HTML
 			baseData := &stypes.BaseTemplate{
-				Title:           "Godocument - " + m.BaseNodeData.Name,
+				Title:           title + " - " + m.BaseNodeData.Name,
 				Content:         mdContentString,
 				Prev:            m.Prev,
 				Next:            m.Next,

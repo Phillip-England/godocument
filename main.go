@@ -13,26 +13,17 @@ import (
 	"path/filepath"
 	"text/template"
 	"time"
-
-	"github.com/joho/godotenv"
 )
 
-// change favicon notes
-// change build notes
-// starting with relative paths during dev
-// adding an absolute path during production
-// hot realoding with air
-// adding ability to provide meta data for pages
 // document how to add meta tags
-// add ability to change page titles
+// document how to use air for hot reloading
 
 var templates *template.Template
 
 func main() {
 
 	args := os.Args
-	_ = godotenv.Load()
-	port := os.Getenv("PORT")
+	port := "8080"
 
 	if len(args) > 1 && args[1] == "--build" {
 		absolutePath := ""
@@ -64,11 +55,13 @@ func main() {
 
 }
 
+// builds out static assets using godocument.config.json
 func build(absolutePath string, port string) {
 	cnf := config.GetDocConfig()
 	filewriter.GenerateStaticAssets(cnf, absolutePath, port)
 }
 
+// serves static files for testing prior to deployment
 func runStaticServer(port string) {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
@@ -83,6 +76,7 @@ func runStaticServer(port string) {
 	}
 }
 
+// runs the development server
 func runDevServer(serverDone chan bool, shutdownComplete chan bool, port string) error {
 	mux := http.NewServeMux()
 	parseTemplates()
@@ -110,6 +104,7 @@ func runDevServer(serverDone chan bool, shutdownComplete chan bool, port string)
 	return nil
 }
 
+// parses all html templates in the html directory
 func parseTemplates() {
 	templates = template.New("")
 	err := filepath.Walk("./html", func(path string, info os.FileInfo, err error) error {

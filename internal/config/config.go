@@ -266,5 +266,25 @@ func ensureIntroductionFileExists(docConfig stypes.DocConfig) {
 	if name != IntroductionString || parent != DocRoot || file != StaticMarkdownPrefix+"/introduction.md" {
 		panic("First entry of \"docs\" section of godocument.config.json must be:\n{\n  \"docs\": {\n    \"Introduction\": \"/introduction.md\"\n  }\n}")
 	}
+}
 
+// GetTitle reads the godocument.config.json file and returns the title
+func GetTitle() string {
+	file, err := os.ReadFile(JSONConfigPath)
+	if err != nil {
+		panic(err)
+	}
+	var result map[string]interface{}
+	err = json.Unmarshal(file, &result)
+	if err != nil {
+		panic(err)
+	}
+	metaData := result["meta"].(map[string]interface{})
+	title := ""
+	for key, value := range metaData {
+		if key == "title" {
+			title = value.(string)
+		}
+	}
+	return title
 }
