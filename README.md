@@ -110,7 +110,7 @@ go run main.go
 go run main.go --build
 ```
 
--- To build for production, run:
+- To build for production, run:
 
 ```bash
 go run main.go --build <your-server-url>
