@@ -420,7 +420,7 @@ class MdCorrect {
             new Header(headerBars, overlay, sitenav)
             new Theme(sunIcons, moonIcons, htmlDocument)
 
-            // defining custom elements
+            // defining custom component
             let customComponents = new CustomComponents()
             new MdImportant(customComponents)
             new MdWarning(customComponents)
