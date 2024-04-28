@@ -437,9 +437,6 @@ class MdCorrect {
 
         }
 
-        eReset(window, 'htmx:beforeHistorySave', () => {
-            document.getElementsByTagName('html')[0].setAttribute('loaded', 'false')
-        }) // initial page load
         eReset(window, 'DOMContentLoaded', onLoad) // initial page load
         eReset(document.getElementsByTagName('body')[0], "htmx:afterOnLoad", onLoad) // after htmx swaps
 
