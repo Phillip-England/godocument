@@ -12,7 +12,7 @@ To read the full documentation, check out [godocument.dev](https://godocument.de
 ## What is Godocument?
 Godocument is a static site generator inspired by [Docusaurus](https://docusaurus.io/) and powered by [Htmx](https://htmx.org). Documenting your code should be *simple*.
 
-<md-important>Godocument requires Go version 1.22.0 or greater</md-important>
+<span class='md-important'>Godocument requires Go version 1.22.0 or greater</span>
 
 ## Hello, World
 
@@ -31,6 +31,12 @@ cd <your-apps-name>
 
 ```bash
 git clone https://github.com/phillip-england/godocument .
+```
+
+- Reset the project
+
+```bash
+go run main.go --reset
 ```
 
 - Add some new entries to `godocument.config.json`:
