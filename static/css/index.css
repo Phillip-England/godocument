@@ -138,7 +138,7 @@ html {
 	--dark-code-keyword: var(--purple);
 	--dark-code-operator: var(--white);
 	--dark-code-punctuation: var(--gray-300);
-	--dark-code-comment: var(--gray-300);
+	--dark-code-comment: var(--gray-500);
 
 	/* custom md elements */
 	--md-bg-color: var(--gray-200);

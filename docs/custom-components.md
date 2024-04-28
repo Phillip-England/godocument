@@ -1,13 +1,83 @@
-<meta name="description" content="Discover how to enhance your Godocument markdown files with Web Components and custom HTML elements using Goldmark's html.WithUnsafe renderer. Learn to initialize and use custom elements like md-important, md-warning, and md-correct directly in your documentation to emphasize important content effectively.">
+<meta name="description" content="Learn to enhance your GoDocument markdown files by integrating Web Components and custom HTML elements with Goldmark's `html.WithUnsafe` renderer. This guide covers the initialization and usage of custom elements such as `md-important`, `md-warning`, and `md-correct` to effectively emphasize key content in your documentation.">
+
 
 
 # Custom Components
 
-## Web Components
+## Creating a New Component
 
-Godocument uses [Web Components](https://developer.mozilla.org/en-US/docs/Web/API/Web_components) for creating custom elements to use within your `.md` files.
+<span class='md-important'>All Javascript for Godocument is located in `/static/js/index.js`.</span>
 
-Web Components are defined in `/static/js/index.js` and can be used directly in our `.md` files to keep things clean and quick to use.
+To create a new custom component, first create a class to represent the component. 
+
+Let's call this component, `simple-component`. The constructor should take in a parameter called `customComponent`, which will be an object built from the `CustomComponent` class.
+
+The `CustomComponent` class is already included in Godocument.
+
+```js
+class SimpleComponent {
+    constructor(customComponent) {
+
+    }
+}
+```
+
+In `onLoad()`, be sure to instantiate both `CustomComponent` and `SimpleComponent`:
+
+```js
+function onLoad() {
+    // ...
+
+    // defining custom components
+    let customComponents = new CustomComponent()
+    new SimpleComponent(customComponents)
+}
+```
+
+In the constructor of `SimpleComponent` call `customComponent.registerComponent(className, htmlContent)` as follows:
+
+```js
+class SimpleComponent {
+    constructor(customComponent) {
+        customComponent.registerComponent("simple-component", `
+            <div>
+                <h1>Hello, World</h1>
+                <p>{text}</p>
+            </div>
+        `)
+    }
+}
+```
+
+Take note of this line:
+
+```js
+<p>{text}</p>
+```
+
+Register component will replace `{text}` with the `innerHTML` of the component.
+
+To utilize `simple-component`, place the following markup in any of your `.md` files:
+
+```md
+<span class='simple-component'>I am a simple component!</span>
+```
+
+## Included Components
+
+Godocument comes with a few components already built. Here they are:
+
+### MdImportant
+
+<span class='md-important'>I am created by using this markup in a `.md` file: `<span class='md-important'>I am important!</span>`</span>
+
+### MdWarning
+
+<span class='md-warning'>I am created by using this markup in a `.md` file: `<span class='md-warning'>I am a warning!</span>`</span>
+
+### MdCorrect
+
+<span class='md-correct'>I am created by using this markup in a `.md` file: `<span class='md-correct'>That is correct!</span>`</span>
 
 ## Goldmark html.WithUnsafe
 
@@ -15,93 +85,4 @@ Since we are using [Goldmark](https://github.com/yuin/goldmark) to convert `.md`
 
 This is only considered *unsafe* if the content within our `.md` files is controlled by our users. In our case, since we will be the ones writing the markup directly, it is not considered unsafe.
 
-<md-important>Removing `html.WithUnsafe()` from Goldmark's rendering options will cause Goldmark to ignore any HTML markup within our `.md` files.</md-important>
-
-## Component Initialization
-
-Custom components require some initialization to work as expected. This is due to the way Goldmark parses `.md` files. These initialization steps are to ensure the component renders properly as well as enabling users to utilize backticks to convey inline code examples.
-
-Within a component's constructor, do the following to initialize the component properly and get the text from within the component:
-
-```js
-class MdImportant extends HTMLElement {
-    constructor() {
-        super()
-        this.hook()
-    }
-    hook() {
-        let text = initMdComponent(this)   
-        this.innerHTML = `
-            <div class='bg-[var(--md-bg-color)] dark:bg-[var(--dark-md-bg-color)] p-4 rounded-md border-l-4 border-[var(--md-important-border-color)] dark:border-[var(--dark-md-important-border-color)] flex flex-col gap-2'>
-                <span class='flex flex-row item-center gap-2 dark:text-[var(--dark-md-important-text-color)] text-[var(--md-important-text-color)]'>
-                    <span class='flex items-center dark:text-[var(--dark-md-important-text-color)] text-[var(--md-important-text-color)]'>
-                        <svg class="h-6 w-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V8m0 8h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                        </svg>
-                    </span>
-                    <p class='font-bold'>Important</p>                   
-                </span>
-                <p class='custom-inline-code'>${text}</p>
-            </div>
-        `
-    }    
-}
-```
-
-We are specifically focusing on this line:
-
-```js
-...
-let text = initMdComponent(this)
-...
-```
-
-### Removing the Parent
-
-When Goldmark finds HTML within a `.md` file, it will wrap the HTML with a `<p>` tag. To ensure proper rendering, it is important to remove the `<p>` tag when initializing our components.
-
-A special function named `initMdComponent()` serves to enable custom components behave as expected.
-
-```js
-function initMdComponent(node) {
-    node.parentElement.replaceWith(node)
-    let text = node.innerHTML
-    text = replaceBackticksWithCodeTags(text)
-    return text
-}
-```
-
-### Enabling Inline Code
-
-Goldmark will not wrap backticks with `<code>` tags within our HTML markup found within `.md` files. To prevent users from manually having to type out `<code>some code example</code>` each time, `initMdComponent()` handles this as well.
-
-`initMdComponent` references another function, `replaceBackticksWithCodeTags()`. Here is that function's declaration:
-
-```js
-function replaceBackticksWithCodeTags(text) {
-    for (let i = 0; i < text.length; i++) {
-        if (text[i] == '`') {
-            text = text.slice(0, i) + '<code>' + text.slice(i + 1)
-            i++
-            while (i < text.length && text[i] != '`') {
-                i++
-            }
-            text = text.slice(0, i) + '</code>' + text.slice(i + 1)
-        }
-    }
-    return text
-}
-```
-
-
-## MdImportant
-
-<md-important>I am created by using this markup in a `.md` file: `<md-important>I am important!</md-important>`</md-important>
-
-## MdWarning
-
-<md-warning>I am created by using this markup in a `.md` file: `<md-warning>I am a warning!</md-warning>`</md-warning>
-
-## MdCorrect
-
-<md-correct>I am created by using this markup in a `.md` file: `<md-correct>That is correct!</md-correct>`</md-correct>
+<span class='md-warning'>Removing `html.WithUnsafe()` from Goldmark's rendering options will cause Goldmark to ignore any HTML markup within our `.md` files.</span>

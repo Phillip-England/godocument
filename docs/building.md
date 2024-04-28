@@ -9,7 +9,7 @@ This command will build all of your static assets and place them in `/out`.
 
 Godocument will take all the relative paths you use during development and modify them into absolute paths for production.
 
-<md-warning>Using relative paths during development is a requirement. Not doing so will result in unexpected behaviour when building.</md-warning>
+<span class='md-warning'>Using relative paths during development is a requirement. Not doing so will result in unexpected behaviour when building.</span>
 
 ## Providing an Absolute Path
 
@@ -19,7 +19,7 @@ When you are ready to build your site for production, you will need to provide a
 go run main.go --build <absolute-path>
 ```
 
-<md-important>If an absolute path is not provided, Godocument will serve your assets on whatever port 8080. This is useful for testing your application prior to deployment. If you do provide an absolute path, Godocument will not serve the assets locally.</md-important>
+<span class='md-important'>If an absolute path is not provided, Godocument will serve your assets on whatever port 8080. This is useful for testing your application prior to deployment. If you do provide an absolute path, Godocument will not serve the assets locally.</span>
 
 For example, let's say I wanted to build for `godocument.dev`, I would run:
 
@@ -27,7 +27,7 @@ For example, let's say I wanted to build for `godocument.dev`, I would run:
 go run main.go --build godocument.dev
 ```
 
-<md-warning>Absolute paths should not include a "/" at the end, this will result in a panic.</md-warning>
+<span class='md-warning' text="Absolute paths should not include a '/' at the end, this will result in a panic."></span>
 
 ## Bundling Stylesheets
 

@@ -9,7 +9,7 @@ Code blocks are made possible by [Prism](https://prismjs.com/).
 
 Godocument includes support for all languages supported by Prism. This is to make it easy to get started with your website. However, when you plan to deploy, it is a good idea to go over to [Prism's download page](https://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javascript) and select only the languages used in your application.
 
-<md-important>When downloading the required languages for your site, you only need to download the `.js` file and replace `/static/js/prism.js` with the newly downloaded file. Be sure the file is named, `primsm.js`.</md-important>
+<span class='md-important'>When downloading the required languages for your site, you only need to download the `.js` file and replace `/static/js/prism.js` with the newly downloaded file. Be sure the file is named, `primsm.js`.</span>
 
 ## CSS Usage
 
@@ -24,7 +24,7 @@ Vanilla CSS is used in Godocument for things like the page layout, scrollbar app
 
 Godocument makes use of CSS variables to give users more control of their theme. Variables are either viewed as *utility* variables or *element-specific* variables.
 
-<md-important>To adjust the theming for your site, edit the variables found at the top of `/static/css/index.css`.</md-important>
+<span class='md-important'>To adjust the theming for your site, edit the variables found at the top of `/static/css/index.css`.</span>
 
 ## Utility Variables
 

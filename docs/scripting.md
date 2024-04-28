@@ -25,7 +25,7 @@ All of this will be done without a full-page refresh. Since we are generating st
 
 Using Htmx's `hx-boost` attribute has implications on how we need to think about using Javascript in our application.
 
-<md-important>Since the `<body>` is the only thing changed when using `hx-boost`, the Javascript located in the `<head>` of our document will only be loaded once. However, Javascript located in the `<body>` will be ran on each request.</md-important>
+<span class='md-important'>Since the `<body>` is the only thing changed when using `hx-boost`, the Javascript located in the `<head>` of our document will only be loaded once. However, Javascript located in the `<body>` will be ran on each request.</span>
 
 This can create issues when declaring functions, declaring variables, and mounting event listeners.
 
@@ -39,7 +39,7 @@ Godocument makes use of an attribute, `loaded`, on the `<html>` tag to avoid rei
 
 After the page is loaded on the initial visit, this attribute is set to `true`. This will prevent our variables and functions from being instantiated more than once.
 
-<md-warning>Failing to set `loaded="true"` on `<html>` will result in unexpected behavior</md-warning>
+<span class='md-warning'>Failing to set `loaded="true"` on `<html>` will result in unexpected behavior</span>
 
 ## onLoad function
 
@@ -94,7 +94,7 @@ eReset(window, 'DOMContentLoaded', onLoad) // initial page load
 eReset(document.getElementsByTagName('body')[0], "htmx:afterOnLoad", onLoad) // after htmx swaps
 ```
 
-<md-important>`DOMContentLoaded` will handle the initial page load, while `hmtx:afterOnLoad` will handle all other navigations.</md-important>
+<span class='md-important'>`DOMContentLoaded` will handle the initial page load, while `hmtx:afterOnLoad` will handle all other navigations.</span>
 
 ## Managing Events
 
@@ -109,6 +109,6 @@ function eReset(node, eventType, callback) {
 
 Instead of calling `element.addEventListener()`, it is better to use `eReset()` to ensure events are properly managed between page navigations.
 
-<md-warning>Failing to unhook events upon navigation will result in the same events being hooked multiple times to the target element, which can have unexpected consequences and lead to poor memory management.</md-warning>
+<span class='md-warning'>Failing to unhook events upon navigation will result in the same events being hooked multiple times to the target element, which can have unexpected consequences and lead to poor memory management.</span>
 
 

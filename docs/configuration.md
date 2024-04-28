@@ -7,7 +7,7 @@
 
 `godocument.config.json` is the configuration file for your application. It contains the necessary information to generate your website's routes. 
 
-<md-important>The order of items in `godocument.config.json` will determine the order of your pages in your website.</md-important>
+<span class='md-important'>The order of items in `godocument.config.json` will determine the order of your pages in your website.</span>
 
 Here is the base configuration needed to generate a site using Godocument:
 
@@ -19,7 +19,7 @@ Here is the base configuration needed to generate a site using Godocument:
 }
 ```
 
-<md-warning>The `/docs` directory and the `/docs/introduction.md` file are required for Godocument. Also, the json object `"docs"` must be named `"docs"` and the first entry beneath `"docs"` must be `"Introduction": "/introduction.md"`. Failing to meet these requirements will result in a panic.</md-warning>
+<span class='md-warning'>The `/docs` directory and the `/docs/introduction.md` file are required for Godocument. Also, the json object `"docs"` must be named `"docs"` and the first entry beneath `"docs"` must be `"Introduction": "/introduction.md"`. Failing to meet these requirements will result in a panic.</span>
 
 ## Pages
 
@@ -27,7 +27,7 @@ The entries in `godocument.config.json` can either be pages or sections. Let's s
 
 To denote a page, simply create a key-value pair with the key being the name of the page and the value being the file path to the `.md` file for the page. You can name pages whatever you would like.
 
-<md-important>All file paths in `godocument.config.json` are relative to `/docs`. This means you do not have to the include `/docs` in your file paths as Godocument assumes all your markdown files are in `/docs`.</md-important>
+<span class='md-important'>All file paths in `godocument.config.json` are relative to `/docs`. This means you do not have to the include `/docs` in your file paths as Godocument assumes all your markdown files are in `/docs`.</span>
 
 Here is how you would add a new page to the base configuration:
 
@@ -133,7 +133,7 @@ Godocument does not require you to structure your `/docs` directory in any parti
 
 For example, here is a `godocument.config.json` file which does not follow the proper conventions.
 
-<md-warning>The example below does not follow the recommended conventions for `godocument.config.json`.</md-warning>
+<span class='md-warning'>The example below does not follow the recommended conventions for `godocument.config.json`.</span>
 
 ```json
 {
@@ -148,7 +148,7 @@ For example, here is a `godocument.config.json` file which does not follow the p
 
 It does not follow the conventions because `/about.md` should have a file path which mirrors the structure of `godocument.config.json`.
 
-<md-correct>To correct the above `godocument.config.json` make the changes below.</md-correct>
+<span class='md-correct'>To correct the above `godocument.config.json` make the changes below.</span>
 
 ```json
 {
@@ -167,7 +167,7 @@ Such a change will ensure that the /docs directory mirrors the structure of godo
 
 Godocument autogenerates titles based off the keys provided in the `"docs"` section of `godocument.config.json`. For example, a key value pair of `"Introduction": "/introduction.md"` would render a title of `Godocument - Introduction` when visiting the introduction page.
 
-<md-important>All pags titles will be prefixed with "Godocument - " until you specify otherwise in the `"meta"` section of `godocument.config.json`.</md-important>
+<span class='md-important'>All pags titles will be prefixed with "Godocument - " until you specify otherwise in the `"meta"` section of `godocument.config.json`.</span>
 
 To modify title prefixes, set the following config:
 
