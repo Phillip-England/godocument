@@ -27,7 +27,7 @@ For example, let's say I wanted to build for `godocument.dev`, I would run:
 go run main.go --build godocument.dev
 ```
 
-<span class='md-warning' text="Absolute paths should not include a '/' at the end, this will result in a panic."></span>
+<span class='md-warning'>Absolute paths should not include a '/' at the end, this will result in a panic.</span>
 
 ## Bundling Stylesheets
 
