@@ -1,0 +1,5 @@
+# Ignore the environment variables file
+.env
+
+# Ignore the temporary files directory
+/tmp/
