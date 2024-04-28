@@ -1,0 +1,29 @@
+# air.toml
+# This is a TOML file.
+
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  cmd = "go build -o ./tmp/main ."
+  bin = "./tmp/main"
+  full_bin = ""
+  include_ext = ["go", "tpl", "tmpl", "html", "css"]
+  exclude_dir = ["assets", "tmp", "vendor"]
+  exclude_file = ["html/components/sitenav.html"]
+  exclude_regex = []
+  include_dir = []
+  include_file = []
+  follow_symlink = false
+
+[log]
+  time = true
+
+[serve]
+  command = ""
+  port = 3000
+  browser_reload = false
+
+[watcher]
+  interval = 1000
+  signal = "SIGTERM"
