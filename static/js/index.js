@@ -13,7 +13,15 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
 */
 
 
+
 (() => {
+
+    let isPopstate = false
+
+    if (localStorage.getItem('popstate') == 'true') {
+        isPopstate = true
+        document.getElementsByTagName('html')[0].setAttribute('loaded', 'false')
+    }
 
     if (document.getElementsByTagName('html')[0].getAttribute('loaded') == 'false') {
 
@@ -44,19 +52,17 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
             }
         }
 
-        function getLoadState() {
-            return document.getElementsByTagName('html')[0].getAttribute('loaded')
-        }
-
-        function doOnce(callback) {
-            if (getLoadState() == 'false') {
-                callback()
-            }
-        }
-
         function eReset(node, eventType, callback) {
             node.removeEventListener(eventType, callback)
             node.addEventListener(eventType, callback)
+        }
+
+        function rememberPopState() {
+            localStorage.setItem('popstate', 'true')
+        }
+
+        function forgetPopState() {
+            localStorage.setItem('popstate', 'false')
         }
 
 // ==============================================================================
@@ -244,10 +250,15 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
             hook() {
                 eReset(this.headerBars, "click", this.toggleMobileNav.bind(this))
                 eReset(this.overlay, "click", this.toggleMobileNav.bind(this))
+                this.closeMobileNav()
             }
             toggleMobileNav() {
                 zez.toggleState(this.overlay, 'active')
                 zez.toggleState(this.sitenav, 'active')
+            }
+            closeMobileNav() {
+                zez.removeState(this.overlay, 'active')
+                zez.removeState(this.sitenav, 'active')
             }
         }
 
@@ -329,73 +340,76 @@ The utility function eReset(node, eventType, callback) is used to detach and re-
 
 // ==============================================================================
 
-class MdImportant {
-    constructor(customComponents) {
-        customComponents.registerComponent("md-important", `
-            <div class='bg-[var(--md-bg-color)] dark:bg-[var(--dark-md-bg-color)] p-4 rounded-md border-l-4 border-[var(--md-important-border-color)] dark:border-[var(--dark-md-important-border-color)] flex flex-col gap-2'>
-                <span class='flex flex-row item-center gap-2 dark:text-[var(--dark-md-important-text-color)] text-[var(--md-important-text-color)]'>
-                    <span class='flex items-center dark:text-[var(--dark-md-important-text-color)] text-[var(--md-important-text-color)]'>
-                        <svg class="h-6 w-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V8m0 8h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                        </svg>
-                    </span>
-                    <p class='font-bold'>Important</p>                   
-                </span>
-                <p class='custom-inline-code'>{text}</p>
-            </div>
-        `)
-    }
-}
+        class MdImportant {
+            constructor(customComponents) {
+                customComponents.registerComponent("md-important", `
+                    <div class='bg-[var(--md-bg-color)] dark:bg-[var(--dark-md-bg-color)] p-4 rounded-md border-l-4 border-[var(--md-important-border-color)] dark:border-[var(--dark-md-important-border-color)] flex flex-col gap-2'>
+                        <span class='flex flex-row item-center gap-2 dark:text-[var(--dark-md-important-text-color)] text-[var(--md-important-text-color)]'>
+                            <span class='flex items-center dark:text-[var(--dark-md-important-text-color)] text-[var(--md-important-text-color)]'>
+                                <svg class="h-6 w-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V8m0 8h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                </svg>
+                            </span>
+                            <p class='font-bold'>Important</p>                   
+                        </span>
+                        <p class='custom-inline-code'>{text}</p>
+                    </div>
+                `)
+            }
+        }
 
 // ==============================================================================
 
-class MdWarning {
-    constructor(customComponents) {
-        customComponents.registerComponent("md-warning", `
-            <div class='bg-[var(--md-bg-color)] dark:bg-[var(--dark-md-bg-color)] p-4 rounded-md border-l-4 border-[var(--md-warning-border-color)] dark:border-[var(--dark-md-warning-border-color)] flex flex-col gap-2'>
-                <span class='flex flex-row item-center gap-2 dark:text-[var(--dark-md-warning-text-color)] text-[var(--md-warning-text-color)]'>
-                    <span class='flex items-center dark:text-[var(--dark-md-warning-text-color)] text-[var(--md-warning-text-color)]'>
-                    <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M12 17a2 2 0 0 1 2 2h-4a2 2 0 0 1 2-2Z"/>
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.815 9H16.5a2 2 0 1 0-1.03-3.707A1.87 1.87 0 0 0 15.5 5 1.992 1.992 0 0 0 12 3.69 1.992 1.992 0 0 0 8.5 5c.002.098.012.196.03.293A2 2 0 1 0 7.5 9h3.388m2.927-.985v3.604M10.228 9v2.574M15 16h.01M9 16h.01m11.962-4.426a1.805 1.805 0 0 1-1.74 1.326 1.893 1.893 0 0 1-1.811-1.326 1.9 1.9 0 0 1-3.621 0 1.8 1.8 0 0 1-1.749 1.326 1.98 1.98 0 0 1-1.87-1.326A1.763 1.763 0 0 1 8.46 12.9a2.035 2.035 0 0 1-1.905-1.326A1.9 1.9 0 0 1 4.74 12.9 1.805 1.805 0 0 1 3 11.574V12a9 9 0 0 0 18 0l-.028-.426Z"/>
-                    </svg>
-                
-                    </span>
-                    <p class='font-bold'>Warning</p>                   
-                </span>
-                <p class='custom-inline-code'>{text}</p>
-            </div>            
-        `)
-    }
-}
+        class MdWarning {
+            constructor(customComponents) {
+                customComponents.registerComponent("md-warning", `
+                    <div class='bg-[var(--md-bg-color)] dark:bg-[var(--dark-md-bg-color)] p-4 rounded-md border-l-4 border-[var(--md-warning-border-color)] dark:border-[var(--dark-md-warning-border-color)] flex flex-col gap-2'>
+                        <span class='flex flex-row item-center gap-2 dark:text-[var(--dark-md-warning-text-color)] text-[var(--md-warning-text-color)]'>
+                            <span class='flex items-center dark:text-[var(--dark-md-warning-text-color)] text-[var(--md-warning-text-color)]'>
+                            <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M12 17a2 2 0 0 1 2 2h-4a2 2 0 0 1 2-2Z"/>
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.815 9H16.5a2 2 0 1 0-1.03-3.707A1.87 1.87 0 0 0 15.5 5 1.992 1.992 0 0 0 12 3.69 1.992 1.992 0 0 0 8.5 5c.002.098.012.196.03.293A2 2 0 1 0 7.5 9h3.388m2.927-.985v3.604M10.228 9v2.574M15 16h.01M9 16h.01m11.962-4.426a1.805 1.805 0 0 1-1.74 1.326 1.893 1.893 0 0 1-1.811-1.326 1.9 1.9 0 0 1-3.621 0 1.8 1.8 0 0 1-1.749 1.326 1.98 1.98 0 0 1-1.87-1.326A1.763 1.763 0 0 1 8.46 12.9a2.035 2.035 0 0 1-1.905-1.326A1.9 1.9 0 0 1 4.74 12.9 1.805 1.805 0 0 1 3 11.574V12a9 9 0 0 0 18 0l-.028-.426Z"/>
+                            </svg>
+                        
+                            </span>
+                            <p class='font-bold'>Warning</p>                   
+                        </span>
+                        <p class='custom-inline-code'>{text}</p>
+                    </div>            
+                `)
+            }
+        }
 
 // ==============================================================================
 
-class MdCorrect {
-    constructor(customComponents) {
-        customComponents.registerComponent("md-correct", `
-            <div class='bg-[var(--md-bg-color)] dark:bg-[var(--dark-md-bg-color)] p-4 rounded-md border-l-4 border-[var(--md-correct-border-color)] dark:border-[var(--dark-md-correct-border-color)] flex flex-col gap-2'>
-                <span class='flex flex-row item-center gap-2 dark:text-[var(--dark-md-correct-text-color)] text-[var(--md-correct-text-color)]'>
-                    <span class='flex items-center dark:text-[var(--dark-md-correct-text-color)] text-[var(--md-correct-text-color)]'>
-                    <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                    </svg>
-                </span>
-                    <p class='font-bold'>Correct</p>                   
-                </span>
-                <p class='custom-inline-code'>{text}</p>
-            </div>
-        `)
-    }
-}
+        class MdCorrect {
+            constructor(customComponents) {
+                customComponents.registerComponent("md-correct", `
+                    <div class='bg-[var(--md-bg-color)] dark:bg-[var(--dark-md-bg-color)] p-4 rounded-md border-l-4 border-[var(--md-correct-border-color)] dark:border-[var(--dark-md-correct-border-color)] flex flex-col gap-2'>
+                        <span class='flex flex-row item-center gap-2 dark:text-[var(--dark-md-correct-text-color)] text-[var(--md-correct-text-color)]'>
+                            <span class='flex items-center dark:text-[var(--dark-md-correct-text-color)] text-[var(--md-correct-text-color)]'>
+                            <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                            </svg>
+                        </span>
+                            <p class='font-bold'>Correct</p>                   
+                        </span>
+                        <p class='custom-inline-code'>{text}</p>
+                    </div>
+                `)
+            }
+        }
 
 // ==============================================================================
 
+        function onLoad(e) {
 
-
-
-
-        function onLoad() {
+            // handling backwards navigation
+            if (e.type == 'popstate') {
+                zez.removeState(document.getElementsByTagName('body')[0], 'loaded')
+                rememberPopState()
+                return
+            }
 
             // elements
             const body = qs(document, 'body')
@@ -421,10 +435,12 @@ class MdCorrect {
             new Theme(sunIcons, moonIcons, htmlDocument)
 
             // defining custom component
-            let customComponents = new CustomComponents()
-            new MdImportant(customComponents)
-            new MdWarning(customComponents)
-            new MdCorrect(customComponents)
+            if (!isPopstate) {
+                let customComponents = new CustomComponents()
+                new MdImportant(customComponents)
+                new MdWarning(customComponents)
+                new MdCorrect(customComponents)
+            }
 
             // init
             Prism.highlightAll();
@@ -435,13 +451,19 @@ class MdCorrect {
             // set loaded attribute
             document.getElementsByTagName('html')[0].setAttribute('loaded', 'true')
 
+
+
         }
 
-        eReset(window, 'DOMContentLoaded', onLoad) // initial page load
-        eReset(document.getElementsByTagName('body')[0], "htmx:afterOnLoad", onLoad) // after htmx swaps
+        if (localStorage.getItem('popstate') == 'true') {
+            forgetPopState()
+            onLoad({ type: 'DOMContentLoaded' })
+        } else {
+            eReset(window, 'popstate', onLoad)
+            eReset(window, 'DOMContentLoaded', onLoad)
+            eReset(document.getElementsByTagName('body')[0], "htmx:afterOnLoad", onLoad)
+        }
 
     }
 
 })();
-
-
