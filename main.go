@@ -20,7 +20,10 @@ var templates *template.Template
 func main() {
 
 	args := os.Args
-	port := "8080"
+	port, found := os.LookupEnv("GODOC_PORT")
+	if !found || port == "" {
+		port = "8080"
+	}
 
 	if len(args) > 1 && args[1] == "--reset" {
 		fmt.Println("WARNING: Resetting the project cannot be undone. All progress will be lost.")
